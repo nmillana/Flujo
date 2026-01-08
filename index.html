@@ -1,870 +1,581 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Editor de flujo — Vertical / Horizontal (BPMN-like)</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diagrama de Flujo - RRHH y Nómina (Editable)</title>
+
   <style>
-    :root{
-      --bg:#f4f6f8; --card:#fff; --ink:#1f2d3d; --muted:#5b6775;
-      --line:#2c3e50; --warn:#fef6e4;
-      --shadow: 0 10px 30px rgba(0,0,0,.08); --radius: 12px;
-    }
-    *{ box-sizing:border-box; }
-    body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background:var(--bg); color:var(--ink); }
-    header{ padding:14px 16px; background:var(--card); box-shadow:var(--shadow); position:sticky; top:0; z-index:10;}
-    header h1{ margin:0; font-size:15px; }
-    header .row{ margin-top:8px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
-    button{ border:1px solid #cfd6df; background:#fff; border-radius:10px; padding:7px 10px; font-size:12px; cursor:pointer; }
-    button.primary{ background:var(--line); color:#fff; border-color:var(--line); }
-    button.danger{ border-color:#b23b3b; color:#b23b3b; }
-    .hint{ font-size:12px; color:var(--muted); margin-left:auto; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 20px; }
+    h1 { text-align: center; color: #333; margin-bottom: 10px; }
+    .hint { text-align:center; color:#666; font-size: 0.9em; margin: 0 0 20px; }
 
-    main{ padding:16px; }
-    .wrap{ margin:0 auto; }
+    .flow-container { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; align-items: flex-start; }
 
-    /* ====== Canvas modes ====== */
-    .canvas.vertical{
-      max-width: 920px;
-      margin: 0 auto;
-    }
-    .canvas.horizontal{
-      width: 100%;
-      overflow-x: auto;
-      overflow-y: hidden;
-      padding-bottom: 10px;
-    }
-    .track{
-      display:flex;
-      align-items:flex-start;
-      gap:12px;
-      padding: 0 6px;
-      min-height: 160px;
+    /* BLOQUES MACRO (SIN LÍMITE DE ANCHO): se ajustan al contenido */
+    .macro {
+      width: max-content;              /* <- sin límite */
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      flex: 0 0 auto;                  /* <- no fuerza un ancho fijo */
     }
 
-    /* ====== Nodes ====== */
-    .node{
-      background:#fff; border:2px solid var(--line); border-radius:10px;
-      padding:10px 12px; margin:10px 0; position:relative; box-shadow:0 1px 0 rgba(0,0,0,.02);
-      min-width: 260px;
+    .macro-title {
+      font-weight: bold; text-align: center; padding: 10px; border-radius: 5px; margin-bottom: 12px;
+      color: white; text-transform: uppercase; font-size: 0.9em;
     }
-    .node.start,.node.end{ background:var(--line); color:#fff; font-weight:700; }
-    .node.decision{ border-style:dashed; background:var(--warn); font-weight:700; }
+    .macro-desc{ text-align:center; color:#555; font-size: 0.85em; margin: 0 0 12px; max-width: 900px; }
 
-    .text{ text-align:center; font-size:14px; line-height:1.25; padding:0 120px; }
-    .note{ margin-top:6px; font-size:12px; color:var(--muted); font-weight:400; text-align:center; }
-    .note span{ background:#eef2f6; padding:2px 8px; border-radius:999px; border:1px solid #d7dde5; }
-
-    .controls{
-      position:absolute; right:8px; top:8px; display:flex; gap:6px;
-    }
-    .controls button{ padding:4px 6px; font-size:12px; border-radius:9px; }
-    .controls .chip{ border-color:#cfd6df; }
-    .controls .del{ border-color:#b23b3b; color:#b23b3b; }
-
-    .move{
-      position:absolute; left:8px; top:8px; display:flex; gap:6px;
-    }
-    .move button{ padding:4px 6px; font-size:12px; border-radius:9px; }
-
-    /* ====== Arrows ====== */
-    .arrowV{ text-align:center; font-size:18px; color:var(--line); user-select:none; margin:4px 0; }
-    .arrowH{
-      display:flex; align-items:center; justify-content:center;
-      font-size:18px; color:var(--line); user-select:none;
-      min-width: 36px; height: 100%;
-      margin-top: 18px;
-    }
-
-    /* ====== Decision BPMN-like in Horizontal ====== */
-    .decisionGroup{
-      display:grid;
-      grid-template-columns: 220px 360px 120px;
-      gap: 10px;
-      align-items:center;          /* <- centramos todo verticalmente */
-      padding-top: 8px;
-      padding-bottom: 8px;
-      min-width: 740px;
-      position:relative;
-    }
-
-    .diamondWrap{
-      position:relative;
-      width: 220px;
-      display:flex;
-      align-items:center;          /* <- centrado respecto a ramas */
-      justify-content:center;
-      padding-top: 0;              /* <- antes 16px */
-    }
-
-    .diamond{
-      width: 140px;
-      height: 140px;
-      background: var(--warn);
-      border: 2px dashed var(--line);
-      transform: rotate(45deg);
-      border-radius: 12px;
-      position: relative;
-      box-shadow:0 1px 0 rgba(0,0,0,.02);
-      cursor: pointer;
-    }
-    .diamond .label{
-      position:absolute;
-      inset: 16px;
-      transform: rotate(-45deg);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      font-weight:800;
-      font-size:13px;
-      color: var(--ink);
-      padding: 0 10px;
-      line-height:1.2;
-    }
-
-    .diamond .dControls{
-      position:absolute;
-      right:-6px;
-      top:-10px;
-      transform: rotate(-45deg);
-      display:flex;
-      gap:6px;
-    }
-    .diamond .dControls button{
-      transform: rotate(0deg);
-      padding:4px 6px;
-      font-size:12px;
-      border-radius:9px;
-      border:1px solid #cfd6df;
-      background:#fff;
-      cursor:pointer;
-    }
-    .diamond .dControls .del{ border-color:#b23b3b; color:#b23b3b; }
-    .diamond .dControls .chip{ border-color:#cfd6df; }
-
-    .branchLane{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      padding-top: 0;              /* <- sin offset raro */
-    }
-    .branchRow{
-      display:grid;
-      grid-template-columns: 38px 1fr;
-      gap:8px;
-      align-items:stretch;
-    }
-    .branchArrow{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:18px;
-      color:var(--line);
-      user-select:none;
-      margin-top: 12px;
-    }
-    .branchCard{
-      border:1px solid #d7dde5;
-      background:#fff;
-      border-radius:10px;
-      padding:10px;
-      position:relative;
-    }
-    .branchCard h3{
-      margin:0 0 8px 0;
-      font-size:13px;
-      display:flex;
-      gap:8px;
-      align-items:center;
-    }
-    .branchCard h3 .lbl{ font-weight:900; }
-    .branchCard h3 .bBtns{ margin-left:auto; display:flex; gap:6px; }
-    .branchCard h3 .bBtns button{
-      padding:3px 6px; border-radius:9px; font-size:12px; border:1px solid #cfd6df; background:#fff; cursor:pointer;
-    }
-    .branchCard h3 .bBtns .del{ border-color:#b23b3b; color:#b23b3b; }
-
-    .item{
-      border:1px solid #d7dde5;
-      border-radius:10px;
-      padding:8px;
-      margin:8px 0;
-      position:relative;
-      background:#fff;
-    }
-    .item .itemText{ font-size:13px; text-align:left; padding-right:74px; }
-    .item .itemControls{ position:absolute; right:8px; top:8px; display:flex; gap:6px; }
-    .item .itemControls button{
-      padding:3px 6px; border-radius:9px; font-size:12px; border:1px solid #cfd6df; background:#fff; cursor:pointer;
-    }
-    .item .itemControls .del{ border-color:#b23b3b; color:#b23b3b; }
-    .item .itemControls .add{ border-color:#2c3e50; color:#2c3e50; font-weight:800; }
-
-    .addInBranch{
-      width:100%;
-      padding:7px 10px;
-      border-style:dashed;
-      margin-top:6px;
-      border-radius:10px;
-      cursor:pointer;
-      background:#fff;
-    }
-
-    .mergeWrap{
-      display:flex;
-      align-items:center;          /* <- centramos merge */
-      justify-content:center;
-      padding-top: 0;              /* <- antes 58px */
-      width: 120px;
-    }
-    .mergeNode{
-      width: 54px;
-      height: 54px;
+    .macro-actions { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin: 8px 0 15px; }
+    .btn {
+      border: 1px solid rgba(0,0,0,0.15);
+      background: #fff;
       border-radius: 999px;
-      border: 2px solid var(--line);
-      background:#fff;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:900;
-      color:var(--line);
-      box-shadow:0 1px 0 rgba(0,0,0,.02);
-      user-select:none;
+      padding: 7px 10px;
+      font-size: 0.82em;
+      cursor: pointer;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.06);
+      white-space: nowrap;
     }
-    .mergeHint{
-      font-size:11px;
-      color:var(--muted);
-      text-align:center;
-      margin-top: 6px;
+    .btn:hover { background:#f9f9f9; }
+    .danger { border-color: rgba(220,38,38,0.25); color:#b91c1c; }
+
+    .searchbar { display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap; margin: 0 0 18px; }
+    .searchbar input{
+      width: min(520px, 92vw);
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.18);
+      outline: none;
+      background: #fff;
     }
 
-    /* ====== Vertical decision layout ====== */
-    .branchesV{
-      display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px; margin-top:12px;
-    }
-    @media (max-width: 880px){ .branchesV{ grid-template-columns: 1fr; } }
+    /* SUBPROCESOS EN NÓMINA (2..5) => carril horizontal interno */
+    .subflow { display:flex; gap: 14px; overflow-x:auto; padding-bottom: 10px; align-items:flex-start; width: max-content; }
+    .subflow::-webkit-scrollbar{height:10px}
+    .subflow::-webkit-scrollbar-thumb{background:rgba(0,0,0,.18);border-radius:999px}
+    .subflow::-webkit-scrollbar-track{background:rgba(0,0,0,.06);border-radius:999px}
 
-    .decisionTools{
-      display:flex; gap:8px; margin-top:10px; justify-content:center;
-    }
-    .decisionTools button{ padding:6px 10px; border-style:dashed; border-radius:10px; background:#fff; cursor:pointer; }
+    /* SUBBLOQUES (SIN LÍMITE): también se ajustan al contenido */
+    .subblock { width: max-content; border-radius: 8px; padding: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.08); flex: 0 0 auto; }
 
-    /* ====== Modal ====== */
-    .modal{
-      display:none; position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:50;
-      align-items:center; justify-content:center; padding:16px;
+    .subblock-title { font-weight: bold; text-align: center; padding: 9px; border-radius: 5px; margin-bottom: 10px; color: white; text-transform: uppercase; font-size: 0.82em; }
+
+    /* Cajas de Procesos */
+    .process-box { background: white; border: 1px solid #ddd; border-radius: 5px; padding: 12px; margin-bottom: 12px; min-width: 260px; }
+    .process-title {
+      font-weight: bold; font-size: 0.85em; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 8px; color: #555;
+      display:flex; justify-content:space-between; gap:10px;
     }
-    .modal .card{
-      width:min(560px, 100%); background:#fff; border-radius:14px; box-shadow:var(--shadow); padding:14px;
+    .process-tools { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+
+    /* Sub-cajas de Tareas */
+    .sub-task {
+      background: #f9f9f9; border-left: 3px solid #ccc; padding: 5px 10px; margin-top: 5px;
+      font-size: 0.8em; color: #666; display:flex; justify-content:space-between; gap:10px; align-items:flex-start;
     }
-    .modal label{ font-size:12px; color:var(--muted); display:block; margin-top:8px; }
-    .modal input{
-      width:100%; margin-top:6px; border:1px solid #d7dde5; border-radius:10px; padding:10px;
-      font-size:13px; font-family:inherit; outline:none;
+
+    /* Colores por Etapa */
+    .b1 { background-color: #e3f2fd; border-top: 5px solid #1976d2; }
+    .b1 .macro-title { background-color: #1976d2; }
+
+    .nomina { background-color: #fafafa; border-top: 5px solid #455a64; }
+    .nomina .macro-title { background-color: #455a64; }
+
+    .b2 { background-color: #fff3e0; border-top: 5px solid #fb8c00; }
+    .b2 .subblock-title { background-color: #fb8c00; }
+
+    .b3 { background-color: #f3e5f5; border-top: 5px solid #8e24aa; }
+    .b3 .subblock-title { background-color: #8e24aa; }
+
+    .b4 { background-color: #e8f5e9; border-top: 5px solid #43a047; }
+    .b4 .subblock-title { background-color: #43a047; }
+
+    .b5 { background-color: #eceff1; border-top: 5px solid #607d8b; }
+    .b5 .subblock-title { background-color: #607d8b; }
+
+    .gd { background-color: #eef2ff; border-top: 5px solid #4f46e5; }
+    .gd .macro-title { background-color: #4f46e5; }
+
+    .connector { display: flex; align-items: center; justify-content: center; min-width: 30px; font-size: 24px; color: #ccc; }
+
+    /* Editable */
+    [contenteditable="true"]{
+      outline:none;
+      border-radius: 4px;
+      padding: 2px 4px;
+      margin: -2px -4px;
     }
-    .modal .row{ display:flex; gap:8px; margin-top:12px; justify-content:flex-end; }
+    [contenteditable="true"]:focus{
+      box-shadow: 0 0 0 2px rgba(25,118,210,0.25);
+      background: rgba(255,255,255,0.85);
+    }
+    .hide { display:none !important; }
   </style>
 </head>
-
 <body>
-<header>
-  <h1>Editor directo del flujo — Vertical / Horizontal (Horizontal BPMN-like)</h1>
-  <div class="row">
-    <button class="primary" id="btnToggle">Vista: Vertical</button>
-    <button class="primary" id="btnAddStepTop">+ STEP al inicio</button>
-    <button class="primary" id="btnAddDecisionTop">+ DECISION al inicio</button>
-    <button id="btnExport">Exportar JSON</button>
-    <button id="btnImport">Importar JSON</button>
-    <button class="danger" id="btnReset">Restaurar v1</button>
-    <div class="hint">Doble clic = editar • +STEP/+DEC • +BRANCH dentro de DECISION</div>
+
+  <h1 contenteditable="true" data-path="page.title">Ciclo de Gestión de Personas y Nómina</h1>
+  <p class="hint">Ahora puedes <b>eliminar subprocesos</b> creados en Nómina y el ancho de los bloques se ajusta al contenido (sin limitar).</p>
+
+  <div class="searchbar">
+    <input id="q" type="search" placeholder="Buscar en todo el flujo..." />
+    <button class="btn" id="exportHtml">Exportar HTML</button>
+    <button class="btn" id="exportJson">Exportar JSON</button>
+    <button class="btn" id="importJson">Importar JSON</button>
+    <button class="btn danger" id="resetAll">Restaurar original</button>
   </div>
-</header>
 
-<main>
-  <div class="wrap">
-    <div id="canvas" class="canvas vertical"></div>
-  </div>
-</main>
+  <div class="flow-container" id="flow"></div>
 
-<div class="modal" id="modal">
-  <div class="card">
-    <div style="font-weight:800;">Editar</div>
-    <label>Texto</label>
-    <input id="mText" type="text" />
-    <label>Nota (opcional)</label>
-    <input id="mNote" type="text" placeholder="Ej: (solo subcontrato)" />
-    <div class="row">
-      <button id="mCancel">Cancelar</button>
-      <button class="primary" id="mOk">Guardar</button>
-    </div>
-  </div>
-</div>
-
-<script>
-  const STORE_KEY = "flujo_editor_vh_bpmnlike_model";
-  const VIEW_KEY  = "flujo_editor_vh_bpmnlike_view";
-
-  const DEFAULT_MODEL = {
-    nodes: [
-      { type:"start", text:"INICIO" },
+  <script id="INITIAL_MODEL" type="application/json">
+  {
+    "page": { "title": "Ciclo de Gestión de Personas y Nómina" },
+    "macros": [
       {
-        type:"decision",
-        text:"Origen del trabajador",
-        branches:[
-          { label:"Selección", items:[{ text:"Derivación desde proceso de selección" }] },
-          { label:"Onboarding", items:[{ text:"Derivación desde onboarding" }] },
-          { label:"Obra Directivo", items:[{ text:"Ingreso directo desde obra (directivo)" }] },
-          { label:"Obra Operario", items:[{ text:"Ingreso directo desde obra (operario)" }] }
+        "id": "m1",
+        "className": "b1",
+        "title": "1. Ingreso a EESS",
+        "desc": "Ingreso del trabajador y datos base (sistema fuente).",
+        "sections": [
+          { "id": "s1", "title": "Origen (Entradas)", "tasks": ["Selección + Onboarding", "Obra Directivo / Operario"] },
+          { "id": "s2", "title": "Alta Administrativa (EESS)", "tasks": ["Datos Personales / Contractuales", "Estructura Org. / Centro Costo"] }
         ]
       },
-      { type:"step", text:"Alta administrativa trabajador en EESS" },
-      { type:"step", text:"Ingreso datos personales" },
-      { type:"step", text:"Ingreso datos contractuales" },
-      { type:"step", text:"Definición estructura organizacional" },
-      { type:"step", text:"Asignación centro de costo" },
-      { type:"step", text:"Carga documentación laboral" },
-      { type:"step", text:"Habilitar app / reloj de marcaje" },
-      { type:"step", text:"Sincronizar usuarios", note:"(solo subcontrato)" },
-      { type:"step", text:"Activar portal de asistencia" },
-      { type:"step", text:"Registro diario de asistencia" },
-      { type:"step", text:"Horas extras", note:"(registro asociado a asistencia)" },
-      { type:"step", text:"Faltas", note:"(registro asociado a asistencia)" },
-      { type:"step", text:"Vacaciones", note:"(registro asociado a asistencia)" },
-      { type:"step", text:"Licencias", note:"(registro asociado a asistencia)" },
-      { type:"step", text:"Permisos", note:"(registro asociado a asistencia)" },
-      { type:"step", text:"Consolidación asistencia mensual" },
-      { type:"step", text:"Traspaso asistencia a remuneraciones", note:"(HE + faltas)" },
-      { type:"step", text:"Ingreso haber movilización" },
-      { type:"step", text:"Ingreso haberes y descuentos mensuales" },
-      { type:"step", text:"Ingreso préstamos" },
-      { type:"step", text:"Ingreso sobregiros" },
-      { type:"step", text:"Ingreso otros descuentos / seguros" },
-      { type:"step", text:"Pago anticipo" },
-      { type:"step", text:"Pago sueldo" },
-      { type:"step", text:"Pago ajustes" },
       {
-        type:"decision",
-        text:"¿Existe finiquito?",
-        branches:[
-          { label:"NO", items:[{ text:"(continúa sin finiquito)" }] },
-          { label:"SÍ", items:[
-            { text:"Simulación datos carta finiquito" },
-            { text:"Grabar data finiquito" },
-            { text:"Impresión documentos" },
-            { text:"Finiquito aplicado", note:"(fin de mes)" }
-          ]}
+        "id": "m2",
+        "className": "nomina",
+        "title": "2. Nómina (Macroproceso)",
+        "desc": "Subprocesos 2 → 5: Configuración y Asistencia → Cálculo y Finiquitos → Tesorería y Centralización → Reportes y Gestión.",
+        "subprocesses": [
+          {
+            "id": "b2",
+            "className": "b2",
+            "title": "2. Configuración y Asistencia",
+            "sections": [
+              { "id": "p1", "title": "Parámetros Nómina", "tasks": ["Bancos / Gratificación / Impuestos"] },
+              { "id": "p2", "title": "Recinto (Puesta en Vivo)", "tasks": ["Habilitar Reloj-App / Sincro Subcontratos", "Fiscalización DT / Portal Asistencia"] },
+              { "id": "p3", "title": "Mantención Mensual", "tasks": ["Nómina: Vacaciones y Licencias", "Recinto: Horas Extras y Faltas"] }
+            ]
+          },
+          {
+            "id": "b3",
+            "className": "b3",
+            "title": "3. Cálculo y Finiquitos",
+            "sections": [
+              { "id": "p4", "title": "Proceso Sueldos", "tasks": ["Actualizar Haberes Movilización", "Anticipo → Sueldo → Ajustes"] },
+              { "id": "p5", "title": "Proceso Finiquitos", "tasks": ["Simular Baja / Grabar / Imprimir", "Anticipado o Fin de Mes"] }
+            ]
+          },
+          {
+            "id": "b4",
+            "className": "b4",
+            "title": "4. Tesorería y Centralización",
+            "sections": [
+              { "id": "p6", "title": "Medios de Pago", "tasks": ["Cta. Cte. / Efectivo / Vale Vista", "Prueba Ingreso Ficha"] },
+              { "id": "p7", "title": "Centralización", "tasks": ["Sueldos y Ajustes", "(Elimina Cent. Finiquitos)"] }
+            ]
+          },
+          {
+            "id": "b5",
+            "className": "b5",
+            "title": "5. Reportes y Gestión",
+            "sections": [
+              { "id": "p8", "title": "Cierres Legales", "tasks": ["INE / LRE / Leyes Sociales", "CIERRE MENSUAL"] },
+              { "id": "p9", "title": "Gestión de Nómina", "tasks": ["Préstamos / Seguros / Vacaciones", "Masa Constructora / Especialidades"] }
+            ]
+          }
         ]
       },
-      { type:"step", text:"Definición medio de pago" },
-      { type:"step", text:"Transferencias bancarias", note:"(por empresa / por banco)" },
-      { type:"step", text:"Generar prueba ingreso ficha" },
-      { type:"step", text:"Informes de gestión" },
-      { type:"step", text:"INE" },
-      { type:"step", text:"LRE" },
-      { type:"step", text:"Leyes sociales" },
-      { type:"end", text:"CIERRE MENSUAL" }
+      {
+        "id": "m3",
+        "className": "gd",
+        "title": "3. Gestión Documental",
+        "desc": "Contratos, anexos, respaldos y trazabilidad documental asociada al ciclo.",
+        "sections": [
+          { "id": "g1", "title": "Documentación Laboral", "tasks": ["Contratos / Anexos / Aviso DT", "Firmas / Versionado / Vigencias"] },
+          { "id": "g2", "title": "Respaldo del Ciclo", "tasks": ["Centralizaciones / Reportes / Comprobantes", "Auditoría y trazabilidad"] }
+        ]
+      }
     ]
-  };
-
-  let model = loadModel() ?? structuredClone(DEFAULT_MODEL);
-  let viewMode = localStorage.getItem(VIEW_KEY) || "vertical";
-
-  const canvas = document.getElementById("canvas");
-  const modal = document.getElementById("modal");
-  const mText = document.getElementById("mText");
-  const mNote = document.getElementById("mNote");
-  let modalCtx = null;
-
-  function openModal(ctx, text, note){
-    modalCtx = ctx;
-    mText.value = text ?? "";
-    mNote.value = note ?? "";
-    modal.style.display = "flex";
-    mText.focus();
   }
-  function closeModal(){ modal.style.display = "none"; modalCtx = null; }
+  </script>
 
-  document.getElementById("mCancel").onclick = closeModal;
-  document.getElementById("mOk").onclick = () => {
-    if(!modalCtx) return closeModal();
-    const newText = mText.value.trim() || "(sin texto)";
-    const newNote = mNote.value.trim();
+  <script>
+    const STORAGE_KEY = "flujo_rrhh_nomina_macro_v2";
+    const flow = document.getElementById("flow");
+    const q = document.getElementById("q");
+    const uid = () => (Math.random().toString(16).slice(2) + Date.now().toString(16));
 
-    if(modalCtx.kind === "node"){
-      const n = model.nodes[modalCtx.nodeIndex];
-      n.text = newText;
-      if(newNote) n.note = newNote; else delete n.note;
-    }else if(modalCtx.kind === "branch"){
-      const d = model.nodes[modalCtx.nodeIndex];
-      d.branches[modalCtx.branchIndex].label = newText;
-    }else{
-      const d = model.nodes[modalCtx.nodeIndex];
-      const item = d.branches[modalCtx.branchIndex].items[modalCtx.itemIndex];
-      item.text = newText;
-      if(newNote) item.note = newNote; else delete item.note;
+    function loadDefault(){ return JSON.parse(document.getElementById("INITIAL_MODEL").textContent); }
+    function loadModel(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return loadDefault();
+        const parsed = JSON.parse(raw);
+        if(!parsed || !parsed.macros) return loadDefault();
+        return parsed;
+      }catch(e){ return loadDefault(); }
     }
-    saveModel(); render(); closeModal();
-  };
+    function saveModel(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(model)); }
+    let model = loadModel();
 
-  window.addEventListener("keydown",(e)=>{ if(e.key==="Escape" && modal.style.display==="flex") closeModal(); });
+    function esc(s){
+      return (s ?? "").toString()
+        .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+    }
 
-  function btn(label, onClick, cls){
-    const b = document.createElement("button");
-    if(cls) b.className = cls;
-    b.textContent = label;
-    b.onclick = (e)=>{ e.stopPropagation(); onClick(); };
-    return b;
-  }
+    function render(){
+      document.querySelector('[data-path="page.title"]').textContent = model.page?.title || "Ciclo";
+      flow.innerHTML = "";
 
-  function setView(mode){
-    viewMode = mode;
-    localStorage.setItem(VIEW_KEY, viewMode);
-    document.getElementById("btnToggle").textContent = "Vista: " + (viewMode === "vertical" ? "Vertical" : "Horizontal");
-    render();
-  }
+      const macros = model.macros || [];
+      macros.forEach((m, i) => {
+        const macro = document.createElement("div");
+        macro.className = `macro ${m.className || ""}`;
+        macro.setAttribute("data-macro", m.id);
 
-  function render(){
-    canvas.className = "canvas " + viewMode;
-    canvas.innerHTML = "";
+        const isNomina = (m.id === "m2");
 
-    if(viewMode === "horizontal"){
-      const track = document.createElement("div");
-      track.className = "track";
+        macro.innerHTML = `
+          <div class="macro-title" contenteditable="true" data-path="macros.${m.id}.title">${esc(m.title || "")}</div>
+          <div class="macro-desc" contenteditable="true" data-path="macros.${m.id}.desc">${esc(m.desc || "")}</div>
 
-      model.nodes.forEach((n, idx) => {
-        if(n.type === "decision"){
-          track.appendChild(renderDecisionHorizontal(n, idx));
-        }else{
-          track.appendChild(renderNodeLinear(n, idx, true));
-        }
+          <div class="macro-actions">
+            ${
+              isNomina
+                ? `<button class="btn" data-action="addSubprocess" data-macro="${esc(m.id)}">+ Subproceso</button>`
+                : `<button class="btn" data-action="addSection" data-macro="${esc(m.id)}">+ Proceso</button>`
+            }
+          </div>
 
-        if(idx < model.nodes.length - 1){
-          const arr = document.createElement("div");
-          arr.className = "arrowH";
-          arr.textContent = "→";
-          track.appendChild(arr);
+          ${
+            isNomina
+              ? `
+                <div class="subflow">
+                  ${(m.subprocesses || []).map((sb) => `
+                    <div class="subblock ${esc(sb.className || "")}" data-sub="${esc(sb.id)}">
+                      <div class="subblock-title" contenteditable="true"
+                        data-path="macros.${m.id}.subprocesses.${sb.id}.title">${esc(sb.title || "")}</div>
+
+                      <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom: 10px;">
+                        <button class="btn" data-action="addSection" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}">+ Caja proceso</button>
+                        <button class="btn danger" data-action="deleteSubprocess" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}">Eliminar subproceso</button>
+                      </div>
+
+                      ${(sb.sections || []).map(sec => `
+                        <div class="process-box" data-section="${esc(sec.id)}">
+                          <div class="process-title">
+                            <span contenteditable="true"
+                              data-path="macros.${m.id}.subprocesses.${sb.id}.sections.${sec.id}.title">${esc(sec.title || "")}</span>
+                            <span class="process-tools">
+                              <button class="btn" data-action="addTask" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}" data-section="${esc(sec.id)}">+ Tarea</button>
+                              <button class="btn danger" data-action="deleteSection" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}" data-section="${esc(sec.id)}">Eliminar</button>
+                            </span>
+                          </div>
+
+                          ${(sec.tasks || []).map((t, ti) => `
+                            <div class="sub-task">
+                              <span contenteditable="true"
+                                data-path="macros.${m.id}.subprocesses.${sb.id}.sections.${sec.id}.tasks.${ti}">${esc(t)}</span>
+                              <button class="btn danger" data-action="deleteTask" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}" data-section="${esc(sec.id)}" data-task="${ti}">Eliminar</button>
+                            </div>
+                          `).join("")}
+                        </div>
+                      `).join("")}
+                    </div>
+                  `).join("")}
+                </div>
+              `
+              : `
+                <div class="process-list">
+                  ${(m.sections || []).map(sec => `
+                    <div class="process-box" data-section="${esc(sec.id)}">
+                      <div class="process-title">
+                        <span contenteditable="true" data-path="macros.${m.id}.sections.${sec.id}.title">${esc(sec.title || "")}</span>
+                        <span class="process-tools">
+                          <button class="btn" data-action="addTask" data-macro="${esc(m.id)}" data-section="${esc(sec.id)}">+ Tarea</button>
+                          <button class="btn danger" data-action="deleteSection" data-macro="${esc(m.id)}" data-section="${esc(sec.id)}">Eliminar</button>
+                        </span>
+                      </div>
+
+                      ${(sec.tasks || []).map((t, ti) => `
+                        <div class="sub-task">
+                          <span contenteditable="true" data-path="macros.${m.id}.sections.${sec.id}.tasks.${ti}">${esc(t)}</span>
+                          <button class="btn danger" data-action="deleteTask" data-macro="${esc(m.id)}" data-section="${esc(sec.id)}" data-task="${ti}">Eliminar</button>
+                        </div>
+                      `).join("")}
+                    </div>
+                  `).join("")}
+                </div>
+              `
+          }
+        `;
+
+        flow.appendChild(macro);
+
+        if(i < macros.length - 1){
+          const conn = document.createElement("div");
+          conn.className = "connector";
+          conn.textContent = "➔";
+          flow.appendChild(conn);
         }
       });
 
-      canvas.appendChild(track);
-    }else{
-      model.nodes.forEach((n, idx) => {
-        canvas.appendChild(renderNodeVertical(n, idx));
-        if(idx < model.nodes.length - 1){
-          const arr = document.createElement("div");
-          arr.className = "arrowV";
-          arr.textContent = "↓";
-          canvas.appendChild(arr);
+      applyFilter();
+    }
+
+    function setByPath(path, value){
+      if(!path) return;
+      const p = path.split(".");
+
+      if(p[0] === "page" && p[1] === "title"){ model.page.title = value; return; }
+
+      if(p[0] !== "macros") return;
+      const macroId = p[1];
+      const m = (model.macros || []).find(x => x.id === macroId);
+      if(!m) return;
+
+      if(p[2] === "title"){ m.title = value; return; }
+      if(p[2] === "desc"){ m.desc = value; return; }
+
+      if(p[2] === "sections"){
+        const secId = p[3];
+        const sec = (m.sections || []).find(x => x.id === secId);
+        if(!sec) return;
+        if(p[4] === "title"){ sec.title = value; return; }
+        if(p[4] === "tasks"){
+          const idx = Number(p[5]);
+          if(!Array.isArray(sec.tasks)) sec.tasks = [];
+          sec.tasks[idx] = value;
         }
-      });
-    }
-  }
+      }
 
-  function renderNodeLinear(n, idx, isHorizontal){
-    const el = document.createElement("div");
-    el.className = "node " + (n.type || "step");
+      if(p[2] === "subprocesses"){
+        const subId = p[3];
+        const sb = (m.subprocesses || []).find(x => x.id === subId);
+        if(!sb) return;
+        if(p[4] === "title"){ sb.title = value; return; }
 
-    const text = document.createElement("div");
-    text.className = "text";
-    text.style.padding = isHorizontal ? "0 84px" : "0 120px";
-    text.textContent = n.text || "(sin texto)";
-    el.appendChild(text);
-
-    if(n.note){
-      const note = document.createElement("div");
-      note.className = "note";
-      const pill = document.createElement("span");
-      pill.textContent = n.note;
-      note.appendChild(pill);
-      el.appendChild(note);
-    }
-
-    const move = document.createElement("div");
-    move.className = "move";
-    if(n.type !== "start" && n.type !== "end"){
-      move.appendChild(btn("↑", ()=>moveNode(idx,-1)));
-      move.appendChild(btn("↓", ()=>moveNode(idx,+1)));
-    }
-    el.appendChild(move);
-
-    const controls = document.createElement("div");
-    controls.className = "controls";
-    if(n.type !== "end"){
-      controls.appendChild(btn("+STEP", ()=>addNodeAfter(idx,"step"), "chip"));
-      controls.appendChild(btn("+DEC", ()=>addNodeAfter(idx,"decision"), "chip"));
-    }
-    if(n.type !== "start" && n.type !== "end"){
-      controls.appendChild(btn("🗑", ()=>deleteNode(idx), "del"));
-    }
-    el.appendChild(controls);
-
-    el.ondblclick = ()=>openModal({kind:"node", nodeIndex: idx}, n.text, n.note);
-
-    return el;
-  }
-
-  function renderNodeVertical(n, idx){
-    if(n.type !== "decision"){
-      return renderNodeLinear(n, idx, false);
-    }
-
-    const el = document.createElement("div");
-    el.className = "node decision";
-
-    const text = document.createElement("div");
-    text.className = "text";
-    text.textContent = n.text || "(sin texto)";
-    el.appendChild(text);
-
-    const move = document.createElement("div");
-    move.className = "move";
-    move.appendChild(btn("↑", ()=>moveNode(idx,-1)));
-    move.appendChild(btn("↓", ()=>moveNode(idx,+1)));
-    el.appendChild(move);
-
-    const controls = document.createElement("div");
-    controls.className = "controls";
-    controls.appendChild(btn("+STEP", ()=>addNodeAfter(idx,"step"), "chip"));
-    controls.appendChild(btn("+DEC", ()=>addNodeAfter(idx,"decision"), "chip"));
-    controls.appendChild(btn("🗑", ()=>deleteNode(idx), "del"));
-    el.appendChild(controls);
-
-    el.ondblclick = ()=>openModal({kind:"node", nodeIndex: idx}, n.text, n.note);
-
-    const branches = document.createElement("div");
-    branches.className = "branchesV";
-
-    (n.branches || []).forEach((b, bIdx)=>{
-      const br = document.createElement("div");
-      br.className = "branchCard";
-
-      const h = document.createElement("h3");
-      const lbl = document.createElement("span");
-      lbl.className = "lbl";
-      lbl.textContent = b.label || "Rama";
-      h.appendChild(lbl);
-
-      const bBtns = document.createElement("span");
-      bBtns.className = "bBtns";
-      bBtns.appendChild(btn("Editar", ()=>openModal({kind:"branch", nodeIndex: idx, branchIndex: bIdx}, b.label, "")));
-      bBtns.appendChild(btn("🗑", ()=>delBranch(idx, bIdx), "del"));
-      h.appendChild(bBtns);
-
-      br.appendChild(h);
-
-      (b.items || []).forEach((it, itIdx)=>{
-        const item = document.createElement("div");
-        item.className = "item";
-        const t = document.createElement("div");
-        t.className = "itemText";
-        t.textContent = it.text || "(sin texto)";
-        item.appendChild(t);
-
-        if(it.note){
-          const nn = document.createElement("div");
-          nn.className = "note";
-          nn.style.textAlign = "left";
-          const pill = document.createElement("span");
-          pill.textContent = it.note;
-          nn.appendChild(pill);
-          item.appendChild(nn);
+        if(p[4] === "sections"){
+          const secId = p[5];
+          const sec = (sb.sections || []).find(x => x.id === secId);
+          if(!sec) return;
+          if(p[6] === "title"){ sec.title = value; return; }
+          if(p[6] === "tasks"){
+            const idx = Number(p[7]);
+            if(!Array.isArray(sec.tasks)) sec.tasks = [];
+            sec.tasks[idx] = value;
+          }
         }
+      }
+    }
 
-        const ic = document.createElement("div");
-        ic.className = "itemControls";
-        ic.appendChild(btn("+", ()=>addBranchItem(idx, bIdx, itIdx), "add"));
-        ic.appendChild(btn("🗑", ()=>delBranchItem(idx, bIdx, itIdx), "del"));
-        item.appendChild(ic);
-
-        item.ondblclick = ()=>openModal({kind:"branchItem", nodeIndex: idx, branchIndex: bIdx, itemIndex: itIdx}, it.text, it.note);
-
-        br.appendChild(item);
-      });
-
-      const addBtn = document.createElement("button");
-      addBtn.className = "addInBranch";
-      addBtn.textContent = "+ Agregar STEP en rama";
-      addBtn.onclick = ()=>addBranchItem(idx, bIdx, (b.items?.length ?? 0) - 1);
-      br.appendChild(addBtn);
-
-      branches.appendChild(br);
+    document.addEventListener("input", (ev) => {
+      const el = ev.target;
+      const path = el?.getAttribute?.("data-path");
+      if(!path) return;
+      setByPath(path, el.textContent);
+      saveModel();
     });
 
-    el.appendChild(branches);
+    // CRUD
+    function addSection(macroId, subId){
+      const m = model.macros.find(x => x.id === macroId);
+      if(!m) return;
 
-    const tools = document.createElement("div");
-    tools.className = "decisionTools";
-    tools.appendChild(btn("+ BRANCH", ()=>addBranch(idx), ""));
-    el.appendChild(tools);
+      if(subId){
+        const sb = (m.subprocesses || []).find(x => x.id === subId);
+        if(!sb) return;
+        if(!Array.isArray(sb.sections)) sb.sections = [];
+        sb.sections.push({ id: "s_" + uid(), title: "Nuevo proceso", tasks: ["Nueva tarea"] });
+        saveModel(); render();
+        return;
+      }
 
-    return el;
-  }
-
-  function renderDecisionHorizontal(n, idx){
-    const group = document.createElement("div");
-    group.className = "decisionGroup";
-
-    // Columna izquierda: rombo
-    const left = document.createElement("div");
-    left.className = "diamondWrap";
-
-    const diamond = document.createElement("div");
-    diamond.className = "diamond";
-
-    const label = document.createElement("div");
-    label.className = "label";
-    label.textContent = n.text || "(sin texto)";
-    diamond.appendChild(label);
-
-    const dControls = document.createElement("div");
-    dControls.className = "dControls";
-    dControls.appendChild(btn("+STEP", ()=>addNodeAfter(idx,"step"), "chip"));
-    dControls.appendChild(btn("+DEC", ()=>addNodeAfter(idx,"decision"), "chip"));
-    dControls.appendChild(btn("🗑", ()=>deleteNode(idx), "del"));
-    diamond.appendChild(dControls);
-
-    diamond.ondblclick = ()=>openModal({kind:"node", nodeIndex: idx}, n.text, n.note);
-
-    left.appendChild(diamond);
-    group.appendChild(left);
-
-    // Columna central: ramas
-    const mid = document.createElement("div");
-    mid.className = "branchLane";
-
-    (n.branches || []).forEach((b, bIdx)=>{
-      const row = document.createElement("div");
-      row.className = "branchRow";
-
-      const arr = document.createElement("div");
-      arr.className = "branchArrow";
-      arr.textContent = "↘";
-      row.appendChild(arr);
-
-      const card = document.createElement("div");
-      card.className = "branchCard";
-
-      const h = document.createElement("h3");
-      const lbl = document.createElement("span");
-      lbl.className = "lbl";
-      lbl.textContent = b.label || "Rama";
-      h.appendChild(lbl);
-
-      const bBtns = document.createElement("span");
-      bBtns.className = "bBtns";
-      bBtns.appendChild(btn("Editar", ()=>openModal({kind:"branch", nodeIndex: idx, branchIndex: bIdx}, b.label, "")));
-      bBtns.appendChild(btn("🗑", ()=>delBranch(idx, bIdx), "del"));
-      h.appendChild(bBtns);
-
-      card.appendChild(h);
-
-      (b.items || []).forEach((it, itIdx)=>{
-        const item = document.createElement("div");
-        item.className = "item";
-
-        const t = document.createElement("div");
-        t.className = "itemText";
-        t.textContent = it.text || "(sin texto)";
-        item.appendChild(t);
-
-        if(it.note){
-          const nn = document.createElement("div");
-          nn.className = "note";
-          nn.style.textAlign = "left";
-          const pill = document.createElement("span");
-          pill.textContent = it.note;
-          nn.appendChild(pill);
-          item.appendChild(nn);
-        }
-
-        const ic = document.createElement("div");
-        ic.className = "itemControls";
-        ic.appendChild(btn("+", ()=>addBranchItem(idx, bIdx, itIdx), "add"));
-        ic.appendChild(btn("🗑", ()=>delBranchItem(idx, bIdx, itIdx), "del"));
-        item.appendChild(ic);
-
-        item.ondblclick = ()=>openModal({kind:"branchItem", nodeIndex: idx, branchIndex: bIdx, itemIndex: itIdx}, it.text, it.note);
-
-        card.appendChild(item);
-      });
-
-      const addBtn = document.createElement("button");
-      addBtn.className = "addInBranch";
-      addBtn.textContent = "+ Agregar STEP en rama";
-      addBtn.onclick = ()=>addBranchItem(idx, bIdx, (b.items?.length ?? 0) - 1);
-      card.appendChild(addBtn);
-
-      row.appendChild(card);
-      mid.appendChild(row);
-    });
-
-    const addBranchBtn = document.createElement("div");
-    addBranchBtn.className = "decisionTools";
-    addBranchBtn.appendChild(btn("+ BRANCH", ()=>addBranch(idx), ""));
-    mid.appendChild(addBranchBtn);
-
-    group.appendChild(mid);
-
-    // Columna derecha: merge
-    const right = document.createElement("div");
-    right.className = "mergeWrap";
-
-    const mergeCol = document.createElement("div");
-    mergeCol.style.display = "flex";
-    mergeCol.style.flexDirection = "column";
-    mergeCol.style.alignItems = "center";
-
-    const merge = document.createElement("div");
-    merge.className = "mergeNode";
-    merge.textContent = "⋈";
-    mergeCol.appendChild(merge);
-
-    const mh = document.createElement("div");
-    mh.className = "mergeHint";
-    mh.textContent = "converge";
-    mergeCol.appendChild(mh);
-
-    right.appendChild(mergeCol);
-    group.appendChild(right);
-
-    // Botones de mover decisión completa
-    const mover = document.createElement("div");
-    mover.style.position = "absolute";
-    mover.style.left = "6px";
-    mover.style.top = "-4px";
-    mover.style.display = "flex";
-    mover.style.gap = "6px";
-
-    const up = btn("↑", ()=>moveNode(idx,-1));
-    const down = btn("↓", ()=>moveNode(idx,+1));
-    up.style.padding = "4px 6px"; down.style.padding = "4px 6px";
-    up.style.borderRadius = "9px"; down.style.borderRadius = "9px";
-    mover.appendChild(up); mover.appendChild(down);
-
-    group.appendChild(mover);
-
-    return group;
-  }
-
-  // Ops
-  function addNodeAfter(index, kind){
-    if(kind === "step"){
-      model.nodes.splice(index+1, 0, {type:"step", text:"Nueva actividad"});
-    }else{
-      model.nodes.splice(index+1, 0, {
-        type:"decision",
-        text:"Nueva decisión",
-        branches:[
-          { label:"Opción A", items:[{text:"Paso A1"}] },
-          { label:"Opción B", items:[{text:"Paso B1"}] }
-        ]
-      });
-    }
-    saveModel(); render();
-  }
-
-  function deleteNode(index){
-    const n = model.nodes[index];
-    if(n.type === "decision"){
-      if(!confirm("Eliminar DECISIÓN completa con sus ramas. ¿Continuar?")) return;
-    }
-    model.nodes.splice(index,1);
-    saveModel(); render();
-  }
-
-  function moveNode(index, delta){
-    const newIndex = index + delta;
-    if(newIndex < 0 || newIndex >= model.nodes.length) return;
-    if(model.nodes[index].type === "start" || model.nodes[index].type === "end") return;
-    if(model.nodes[newIndex].type === "start" || model.nodes[newIndex].type === "end") return;
-    const [it] = model.nodes.splice(index,1);
-    model.nodes.splice(newIndex,0,it);
-    saveModel(); render();
-  }
-
-  function addBranch(nodeIndex){
-    const d = model.nodes[nodeIndex];
-    if(!d.branches) d.branches = [];
-    d.branches.push({ label:"Nueva rama", items:[{text:"Nuevo STEP"}] });
-    saveModel(); render();
-  }
-  function delBranch(nodeIndex, branchIndex){
-    const d = model.nodes[nodeIndex];
-    if((d.branches?.length ?? 0) <= 1){ alert("Una decisión debe tener al menos 1 rama."); return; }
-    d.branches.splice(branchIndex,1);
-    saveModel(); render();
-  }
-  function addBranchItem(nodeIndex, branchIndex, afterIndex){
-    const d = model.nodes[nodeIndex];
-    const b = d.branches[branchIndex];
-    if(!b.items) b.items = [];
-    const at = Math.max(0, (afterIndex ?? -1) + 1);
-    b.items.splice(at, 0, {text:"Nuevo STEP (rama)"});
-    saveModel(); render();
-  }
-  function delBranchItem(nodeIndex, branchIndex, itemIndex){
-    const d = model.nodes[nodeIndex];
-    d.branches[branchIndex].items.splice(itemIndex,1);
-    saveModel(); render();
-  }
-
-  function saveModel(){ localStorage.setItem(STORE_KEY, JSON.stringify(model)); }
-  function loadModel(){
-    try{
-      const raw = localStorage.getItem(STORE_KEY);
-      if(!raw) return null;
-      return JSON.parse(raw);
-    }catch{ return null; }
-  }
-
-  // Botones
-  document.getElementById("btnToggle").onclick = ()=>{
-    setView(viewMode === "vertical" ? "horizontal" : "vertical");
-  };
-
-  document.getElementById("btnAddStepTop").onclick = ()=>{
-    model.nodes.splice(1,0,{type:"step", text:"Nueva actividad"});
-    saveModel(); render();
-  };
-  document.getElementById("btnAddDecisionTop").onclick = ()=>{
-    model.nodes.splice(1,0,{
-      type:"decision",
-      text:"Nueva decisión",
-      branches:[{label:"Opción A", items:[{text:"Paso A1"}]},{label:"Opción B", items:[{text:"Paso B1"}]}]
-    });
-    saveModel(); render();
-  };
-
-  document.getElementById("btnReset").onclick = ()=>{
-    if(!confirm("Restaurar el flujo v1 y perder cambios actuales. ¿Continuar?")) return;
-    model = structuredClone(DEFAULT_MODEL);
-    saveModel(); render();
-  };
-
-  document.getElementById("btnExport").onclick = async ()=>{
-    const txt = JSON.stringify(model, null, 2);
-    try{ await navigator.clipboard.writeText(txt); alert("JSON copiado al portapapeles."); }
-    catch{ prompt("Copia este JSON:", txt); }
-  };
-
-  document.getElementById("btnImport").onclick = ()=>{
-    const txt = prompt("Pega aquí el JSON exportado:");
-    if(!txt) return;
-    try{
-      const obj = JSON.parse(txt);
-      if(!obj || !Array.isArray(obj.nodes)) throw new Error("Estructura inválida");
-      model = obj;
+      if(!Array.isArray(m.sections)) m.sections = [];
+      m.sections.push({ id: "s_" + uid(), title: "Nuevo proceso", tasks: ["Nueva tarea"] });
       saveModel(); render();
-      alert("Importado OK.");
-    }catch(e){
-      alert("No pude importar. Revisa el JSON.\n\nDetalle: " + (e.message || e));
     }
-  };
 
-  document.getElementById("btnToggle").textContent = "Vista: " + (viewMode === "vertical" ? "Vertical" : "Horizontal");
-  canvas.className = "canvas " + viewMode;
-  render();
-</script>
+    function deleteSection(macroId, sectionId, subId){
+      const m = model.macros.find(x => x.id === macroId);
+      if(!m) return;
+
+      if(subId){
+        const sb = (m.subprocesses || []).find(x => x.id === subId);
+        if(!sb) return;
+        sb.sections = (sb.sections || []).filter(x => x.id !== sectionId);
+        saveModel(); render();
+        return;
+      }
+
+      m.sections = (m.sections || []).filter(x => x.id !== sectionId);
+      saveModel(); render();
+    }
+
+    function addTask(macroId, sectionId, subId){
+      const m = model.macros.find(x => x.id === macroId);
+      if(!m) return;
+
+      if(subId){
+        const sb = (m.subprocesses || []).find(x => x.id === subId);
+        if(!sb) return;
+        const sec = (sb.sections || []).find(x => x.id === sectionId);
+        if(!sec) return;
+        if(!Array.isArray(sec.tasks)) sec.tasks = [];
+        sec.tasks.push("Nueva tarea");
+        saveModel(); render();
+        return;
+      }
+
+      const sec = (m.sections || []).find(x => x.id === sectionId);
+      if(!sec) return;
+      if(!Array.isArray(sec.tasks)) sec.tasks = [];
+      sec.tasks.push("Nueva tarea");
+      saveModel(); render();
+    }
+
+    function deleteTask(macroId, sectionId, idx, subId){
+      const m = model.macros.find(x => x.id === macroId);
+      if(!m) return;
+
+      if(subId){
+        const sb = (m.subprocesses || []).find(x => x.id === subId);
+        if(!sb) return;
+        const sec = (sb.sections || []).find(x => x.id === sectionId);
+        if(!sec || !Array.isArray(sec.tasks)) return;
+        sec.tasks.splice(idx, 1);
+        saveModel(); render();
+        return;
+      }
+
+      const sec = (m.sections || []).find(x => x.id === sectionId);
+      if(!sec || !Array.isArray(sec.tasks)) return;
+      sec.tasks.splice(idx, 1);
+      saveModel(); render();
+    }
+
+    function addSubprocess(macroId){
+      const m = model.macros.find(x => x.id === macroId);
+      if(!m) return;
+      if(!Array.isArray(m.subprocesses)) m.subprocesses = [];
+      const newId = "sb_" + uid();
+      m.subprocesses.push({
+        id: newId,
+        className: "b5",
+        title: "Nuevo subproceso",
+        sections: [{ id: "p_" + uid(), title: "Nuevo proceso", tasks: ["Nueva tarea"] }]
+      });
+      saveModel(); render();
+    }
+
+    function deleteSubprocess(macroId, subId){
+      const m = model.macros.find(x => x.id === macroId);
+      if(!m || !Array.isArray(m.subprocesses)) return;
+      m.subprocesses = m.subprocesses.filter(x => x.id !== subId);
+      saveModel(); render();
+    }
+
+    document.addEventListener("click", (ev) => {
+      const btn = ev.target.closest?.("button[data-action]");
+      if(!btn) return;
+
+      const a = btn.getAttribute("data-action");
+      const macroId = btn.getAttribute("data-macro");
+      const subId = btn.getAttribute("data-sub");
+      const sectionId = btn.getAttribute("data-section");
+      const taskIdx = btn.getAttribute("data-task");
+
+      if(a === "addSection") addSection(macroId, subId);
+      if(a === "deleteSection") deleteSection(macroId, sectionId, subId);
+      if(a === "addTask") addTask(macroId, sectionId, subId);
+      if(a === "deleteTask") deleteTask(macroId, sectionId, Number(taskIdx), subId);
+      if(a === "addSubprocess") addSubprocess(macroId);
+      if(a === "deleteSubprocess") deleteSubprocess(macroId, subId);
+    });
+
+    // Filtro
+    function applyFilter(){
+      const term = (q.value || "").trim().toLowerCase();
+      const macros = Array.from(document.querySelectorAll(".macro"));
+      const connectors = Array.from(document.querySelectorAll(".connector"));
+
+      if(!term){
+        macros.forEach(m => m.classList.remove("hide"));
+        connectors.forEach(c => c.classList.remove("hide"));
+        return;
+      }
+
+      macros.forEach(m => {
+        const hit = (m.innerText || m.textContent || "").toLowerCase().includes(term);
+        m.classList.toggle("hide", !hit);
+      });
+
+      connectors.forEach((c, idx) => {
+        const left = macros[idx];
+        const right = macros[idx+1];
+        const hide = (!left || left.classList.contains("hide")) || (!right || right.classList.contains("hide"));
+        c.classList.toggle("hide", hide);
+      });
+    }
+    q.addEventListener("input", applyFilter);
+
+    // Export / Import / Reset
+    document.getElementById("exportJson").addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(model, null, 2)], {type:"application/json;charset=utf-8"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = "flujo_macro_editable.json";
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById("importJson").addEventListener("click", () => {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "application/json";
+      input.onchange = async () => {
+        const file = input.files?.[0];
+        if(!file) return;
+        const text = await file.text();
+        try{
+          const parsed = JSON.parse(text);
+          if(!parsed || !parsed.macros) throw new Error("JSON inválido");
+          model = parsed;
+          saveModel();
+          render();
+        }catch(e){
+          alert("No pude importar: JSON inválido.");
+        }
+      };
+      input.click();
+    });
+
+    document.getElementById("exportHtml").addEventListener("click", () => {
+      const clone = document.documentElement.cloneNode(true);
+      const script = clone.querySelector("#INITIAL_MODEL");
+      script.textContent = "\n" + JSON.stringify(model, null, 2) + "\n";
+      const html = "<!doctype html>\n" + clone.outerHTML;
+      const blob = new Blob([html], {type:"text/html;charset=utf-8"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = "flujo_macro_editable.html";
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById("resetAll").addEventListener("click", () => {
+      localStorage.removeItem(STORAGE_KEY);
+      model = loadDefault();
+      saveModel();
+      render();
+    });
+
+    // boot
+    render();
+  </script>
 </body>
 </html>
