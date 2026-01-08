@@ -59,7 +59,7 @@
       position:absolute; right:8px; top:8px; display:flex; gap:6px;
     }
     .controls button{ padding:4px 6px; font-size:12px; border-radius:9px; }
-    .controls .chip{ border-color:#d7dde5; }
+    .controls .chip{ border-color:#cfd6df; }
     .controls .del{ border-color:#b23b3b; color:#b23b3b; }
 
     .move{
@@ -81,19 +81,20 @@
       display:grid;
       grid-template-columns: 220px 360px 120px;
       gap: 10px;
-      align-items:start;
+      align-items:center;          /* <- centramos todo verticalmente */
       padding-top: 8px;
       padding-bottom: 8px;
-      min-width: 740px; /* ensures decision looks stable */
+      min-width: 740px;
+      position:relative;
     }
 
     .diamondWrap{
       position:relative;
       width: 220px;
       display:flex;
-      align-items:flex-start;
+      align-items:center;          /* <- centrado respecto a ramas */
       justify-content:center;
-      padding-top: 16px;
+      padding-top: 0;              /* <- antes 16px */
     }
 
     .diamond{
@@ -140,14 +141,13 @@
       cursor:pointer;
     }
     .diamond .dControls .del{ border-color:#b23b3b; color:#b23b3b; }
-    .diamond .dControls .chip{ border-color:#d7dde5; }
+    .diamond .dControls .chip{ border-color:#cfd6df; }
 
-    /* arrows from diamond to branches */
     .branchLane{
       display:flex;
       flex-direction:column;
       gap:10px;
-      padding-top: 6px;
+      padding-top: 0;              /* <- sin offset raro */
     }
     .branchRow{
       display:grid;
@@ -213,9 +213,9 @@
 
     .mergeWrap{
       display:flex;
-      align-items:flex-start;
+      align-items:center;          /* <- centramos merge */
       justify-content:center;
-      padding-top: 58px;
+      padding-top: 0;              /* <- antes 58px */
       width: 120px;
     }
     .mergeNode{
@@ -239,7 +239,7 @@
       margin-top: 6px;
     }
 
-    /* ====== Vertical decision layout (keep simpler) ====== */
+    /* ====== Vertical decision layout ====== */
     .branchesV{
       display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px; margin-top:12px;
     }
@@ -277,7 +277,7 @@
     <button id="btnExport">Exportar JSON</button>
     <button id="btnImport">Importar JSON</button>
     <button class="danger" id="btnReset">Restaurar v1</button>
-    <div class="hint">Doble clic = editar • +STEP/+DEC • +BRANCH dentro de DECISION • Horizontal: ramas + convergencia</div>
+    <div class="hint">Doble clic = editar • +STEP/+DEC • +BRANCH dentro de DECISION</div>
   </div>
 </header>
 
@@ -303,7 +303,7 @@
 
 <script>
   const STORE_KEY = "flujo_editor_vh_bpmnlike_model";
-  const VIEW_KEY  = "flujo_editor_vh_bpmnlike_view"; // "vertical" | "horizontal"
+  const VIEW_KEY  = "flujo_editor_vh_bpmnlike_view";
 
   const DEFAULT_MODEL = {
     nodes: [
@@ -371,8 +371,6 @@
   let viewMode = localStorage.getItem(VIEW_KEY) || "vertical";
 
   const canvas = document.getElementById("canvas");
-
-  // Modal
   const modal = document.getElementById("modal");
   const mText = document.getElementById("mText");
   const mNote = document.getElementById("mNote");
@@ -507,7 +505,6 @@
   }
 
   function renderNodeVertical(n, idx){
-    // For vertical, we keep the decision as a card with branches (simple, still editable)
     if(n.type !== "decision"){
       return renderNodeLinear(n, idx, false);
     }
@@ -608,7 +605,7 @@
     const group = document.createElement("div");
     group.className = "decisionGroup";
 
-    // Left: diamond
+    // Columna izquierda: rombo
     const left = document.createElement("div");
     left.className = "diamondWrap";
 
@@ -632,7 +629,7 @@
     left.appendChild(diamond);
     group.appendChild(left);
 
-    // Middle: branches down
+    // Columna central: ramas
     const mid = document.createElement("div");
     mid.className = "branchLane";
 
@@ -702,7 +699,6 @@
       mid.appendChild(row);
     });
 
-    // tool: add branch
     const addBranchBtn = document.createElement("div");
     addBranchBtn.className = "decisionTools";
     addBranchBtn.appendChild(btn("+ BRANCH", ()=>addBranch(idx), ""));
@@ -710,7 +706,7 @@
 
     group.appendChild(mid);
 
-    // Right: merge
+    // Columna derecha: merge
     const right = document.createElement("div");
     right.className = "mergeWrap";
 
@@ -732,18 +728,11 @@
     right.appendChild(mergeCol);
     group.appendChild(right);
 
-    // Move controls (for decision group) - placed on container with small overlay
-    // Keep it simple: click group background not to move; use keyboard? We'll add small move buttons near left
-    const move = document.createElement("div");
-    move.style.position = "absolute";
-    move.style.marginLeft = "6px";
-
-    // We'll attach move controls to left wrap using existing header controls?:
-    // (simple) add small move buttons above diamond wrap
+    // Botones de mover decisión completa
     const mover = document.createElement("div");
     mover.style.position = "absolute";
     mover.style.left = "6px";
-    mover.style.top = "0px";
+    mover.style.top = "-4px";
     mover.style.display = "flex";
     mover.style.gap = "6px";
 
@@ -753,13 +742,12 @@
     up.style.borderRadius = "9px"; down.style.borderRadius = "9px";
     mover.appendChild(up); mover.appendChild(down);
 
-    group.style.position = "relative";
     group.appendChild(mover);
 
     return group;
   }
 
-  // Operations
+  // Ops
   function addNodeAfter(index, kind){
     if(kind === "step"){
       model.nodes.splice(index+1, 0, {type:"step", text:"Nueva actividad"});
@@ -821,7 +809,6 @@
     saveModel(); render();
   }
 
-  // Persistence
   function saveModel(){ localStorage.setItem(STORE_KEY, JSON.stringify(model)); }
   function loadModel(){
     try{
@@ -831,7 +818,7 @@
     }catch{ return null; }
   }
 
-  // Buttons
+  // Botones
   document.getElementById("btnToggle").onclick = ()=>{
     setView(viewMode === "vertical" ? "horizontal" : "vertical");
   };
@@ -875,11 +862,9 @@
     }
   };
 
-  // init
   document.getElementById("btnToggle").textContent = "Vista: " + (viewMode === "vertical" ? "Vertical" : "Horizontal");
   canvas.className = "canvas " + viewMode;
   render();
 </script>
 </body>
 </html>
-
