@@ -44,6 +44,7 @@
     }
     .btn:hover { background:#f9f9f9; }
     .danger { border-color: rgba(220,38,38,0.25); color:#b91c1c; }
+    .primary { border-color: rgba(37,99,235,0.3); color:#1d4ed8; }
 
     .toolbar { display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap; margin: 0 0 18px; }
     .toolbar input{
@@ -92,11 +93,15 @@
       font-size: 0.8em; color: #666; display:flex; justify-content:space-between; gap:10px; align-items:flex-start;
     }
 
+    /* ===== Colores ===== */
     .b1 { background-color: #e3f2fd; border-top: 5px solid #1976d2; }
     .b1 .macro-title { background-color: #1976d2; }
 
     .nomina { background-color: #fafafa; border-top: 5px solid #455a64; }
     .nomina .macro-title { background-color: #455a64; }
+
+    .gd { background-color: #eef2ff; border-top: 5px solid #4f46e5; }
+    .gd .macro-title { background-color: #4f46e5; }
 
     .b2 { background-color: #fff3e0; border-top: 5px solid #fb8c00; }
     .b2 .subblock-title { background-color: #fb8c00; }
@@ -109,9 +114,8 @@
 
     .b5 { background-color: #eceff1; border-top: 5px solid #607d8b; }
     .b5 .subblock-title { background-color: #607d8b; }
-
-    .gd { background-color: #eef2ff; border-top: 5px solid #4f46e5; }
-    .gd .macro-title { background-color: #4f46e5; }
+    /* FIX: macro-title para b5 (si un macro usa b5) */
+    .b5 .macro-title { background-color: #607d8b; }
 
     .connector { display: flex; align-items: center; justify-content: center; min-width: 30px; font-size: 24px; color: #ccc; }
 
@@ -121,34 +125,61 @@
       padding: 2px 4px;
       margin: -2px -4px;
     }
+
+    /* ====== EDICIÓN LEGIBLE: SIEMPRE NEGRO AL EDITAR ====== */
     [contenteditable="true"]:focus{
       box-shadow: 0 0 0 2px rgba(25,118,210,0.25);
-      background: rgba(255,255,255,0.85);
+      background: #ffffff !important;
+      color: #111 !important;
+      caret-color: #111 !important;
+      text-shadow: none !important;
     }
+
+    .macro-title[contenteditable="true"]:focus,
+    .subblock-title[contenteditable="true"]:focus{
+      display: inline-block;
+      max-width: 100%;
+    }
+
     .hide { display:none !important; }
 
-    /* OCULTAR BOTONES EN EXPORT */
+    /* =================== EXPORT =================== */
     body.exporting .no-export { display:none !important; }
-    body.exporting [contenteditable="true"]{ box-shadow:none !important; background:transparent !important; }
 
-    /* Mejora nitidez en captura (fuerza renderizado estable) */
+    body.exporting [contenteditable="true"]{
+      box-shadow: none !important;
+      outline: none !important;
+      background: initial !important;
+      color: initial !important;
+      caret-color: initial !important;
+    }
+
+    body.exporting .flow-container,
+    body.exporting .subflow{
+      overflow: visible !important;
+    }
+
     body.exporting #captureArea{
+      width: max-content !important;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       text-rendering: geometricPrecision;
     }
   </style>
 </head>
-<body>
 
+<body>
   <div class="no-export">
     <h1 contenteditable="true" data-path="page.title">Ciclo de Gestión de Personas y Nómina</h1>
     <p class="hint">
-      ✅ Export PNG/PDF más nítido: se captura a alta resolución (DPR) y PDF en varias páginas si hace falta.
+      ✅ Al crear un <b>Bloque</b> o <b>Subproceso</b>, el sistema asigna un <b>color distinto</b> (primero usa los no ocupados, luego rota).<br>
+      ✅ Al editar, el texto pasa a <b>negro</b> para que se lea perfecto.
     </p>
 
     <div class="toolbar">
       <input id="q" type="search" placeholder="Buscar en todo el flujo..." />
+      <button class="btn primary" id="addMacro">+ Bloque</button>
+      <button class="btn danger" id="deleteMacro">Eliminar bloque</button>
       <button class="btn" id="exportHtml">Exportar HTML</button>
       <button class="btn" id="exportPng">Exportar PNG (HD)</button>
       <button class="btn" id="exportPdf">Exportar PDF (HD)</button>
@@ -249,12 +280,11 @@
   </script>
 
   <script>
-    const STORAGE_KEY = "flujo_rrhh_nomina_macro_v5";
+    const STORAGE_KEY = "flujo_rrhh_nomina_macro_v8";
     const flow = document.getElementById("flow");
     const q = document.getElementById("q");
     const exportTitle = document.getElementById("exportTitle");
     const captureArea = document.getElementById("captureArea");
-
     const uid = () => (Math.random().toString(16).slice(2) + Date.now().toString(16));
 
     function loadDefault(){ return JSON.parse(document.getElementById("INITIAL_MODEL").textContent); }
@@ -270,6 +300,10 @@
     function saveModel(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(model)); }
     let model = loadModel();
 
+    // Paletas separadas: macro vs subproceso
+    const MACRO_PALETTE = ["b1", "nomina", "gd", "b5"];
+    const SUBPROC_PALETTE = ["b2", "b3", "b4", "b5"];
+
     function esc(s){
       return (s ?? "").toString()
         .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
@@ -284,9 +318,33 @@
       });
     }
 
+    // ===== Selección de color (primero el que NO está usado, si todos usados rota) =====
+    function pickClass(palette, usedSet){
+      for(const c of palette){
+        if(!usedSet.has(c)) return c;
+      }
+      // si todos están usados: rota según cantidad existente para que vaya variando
+      return palette[usedSet.size % palette.length] || palette[0];
+    }
+
+    function getUsedMacroClasses(){
+      const used = new Set();
+      (model.macros || []).forEach(m => used.add(m.className || ""));
+      return used;
+    }
+
+    function getUsedSubprocClasses(macroId){
+      const used = new Set();
+      const m = (model.macros || []).find(x => x.id === macroId);
+      if(!m) return used;
+      (m.subprocesses || []).forEach(sb => used.add(sb.className || ""));
+      return used;
+    }
+
     function render(){
       const title = model.page?.title || "Ciclo";
-      document.querySelector('[data-path="page.title"]').textContent = title;
+      const titleEl = document.querySelector('[data-path="page.title"]');
+      if(titleEl && titleEl !== document.activeElement) titleEl.textContent = title;
       exportTitle.textContent = title;
 
       flow.innerHTML = "";
@@ -305,6 +363,7 @@
 
           <div class="macro-actions no-export">
             <button class="btn" data-action="addSubprocess" data-macro="${esc(m.id)}">+ Subproceso</button>
+            <button class="btn danger" data-action="deleteMacroInline" data-macro="${esc(m.id)}">Eliminar bloque</button>
           </div>
 
           <div class="subflow" data-subflow="${esc(m.id)}">
@@ -362,7 +421,12 @@
       if(!path) return;
       const p = path.split(".");
 
-      if(p[0] === "page" && p[1] === "title"){ model.page.title = value; saveModel(); render(); return; }
+      if(p[0] === "page" && p[1] === "title"){
+        model.page.title = value;
+        saveModel();
+        exportTitle.textContent = value || "";
+        return;
+      }
 
       if(p[0] !== "macros") return;
       const macroId = p[1];
@@ -401,27 +465,33 @@
       setByPath(path, el.textContent);
     });
 
-    // CRUD
+    // ===== CRUD =====
     function addSubprocess(macroId){
       const m = model.macros.find(x => x.id === macroId);
       if(!m) return;
       ensureSubprocesses(m);
 
+      // color distinto dentro del macro
+      const used = getUsedSubprocClasses(macroId);
+      const cls = pickClass(SUBPROC_PALETTE, used);
+
       const newId = "sb_" + uid();
       m.subprocesses.push({
         id: newId,
-        className: "b5",
+        className: cls,
         title: "Nuevo subproceso",
         sections: [{ id: "p_" + uid(), title: "Nuevo proceso", tasks: ["Nueva tarea"] }]
       });
       saveModel(); render();
     }
+
     function deleteSubprocess(macroId, subId){
       const m = model.macros.find(x => x.id === macroId);
       if(!m || !Array.isArray(m.subprocesses)) return;
       m.subprocesses = m.subprocesses.filter(x => x.id !== subId);
       saveModel(); render();
     }
+
     function addSection(macroId, subId){
       const m = model.macros.find(x => x.id === macroId);
       if(!m) return;
@@ -431,6 +501,7 @@
       sb.sections.push({ id: "s_" + uid(), title: "Nuevo proceso", tasks: ["Nueva tarea"] });
       saveModel(); render();
     }
+
     function deleteSection(macroId, subId, sectionId){
       const m = model.macros.find(x => x.id === macroId);
       if(!m) return;
@@ -439,6 +510,7 @@
       sb.sections = (sb.sections || []).filter(x => x.id !== sectionId);
       saveModel(); render();
     }
+
     function addTask(macroId, subId, sectionId){
       const m = model.macros.find(x => x.id === macroId);
       if(!m) return;
@@ -449,6 +521,7 @@
       sec.tasks.push("Nueva tarea");
       saveModel(); render();
     }
+
     function deleteTask(macroId, subId, sectionId, idx){
       const m = model.macros.find(x => x.id === macroId);
       if(!m) return;
@@ -458,6 +531,50 @@
       sec.tasks.splice(idx, 1);
       saveModel(); render();
     }
+
+    // ===== Agregar / Eliminar BLOQUE (macro) con color distinto =====
+    function addMacro(){
+      const used = getUsedMacroClasses();
+      const cls = pickClass(MACRO_PALETTE, used);
+
+      const newId = "m_" + uid();
+
+      // Subproceso inicial también con color distinto dentro de ese macro
+      const spCls = pickClass(SUBPROC_PALETTE, new Set());
+
+      model.macros.push({
+        id: newId,
+        className: cls,
+        title: "Nuevo Bloque",
+        desc: "Descripción del bloque",
+        subprocesses: [
+          {
+            id: "sb_" + uid(),
+            className: spCls,
+            title: "Subproceso",
+            sections: [{ id: "s_" + uid(), title: "Proceso", tasks: ["Tarea"] }]
+          }
+        ]
+      });
+
+      saveModel(); render();
+    }
+
+    function deleteMacroById(macroId){
+      if(!macroId) return;
+      if(model.macros.length <= 1){
+        alert("No puedes eliminar el último bloque.");
+        return;
+      }
+      model.macros = model.macros.filter(m => m.id !== macroId);
+      saveModel(); render();
+    }
+
+    document.getElementById("addMacro").addEventListener("click", addMacro);
+    document.getElementById("deleteMacro").addEventListener("click", () => {
+      const last = model.macros[model.macros.length - 1];
+      deleteMacroById(last?.id);
+    });
 
     document.addEventListener("click", (ev) => {
       const btn = ev.target.closest?.("button[data-action]");
@@ -475,9 +592,10 @@
       if(a === "deleteSection") deleteSection(macroId, subId, sectionId);
       if(a === "addTask") addTask(macroId, subId, sectionId);
       if(a === "deleteTask") deleteTask(macroId, subId, sectionId, Number(taskIdx));
+      if(a === "deleteMacroInline") deleteMacroById(macroId);
     });
 
-    // Drag & Drop reordenar subprocesos
+    // ===== Drag & Drop: reordenar subprocesos =====
     function wireDnDAllMacros(){
       (model.macros || []).forEach(m => {
         const container = document.querySelector(`.subflow[data-subflow="${CSS.escape(m.id)}"]`);
@@ -537,7 +655,7 @@
       });
     }
 
-    // Filtro
+    // ===== Filtro =====
     function applyFilter(){
       const term = (q.value || "").trim().toLowerCase();
       const macrosEls = Array.from(document.querySelectorAll(".macro"));
@@ -563,7 +681,7 @@
     }
     q.addEventListener("input", applyFilter);
 
-    // ===== Export (más nítido) =====
+    // ===== Export =====
     function downloadBlob(blob, filename){
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -574,9 +692,8 @@
     function setExporting(on){ document.body.classList.toggle("exporting", !!on); }
 
     function getDeviceScale(){
-      // DPR alto mejora mucho nitidez; capeo para evitar canvas gigantes y crashes
       const dpr = window.devicePixelRatio || 1;
-      return Math.min(4, Math.max(2, dpr * 2)); // >=2 y <=4
+      return Math.min(4, Math.max(2, dpr * 2));
     }
 
     async function captureFullCanvas(){
@@ -585,14 +702,12 @@
         return null;
       }
 
-      // Render estable antes de capturar
       setExporting(true);
-      await new Promise(r => setTimeout(r, 120));
+      await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
 
       const el = captureArea;
       const width = el.scrollWidth;
       const height = el.scrollHeight;
-
       const scale = getDeviceScale();
 
       const canvas = await html2canvas(el, {
@@ -605,8 +720,6 @@
         windowHeight: height,
         scrollX: 0,
         scrollY: 0,
-        // quality hints
-        imageTimeout: 15000,
         logging: false
       });
 
@@ -625,8 +738,6 @@
     document.getElementById("exportPng").addEventListener("click", async () => {
       const canvas = await captureFullCanvas();
       if(!canvas) return;
-
-      // PNG “real”: sin compresión con pérdida (mejor nitidez)
       canvas.toBlob((blob) => {
         if(!blob) return;
         downloadBlob(blob, "flujo_hd.png");
@@ -643,19 +754,14 @@
       }
 
       const { jsPDF } = window.jspdf;
-
-      // PDF en A4 landscape, multipágina vertical si corresponde.
-      // Clave para nitidez: usar PNG + compresión lenta/ninguna y NO re-muestrear de más.
       const pdf = new jsPDF({orientation: "landscape", unit: "pt", format: "a4", compress: true});
 
       const pageW = pdf.internal.pageSize.getWidth();
       const pageH = pdf.internal.pageSize.getHeight();
 
-      // Ajuste por ancho de página
       const scale = pageW / canvas.width;
       const pageCanvasHeight = Math.floor(pageH / scale);
 
-      // Cortamos por tiras del canvas, evitando que jsPDF haga downscale brutal de un solo golpe
       const tmp = document.createElement("canvas");
       const tctx = tmp.getContext("2d", {alpha: false});
 
@@ -664,16 +770,13 @@
 
       while(y < canvas.height){
         const sliceH = Math.min(pageCanvasHeight, canvas.height - y);
-
         tmp.width = canvas.width;
         tmp.height = sliceH;
 
         tctx.clearRect(0, 0, tmp.width, tmp.height);
         tctx.drawImage(canvas, 0, y, canvas.width, sliceH, 0, 0, canvas.width, sliceH);
 
-        // PNG (mejor texto) + "FAST" evita artefactos raros en algunos viewers
         const sliceData = tmp.toDataURL("image/png");
-
         if(page > 0) pdf.addPage();
         const drawH = sliceH * scale;
 
