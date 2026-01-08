@@ -170,7 +170,10 @@
 <body>
   <div class="no-export">
     <h1 contenteditable="true" data-path="page.title">Ciclo de Gestión de Personas y Nómina</h1>
-   
+    <p class="hint">
+      ✅ Al crear un <b>Bloque</b> o <b>Subproceso</b>, el sistema asigna un <b>color distinto</b> (primero usa los no ocupados, luego rota).<br>
+      ✅ Al editar, el texto pasa a <b>negro</b> para que se lea perfecto.
+    </p>
 
     <div class="toolbar">
       <input id="q" type="search" placeholder="Buscar en todo el flujo...">
@@ -600,6 +603,47 @@
               </div>
             
           </div>
+        </div><div class="connector">➔</div><div class="macro b5" data-macro="m_c9120e1a5996319b9ed2eb03">
+          <div class="macro-title" contenteditable="true" data-path="macros.m_c9120e1a5996319b9ed2eb03.title">ASISTENCIA</div>
+          <div class="macro-desc" contenteditable="true" data-path="macros.m_c9120e1a5996319b9ed2eb03.desc">Descripción del bloque</div>
+
+          <div class="macro-actions no-export">
+            <button class="btn" data-action="addSubprocess" data-macro="m_c9120e1a5996319b9ed2eb03">+ Subproceso</button>
+            <button class="btn danger" data-action="deleteMacroInline" data-macro="m_c9120e1a5996319b9ed2eb03">Eliminar bloque</button>
+          </div>
+
+          <div class="subflow" data-subflow="m_c9120e1a5996319b9ed2eb03">
+            
+              <div class="subblock b2" data-sub="sb_51a10b49925dc819b9ed2eb03" draggable="true">
+                <div class="subblock-topbar no-export">
+                  <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
+                  <button class="btn" data-action="addSection" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03">+ Caja proceso</button>
+                  <button class="btn danger" data-action="deleteSubprocess" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03">Eliminar subproceso</button>
+                </div>
+
+                <div class="subblock-title" contenteditable="true" data-path="macros.m_c9120e1a5996319b9ed2eb03.subprocesses.sb_51a10b49925dc819b9ed2eb03.title">mODULO buk</div>
+
+                
+                  <div class="process-box" data-section="s_9c15ca094d062819b9ed2eb03">
+                    <div class="process-title">
+                      <span contenteditable="true" data-path="macros.m_c9120e1a5996319b9ed2eb03.subprocesses.sb_51a10b49925dc819b9ed2eb03.sections.s_9c15ca094d062819b9ed2eb03.title">Proceso 1</span>
+                      <span class="process-tools no-export">
+                        <button class="btn" data-action="addTask" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_9c15ca094d062819b9ed2eb03">+ Tarea</button>
+                        <button class="btn danger" data-action="deleteSection" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_9c15ca094d062819b9ed2eb03">Eliminar</button>
+                      </span>
+                    </div>
+
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m_c9120e1a5996319b9ed2eb03.subprocesses.sb_51a10b49925dc819b9ed2eb03.sections.s_9c15ca094d062819b9ed2eb03.tasks.0">Tarea</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_9c15ca094d062819b9ed2eb03" data-task="0">Eliminar</button>
+                      </div>
+                    
+                  </div>
+                
+              </div>
+            
+          </div>
         </div></div>
   </div>
 
@@ -776,6 +820,28 @@
               "tasks": [
                 "Centralizaciones / Reportes / Comprobantes",
                 "Auditoría y trazabilidad"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m_c9120e1a5996319b9ed2eb03",
+      "className": "b5",
+      "title": "ASISTENCIA",
+      "desc": "Descripción del bloque",
+      "subprocesses": [
+        {
+          "id": "sb_51a10b49925dc819b9ed2eb03",
+          "className": "b2",
+          "title": "mODULO buk",
+          "sections": [
+            {
+              "id": "s_9c15ca094d062819b9ed2eb03",
+              "title": "Proceso 1",
+              "tasks": [
+                "Tarea"
               ]
             }
           ]
@@ -1305,6 +1371,7 @@
     // boot
     render();
   </script>
+
 
 
 
