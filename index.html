@@ -5,27 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Diagrama de Flujo - RRHH y Nómina (Editable)</title>
 
+  <!-- Export PNG/PDF -->
+  <script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
   <style>
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 20px; }
     h1 { text-align: center; color: #333; margin-bottom: 10px; }
     .hint { text-align:center; color:#666; font-size: 0.9em; margin: 0 0 20px; }
 
+    #captureArea{ width:max-content; }
     .flow-container { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; align-items: flex-start; }
 
-    /* BLOQUES MACRO (SIN LÍMITE DE ANCHO): se ajustan al contenido */
     .macro {
-      width: max-content;              /* <- sin límite */
+      width: max-content;
       border-radius: 8px;
       padding: 15px;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      flex: 0 0 auto;                  /* <- no fuerza un ancho fijo */
+      flex: 0 0 auto;
     }
 
     .macro-title {
       font-weight: bold; text-align: center; padding: 10px; border-radius: 5px; margin-bottom: 12px;
       color: white; text-transform: uppercase; font-size: 0.9em;
     }
-    .macro-desc{ text-align:center; color:#555; font-size: 0.85em; margin: 0 0 12px; max-width: 900px; }
+    .macro-desc{ text-align:center; color:#555; font-size: 0.85em; margin: 0 0 12px; max-width: 1300px; }
 
     .macro-actions { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin: 8px 0 15px; }
     .btn {
@@ -41,8 +45,8 @@
     .btn:hover { background:#f9f9f9; }
     .danger { border-color: rgba(220,38,38,0.25); color:#b91c1c; }
 
-    .searchbar { display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap; margin: 0 0 18px; }
-    .searchbar input{
+    .toolbar { display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap; margin: 0 0 18px; }
+    .toolbar input{
       width: min(520px, 92vw);
       padding: 10px 12px;
       border-radius: 999px;
@@ -51,18 +55,31 @@
       background: #fff;
     }
 
-    /* SUBPROCESOS EN NÓMINA (2..5) => carril horizontal interno */
     .subflow { display:flex; gap: 14px; overflow-x:auto; padding-bottom: 10px; align-items:flex-start; width: max-content; }
     .subflow::-webkit-scrollbar{height:10px}
     .subflow::-webkit-scrollbar-thumb{background:rgba(0,0,0,.18);border-radius:999px}
     .subflow::-webkit-scrollbar-track{background:rgba(0,0,0,.06);border-radius:999px}
 
-    /* SUBBLOQUES (SIN LÍMITE): también se ajustan al contenido */
     .subblock { width: max-content; border-radius: 8px; padding: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.08); flex: 0 0 auto; }
-
     .subblock-title { font-weight: bold; text-align: center; padding: 9px; border-radius: 5px; margin-bottom: 10px; color: white; text-transform: uppercase; font-size: 0.82em; }
 
-    /* Cajas de Procesos */
+    .subblock[draggable="true"]{ cursor: grab; }
+    .subblock.dragging{ opacity: 0.6; transform: scale(0.995); }
+    .drag-handle{
+      display:inline-flex; align-items:center; justify-content:center;
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      border: 1px solid rgba(0,0,0,0.12);
+      background: rgba(255,255,255,0.75);
+      cursor: grab;
+      user-select:none;
+      font-size: 14px;
+    }
+    .subblock-topbar{
+      display:flex; gap:8px; justify-content:center; align-items:center; flex-wrap:wrap;
+      margin: -2px 0 10px;
+    }
+
     .process-box { background: white; border: 1px solid #ddd; border-radius: 5px; padding: 12px; margin-bottom: 12px; min-width: 260px; }
     .process-title {
       font-weight: bold; font-size: 0.85em; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 8px; color: #555;
@@ -70,13 +87,11 @@
     }
     .process-tools { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
 
-    /* Sub-cajas de Tareas */
     .sub-task {
       background: #f9f9f9; border-left: 3px solid #ccc; padding: 5px 10px; margin-top: 5px;
       font-size: 0.8em; color: #666; display:flex; justify-content:space-between; gap:10px; align-items:flex-start;
     }
 
-    /* Colores por Etapa */
     .b1 { background-color: #e3f2fd; border-top: 5px solid #1976d2; }
     .b1 .macro-title { background-color: #1976d2; }
 
@@ -100,7 +115,6 @@
 
     .connector { display: flex; align-items: center; justify-content: center; min-width: 30px; font-size: 24px; color: #ccc; }
 
-    /* Editable */
     [contenteditable="true"]{
       outline:none;
       border-radius: 4px;
@@ -112,22 +126,40 @@
       background: rgba(255,255,255,0.85);
     }
     .hide { display:none !important; }
+
+    /* OCULTAR BOTONES EN EXPORT */
+    body.exporting .no-export { display:none !important; }
+    body.exporting [contenteditable="true"]{ box-shadow:none !important; background:transparent !important; }
+
+    /* Mejora nitidez en captura (fuerza renderizado estable) */
+    body.exporting #captureArea{
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: geometricPrecision;
+    }
   </style>
 </head>
 <body>
 
-  <h1 contenteditable="true" data-path="page.title">Ciclo de Gestión de Personas y Nómina</h1>
-  <p class="hint">Ahora puedes <b>eliminar subprocesos</b> creados en Nómina y el ancho de los bloques se ajusta al contenido (sin limitar).</p>
+  <div class="no-export">
+    <h1 contenteditable="true" data-path="page.title">Ciclo de Gestión de Personas y Nómina</h1>
+    <p class="hint">
+      ✅ Export PNG/PDF más nítido: se captura a alta resolución (DPR) y PDF en varias páginas si hace falta.
+    </p>
 
-  <div class="searchbar">
-    <input id="q" type="search" placeholder="Buscar en todo el flujo..." />
-    <button class="btn" id="exportHtml">Exportar HTML</button>
-    <button class="btn" id="exportJson">Exportar JSON</button>
-    <button class="btn" id="importJson">Importar JSON</button>
-    <button class="btn danger" id="resetAll">Restaurar original</button>
+    <div class="toolbar">
+      <input id="q" type="search" placeholder="Buscar en todo el flujo..." />
+      <button class="btn" id="exportHtml">Exportar HTML</button>
+      <button class="btn" id="exportPng">Exportar PNG (HD)</button>
+      <button class="btn" id="exportPdf">Exportar PDF (HD)</button>
+      <button class="btn danger" id="resetAll">Restaurar original</button>
+    </div>
   </div>
 
-  <div class="flow-container" id="flow"></div>
+  <div id="captureArea">
+    <h1 id="exportTitle" style="text-align:center;color:#333;margin:0 0 12px 0;"></h1>
+    <div class="flow-container" id="flow"></div>
+  </div>
 
   <script id="INITIAL_MODEL" type="application/json">
   {
@@ -138,9 +170,16 @@
         "className": "b1",
         "title": "1. Ingreso a EESS",
         "desc": "Ingreso del trabajador y datos base (sistema fuente).",
-        "sections": [
-          { "id": "s1", "title": "Origen (Entradas)", "tasks": ["Selección + Onboarding", "Obra Directivo / Operario"] },
-          { "id": "s2", "title": "Alta Administrativa (EESS)", "tasks": ["Datos Personales / Contractuales", "Estructura Org. / Centro Costo"] }
+        "subprocesses": [
+          {
+            "id": "sp_ing_1",
+            "className": "b2",
+            "title": "Ingreso y Datos Base",
+            "sections": [
+              { "id": "s1", "title": "Origen (Entradas)", "tasks": ["Selección + Onboarding", "Obra Directivo / Operario"] },
+              { "id": "s2", "title": "Alta Administrativa (EESS)", "tasks": ["Datos Personales / Contractuales", "Estructura Org. / Centro Costo"] }
+            ]
+          }
         ]
       },
       {
@@ -193,9 +232,16 @@
         "className": "gd",
         "title": "3. Gestión Documental",
         "desc": "Contratos, anexos, respaldos y trazabilidad documental asociada al ciclo.",
-        "sections": [
-          { "id": "g1", "title": "Documentación Laboral", "tasks": ["Contratos / Anexos / Aviso DT", "Firmas / Versionado / Vigencias"] },
-          { "id": "g2", "title": "Respaldo del Ciclo", "tasks": ["Centralizaciones / Reportes / Comprobantes", "Auditoría y trazabilidad"] }
+        "subprocesses": [
+          {
+            "id": "sp_gd_1",
+            "className": "b5",
+            "title": "Gestión y Respaldo",
+            "sections": [
+              { "id": "g1", "title": "Documentación Laboral", "tasks": ["Contratos / Anexos / Aviso DT", "Firmas / Versionado / Vigencias"] },
+              { "id": "g2", "title": "Respaldo del Ciclo", "tasks": ["Centralizaciones / Reportes / Comprobantes", "Auditoría y trazabilidad"] }
+            ]
+          }
         ]
       }
     ]
@@ -203,9 +249,12 @@
   </script>
 
   <script>
-    const STORAGE_KEY = "flujo_rrhh_nomina_macro_v2";
+    const STORAGE_KEY = "flujo_rrhh_nomina_macro_v5";
     const flow = document.getElementById("flow");
     const q = document.getElementById("q");
+    const exportTitle = document.getElementById("exportTitle");
+    const captureArea = document.getElementById("captureArea");
+
     const uid = () => (Math.random().toString(16).slice(2) + Date.now().toString(16));
 
     function loadDefault(){ return JSON.parse(document.getElementById("INITIAL_MODEL").textContent); }
@@ -227,91 +276,72 @@
         .replaceAll('"',"&quot;").replaceAll("'","&#039;");
     }
 
+    function ensureSubprocesses(m){
+      if(!Array.isArray(m.subprocesses)) m.subprocesses = [];
+      m.subprocesses.forEach(sb => {
+        if(!Array.isArray(sb.sections)) sb.sections = [];
+        sb.sections.forEach(sec => { if(!Array.isArray(sec.tasks)) sec.tasks = []; });
+      });
+    }
+
     function render(){
-      document.querySelector('[data-path="page.title"]').textContent = model.page?.title || "Ciclo";
+      const title = model.page?.title || "Ciclo";
+      document.querySelector('[data-path="page.title"]').textContent = title;
+      exportTitle.textContent = title;
+
       flow.innerHTML = "";
 
       const macros = model.macros || [];
+      macros.forEach(ensureSubprocesses);
+
       macros.forEach((m, i) => {
         const macro = document.createElement("div");
         macro.className = `macro ${m.className || ""}`;
         macro.setAttribute("data-macro", m.id);
 
-        const isNomina = (m.id === "m2");
-
         macro.innerHTML = `
           <div class="macro-title" contenteditable="true" data-path="macros.${m.id}.title">${esc(m.title || "")}</div>
           <div class="macro-desc" contenteditable="true" data-path="macros.${m.id}.desc">${esc(m.desc || "")}</div>
 
-          <div class="macro-actions">
-            ${
-              isNomina
-                ? `<button class="btn" data-action="addSubprocess" data-macro="${esc(m.id)}">+ Subproceso</button>`
-                : `<button class="btn" data-action="addSection" data-macro="${esc(m.id)}">+ Proceso</button>`
-            }
+          <div class="macro-actions no-export">
+            <button class="btn" data-action="addSubprocess" data-macro="${esc(m.id)}">+ Subproceso</button>
           </div>
 
-          ${
-            isNomina
-              ? `
-                <div class="subflow">
-                  ${(m.subprocesses || []).map((sb) => `
-                    <div class="subblock ${esc(sb.className || "")}" data-sub="${esc(sb.id)}">
-                      <div class="subblock-title" contenteditable="true"
-                        data-path="macros.${m.id}.subprocesses.${sb.id}.title">${esc(sb.title || "")}</div>
-
-                      <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom: 10px;">
-                        <button class="btn" data-action="addSection" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}">+ Caja proceso</button>
-                        <button class="btn danger" data-action="deleteSubprocess" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}">Eliminar subproceso</button>
-                      </div>
-
-                      ${(sb.sections || []).map(sec => `
-                        <div class="process-box" data-section="${esc(sec.id)}">
-                          <div class="process-title">
-                            <span contenteditable="true"
-                              data-path="macros.${m.id}.subprocesses.${sb.id}.sections.${sec.id}.title">${esc(sec.title || "")}</span>
-                            <span class="process-tools">
-                              <button class="btn" data-action="addTask" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}" data-section="${esc(sec.id)}">+ Tarea</button>
-                              <button class="btn danger" data-action="deleteSection" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}" data-section="${esc(sec.id)}">Eliminar</button>
-                            </span>
-                          </div>
-
-                          ${(sec.tasks || []).map((t, ti) => `
-                            <div class="sub-task">
-                              <span contenteditable="true"
-                                data-path="macros.${m.id}.subprocesses.${sb.id}.sections.${sec.id}.tasks.${ti}">${esc(t)}</span>
-                              <button class="btn danger" data-action="deleteTask" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}" data-section="${esc(sec.id)}" data-task="${ti}">Eliminar</button>
-                            </div>
-                          `).join("")}
-                        </div>
-                      `).join("")}
-                    </div>
-                  `).join("")}
+          <div class="subflow" data-subflow="${esc(m.id)}">
+            ${(m.subprocesses || []).map((sb) => `
+              <div class="subblock ${esc(sb.className || "b5")}" data-sub="${esc(sb.id)}" draggable="true">
+                <div class="subblock-topbar no-export">
+                  <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
+                  <button class="btn" data-action="addSection" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}">+ Caja proceso</button>
+                  <button class="btn danger" data-action="deleteSubprocess" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}">Eliminar subproceso</button>
                 </div>
-              `
-              : `
-                <div class="process-list">
-                  ${(m.sections || []).map(sec => `
-                    <div class="process-box" data-section="${esc(sec.id)}">
-                      <div class="process-title">
-                        <span contenteditable="true" data-path="macros.${m.id}.sections.${sec.id}.title">${esc(sec.title || "")}</span>
-                        <span class="process-tools">
-                          <button class="btn" data-action="addTask" data-macro="${esc(m.id)}" data-section="${esc(sec.id)}">+ Tarea</button>
-                          <button class="btn danger" data-action="deleteSection" data-macro="${esc(m.id)}" data-section="${esc(sec.id)}">Eliminar</button>
-                        </span>
-                      </div>
 
-                      ${(sec.tasks || []).map((t, ti) => `
-                        <div class="sub-task">
-                          <span contenteditable="true" data-path="macros.${m.id}.sections.${sec.id}.tasks.${ti}">${esc(t)}</span>
-                          <button class="btn danger" data-action="deleteTask" data-macro="${esc(m.id)}" data-section="${esc(sec.id)}" data-task="${ti}">Eliminar</button>
-                        </div>
-                      `).join("")}
+                <div class="subblock-title" contenteditable="true"
+                  data-path="macros.${m.id}.subprocesses.${sb.id}.title">${esc(sb.title || "")}</div>
+
+                ${(sb.sections || []).map(sec => `
+                  <div class="process-box" data-section="${esc(sec.id)}">
+                    <div class="process-title">
+                      <span contenteditable="true"
+                        data-path="macros.${m.id}.subprocesses.${sb.id}.sections.${sec.id}.title">${esc(sec.title || "")}</span>
+                      <span class="process-tools no-export">
+                        <button class="btn" data-action="addTask" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}" data-section="${esc(sec.id)}">+ Tarea</button>
+                        <button class="btn danger" data-action="deleteSection" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}" data-section="${esc(sec.id)}">Eliminar</button>
+                      </span>
                     </div>
-                  `).join("")}
-                </div>
-              `
-          }
+
+                    ${(sec.tasks || []).map((t, ti) => `
+                      <div class="sub-task">
+                        <span contenteditable="true"
+                          data-path="macros.${m.id}.subprocesses.${sb.id}.sections.${sec.id}.tasks.${ti}">${esc(t)}</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}" data-section="${esc(sec.id)}" data-task="${ti}">Eliminar</button>
+                      </div>
+                    `).join("")}
+                  </div>
+                `).join("")}
+              </div>
+            `).join("")}
+          </div>
         `;
 
         flow.appendChild(macro);
@@ -324,6 +354,7 @@
         }
       });
 
+      wireDnDAllMacros();
       applyFilter();
     }
 
@@ -331,43 +362,33 @@
       if(!path) return;
       const p = path.split(".");
 
-      if(p[0] === "page" && p[1] === "title"){ model.page.title = value; return; }
+      if(p[0] === "page" && p[1] === "title"){ model.page.title = value; saveModel(); render(); return; }
 
       if(p[0] !== "macros") return;
       const macroId = p[1];
       const m = (model.macros || []).find(x => x.id === macroId);
       if(!m) return;
 
-      if(p[2] === "title"){ m.title = value; return; }
-      if(p[2] === "desc"){ m.desc = value; return; }
-
-      if(p[2] === "sections"){
-        const secId = p[3];
-        const sec = (m.sections || []).find(x => x.id === secId);
-        if(!sec) return;
-        if(p[4] === "title"){ sec.title = value; return; }
-        if(p[4] === "tasks"){
-          const idx = Number(p[5]);
-          if(!Array.isArray(sec.tasks)) sec.tasks = [];
-          sec.tasks[idx] = value;
-        }
-      }
+      if(p[2] === "title"){ m.title = value; saveModel(); return; }
+      if(p[2] === "desc"){ m.desc = value; saveModel(); return; }
 
       if(p[2] === "subprocesses"){
         const subId = p[3];
         const sb = (m.subprocesses || []).find(x => x.id === subId);
         if(!sb) return;
-        if(p[4] === "title"){ sb.title = value; return; }
+
+        if(p[4] === "title"){ sb.title = value; saveModel(); return; }
 
         if(p[4] === "sections"){
           const secId = p[5];
           const sec = (sb.sections || []).find(x => x.id === secId);
           if(!sec) return;
-          if(p[6] === "title"){ sec.title = value; return; }
+
+          if(p[6] === "title"){ sec.title = value; saveModel(); return; }
           if(p[6] === "tasks"){
             const idx = Number(p[7]);
             if(!Array.isArray(sec.tasks)) sec.tasks = [];
-            sec.tasks[idx] = value;
+            sec.tasks[idx] = value; saveModel(); return;
           }
         }
       }
@@ -378,90 +399,14 @@
       const path = el?.getAttribute?.("data-path");
       if(!path) return;
       setByPath(path, el.textContent);
-      saveModel();
     });
 
     // CRUD
-    function addSection(macroId, subId){
-      const m = model.macros.find(x => x.id === macroId);
-      if(!m) return;
-
-      if(subId){
-        const sb = (m.subprocesses || []).find(x => x.id === subId);
-        if(!sb) return;
-        if(!Array.isArray(sb.sections)) sb.sections = [];
-        sb.sections.push({ id: "s_" + uid(), title: "Nuevo proceso", tasks: ["Nueva tarea"] });
-        saveModel(); render();
-        return;
-      }
-
-      if(!Array.isArray(m.sections)) m.sections = [];
-      m.sections.push({ id: "s_" + uid(), title: "Nuevo proceso", tasks: ["Nueva tarea"] });
-      saveModel(); render();
-    }
-
-    function deleteSection(macroId, sectionId, subId){
-      const m = model.macros.find(x => x.id === macroId);
-      if(!m) return;
-
-      if(subId){
-        const sb = (m.subprocesses || []).find(x => x.id === subId);
-        if(!sb) return;
-        sb.sections = (sb.sections || []).filter(x => x.id !== sectionId);
-        saveModel(); render();
-        return;
-      }
-
-      m.sections = (m.sections || []).filter(x => x.id !== sectionId);
-      saveModel(); render();
-    }
-
-    function addTask(macroId, sectionId, subId){
-      const m = model.macros.find(x => x.id === macroId);
-      if(!m) return;
-
-      if(subId){
-        const sb = (m.subprocesses || []).find(x => x.id === subId);
-        if(!sb) return;
-        const sec = (sb.sections || []).find(x => x.id === sectionId);
-        if(!sec) return;
-        if(!Array.isArray(sec.tasks)) sec.tasks = [];
-        sec.tasks.push("Nueva tarea");
-        saveModel(); render();
-        return;
-      }
-
-      const sec = (m.sections || []).find(x => x.id === sectionId);
-      if(!sec) return;
-      if(!Array.isArray(sec.tasks)) sec.tasks = [];
-      sec.tasks.push("Nueva tarea");
-      saveModel(); render();
-    }
-
-    function deleteTask(macroId, sectionId, idx, subId){
-      const m = model.macros.find(x => x.id === macroId);
-      if(!m) return;
-
-      if(subId){
-        const sb = (m.subprocesses || []).find(x => x.id === subId);
-        if(!sb) return;
-        const sec = (sb.sections || []).find(x => x.id === sectionId);
-        if(!sec || !Array.isArray(sec.tasks)) return;
-        sec.tasks.splice(idx, 1);
-        saveModel(); render();
-        return;
-      }
-
-      const sec = (m.sections || []).find(x => x.id === sectionId);
-      if(!sec || !Array.isArray(sec.tasks)) return;
-      sec.tasks.splice(idx, 1);
-      saveModel(); render();
-    }
-
     function addSubprocess(macroId){
       const m = model.macros.find(x => x.id === macroId);
       if(!m) return;
-      if(!Array.isArray(m.subprocesses)) m.subprocesses = [];
+      ensureSubprocesses(m);
+
       const newId = "sb_" + uid();
       m.subprocesses.push({
         id: newId,
@@ -471,11 +416,46 @@
       });
       saveModel(); render();
     }
-
     function deleteSubprocess(macroId, subId){
       const m = model.macros.find(x => x.id === macroId);
       if(!m || !Array.isArray(m.subprocesses)) return;
       m.subprocesses = m.subprocesses.filter(x => x.id !== subId);
+      saveModel(); render();
+    }
+    function addSection(macroId, subId){
+      const m = model.macros.find(x => x.id === macroId);
+      if(!m) return;
+      const sb = (m.subprocesses || []).find(x => x.id === subId);
+      if(!sb) return;
+      if(!Array.isArray(sb.sections)) sb.sections = [];
+      sb.sections.push({ id: "s_" + uid(), title: "Nuevo proceso", tasks: ["Nueva tarea"] });
+      saveModel(); render();
+    }
+    function deleteSection(macroId, subId, sectionId){
+      const m = model.macros.find(x => x.id === macroId);
+      if(!m) return;
+      const sb = (m.subprocesses || []).find(x => x.id === subId);
+      if(!sb) return;
+      sb.sections = (sb.sections || []).filter(x => x.id !== sectionId);
+      saveModel(); render();
+    }
+    function addTask(macroId, subId, sectionId){
+      const m = model.macros.find(x => x.id === macroId);
+      if(!m) return;
+      const sb = (m.subprocesses || []).find(x => x.id === subId);
+      const sec = sb ? (sb.sections || []).find(x => x.id === sectionId) : null;
+      if(!sec) return;
+      if(!Array.isArray(sec.tasks)) sec.tasks = [];
+      sec.tasks.push("Nueva tarea");
+      saveModel(); render();
+    }
+    function deleteTask(macroId, subId, sectionId, idx){
+      const m = model.macros.find(x => x.id === macroId);
+      if(!m) return;
+      const sb = (m.subprocesses || []).find(x => x.id === subId);
+      const sec = sb ? (sb.sections || []).find(x => x.id === sectionId) : null;
+      if(!sec || !Array.isArray(sec.tasks)) return;
+      sec.tasks.splice(idx, 1);
       saveModel(); render();
     }
 
@@ -489,82 +469,220 @@
       const sectionId = btn.getAttribute("data-section");
       const taskIdx = btn.getAttribute("data-task");
 
-      if(a === "addSection") addSection(macroId, subId);
-      if(a === "deleteSection") deleteSection(macroId, sectionId, subId);
-      if(a === "addTask") addTask(macroId, sectionId, subId);
-      if(a === "deleteTask") deleteTask(macroId, sectionId, Number(taskIdx), subId);
       if(a === "addSubprocess") addSubprocess(macroId);
       if(a === "deleteSubprocess") deleteSubprocess(macroId, subId);
+      if(a === "addSection") addSection(macroId, subId);
+      if(a === "deleteSection") deleteSection(macroId, subId, sectionId);
+      if(a === "addTask") addTask(macroId, subId, sectionId);
+      if(a === "deleteTask") deleteTask(macroId, subId, sectionId, Number(taskIdx));
     });
+
+    // Drag & Drop reordenar subprocesos
+    function wireDnDAllMacros(){
+      (model.macros || []).forEach(m => {
+        const container = document.querySelector(`.subflow[data-subflow="${CSS.escape(m.id)}"]`);
+        if(!container) return;
+
+        let draggedId = null;
+
+        const items = Array.from(container.querySelectorAll('.subblock[draggable="true"]'));
+        items.forEach(el => {
+          const handle = el.querySelector('.drag-handle');
+          if(handle){
+            handle.addEventListener('mousedown', () => el.dataset.dragAllowed = "1");
+            handle.addEventListener('mouseup',   () => el.dataset.dragAllowed = "0");
+            handle.addEventListener('mouseleave',() => el.dataset.dragAllowed = "0");
+          }
+
+          el.addEventListener('dragstart', (e) => {
+            if(el.dataset.dragAllowed !== "1"){ e.preventDefault(); return; }
+            draggedId = el.getAttribute('data-sub');
+            el.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            try{ e.dataTransfer.setData('text/plain', draggedId); }catch(_){}
+          });
+
+          el.addEventListener('dragend', () => {
+            el.classList.remove('dragging');
+            el.dataset.dragAllowed = "0";
+          });
+        });
+
+        container.addEventListener('dragover', (e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; });
+
+        container.addEventListener('drop', (e) => {
+          e.preventDefault();
+          const target = e.target.closest('.subblock');
+          if(!target) return;
+
+          const toId = target.getAttribute('data-sub');
+          const fromId = draggedId || (()=>{
+            try{ return e.dataTransfer.getData('text/plain'); }catch(_){ return null; }
+          })();
+
+          if(!fromId || !toId || fromId === toId) return;
+
+          const mm = model.macros.find(x => x.id === m.id);
+          if(!mm || !Array.isArray(mm.subprocesses)) return;
+
+          const fromIndex = mm.subprocesses.findIndex(x => x.id === fromId);
+          const toIndex   = mm.subprocesses.findIndex(x => x.id === toId);
+          if(fromIndex < 0 || toIndex < 0) return;
+
+          const [moved] = mm.subprocesses.splice(fromIndex, 1);
+          mm.subprocesses.splice(toIndex, 0, moved);
+
+          saveModel(); render();
+        });
+      });
+    }
 
     // Filtro
     function applyFilter(){
       const term = (q.value || "").trim().toLowerCase();
-      const macros = Array.from(document.querySelectorAll(".macro"));
+      const macrosEls = Array.from(document.querySelectorAll(".macro"));
       const connectors = Array.from(document.querySelectorAll(".connector"));
 
       if(!term){
-        macros.forEach(m => m.classList.remove("hide"));
+        macrosEls.forEach(m => m.classList.remove("hide"));
         connectors.forEach(c => c.classList.remove("hide"));
         return;
       }
 
-      macros.forEach(m => {
+      macrosEls.forEach(m => {
         const hit = (m.innerText || m.textContent || "").toLowerCase().includes(term);
         m.classList.toggle("hide", !hit);
       });
 
       connectors.forEach((c, idx) => {
-        const left = macros[idx];
-        const right = macros[idx+1];
+        const left = macrosEls[idx];
+        const right = macrosEls[idx+1];
         const hide = (!left || left.classList.contains("hide")) || (!right || right.classList.contains("hide"));
         c.classList.toggle("hide", hide);
       });
     }
     q.addEventListener("input", applyFilter);
 
-    // Export / Import / Reset
-    document.getElementById("exportJson").addEventListener("click", () => {
-      const blob = new Blob([JSON.stringify(model, null, 2)], {type:"application/json;charset=utf-8"});
+    // ===== Export (más nítido) =====
+    function downloadBlob(blob, filename){
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      a.href = url; a.download = "flujo_macro_editable.json";
+      a.href = url; a.download = filename;
       document.body.appendChild(a); a.click(); a.remove();
       URL.revokeObjectURL(url);
-    });
+    }
+    function setExporting(on){ document.body.classList.toggle("exporting", !!on); }
 
-    document.getElementById("importJson").addEventListener("click", () => {
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = "application/json";
-      input.onchange = async () => {
-        const file = input.files?.[0];
-        if(!file) return;
-        const text = await file.text();
-        try{
-          const parsed = JSON.parse(text);
-          if(!parsed || !parsed.macros) throw new Error("JSON inválido");
-          model = parsed;
-          saveModel();
-          render();
-        }catch(e){
-          alert("No pude importar: JSON inválido.");
-        }
-      };
-      input.click();
-    });
+    function getDeviceScale(){
+      // DPR alto mejora mucho nitidez; capeo para evitar canvas gigantes y crashes
+      const dpr = window.devicePixelRatio || 1;
+      return Math.min(4, Math.max(2, dpr * 2)); // >=2 y <=4
+    }
+
+    async function captureFullCanvas(){
+      if(typeof html2canvas !== "function"){
+        alert("No se cargó html2canvas (revisa conexión a internet o políticas del navegador).");
+        return null;
+      }
+
+      // Render estable antes de capturar
+      setExporting(true);
+      await new Promise(r => setTimeout(r, 120));
+
+      const el = captureArea;
+      const width = el.scrollWidth;
+      const height = el.scrollHeight;
+
+      const scale = getDeviceScale();
+
+      const canvas = await html2canvas(el, {
+        scale,
+        backgroundColor: "#f4f7f6",
+        useCORS: true,
+        width,
+        height,
+        windowWidth: width,
+        windowHeight: height,
+        scrollX: 0,
+        scrollY: 0,
+        // quality hints
+        imageTimeout: 15000,
+        logging: false
+      });
+
+      setExporting(false);
+      return canvas;
+    }
 
     document.getElementById("exportHtml").addEventListener("click", () => {
       const clone = document.documentElement.cloneNode(true);
       const script = clone.querySelector("#INITIAL_MODEL");
       script.textContent = "\n" + JSON.stringify(model, null, 2) + "\n";
       const html = "<!doctype html>\n" + clone.outerHTML;
-      const blob = new Blob([html], {type:"text/html;charset=utf-8"});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url; a.download = "flujo_macro_editable.html";
-      document.body.appendChild(a); a.click(); a.remove();
-      URL.revokeObjectURL(url);
+      downloadBlob(new Blob([html], {type:"text/html;charset=utf-8"}), "flujo_macro_editable.html");
+    });
+
+    document.getElementById("exportPng").addEventListener("click", async () => {
+      const canvas = await captureFullCanvas();
+      if(!canvas) return;
+
+      // PNG “real”: sin compresión con pérdida (mejor nitidez)
+      canvas.toBlob((blob) => {
+        if(!blob) return;
+        downloadBlob(blob, "flujo_hd.png");
+      }, "image/png");
+    });
+
+    document.getElementById("exportPdf").addEventListener("click", async () => {
+      const canvas = await captureFullCanvas();
+      if(!canvas) return;
+
+      if(!window.jspdf?.jsPDF){
+        alert("No se cargó jsPDF (revisa conexión a internet o políticas del navegador).");
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+
+      // PDF en A4 landscape, multipágina vertical si corresponde.
+      // Clave para nitidez: usar PNG + compresión lenta/ninguna y NO re-muestrear de más.
+      const pdf = new jsPDF({orientation: "landscape", unit: "pt", format: "a4", compress: true});
+
+      const pageW = pdf.internal.pageSize.getWidth();
+      const pageH = pdf.internal.pageSize.getHeight();
+
+      // Ajuste por ancho de página
+      const scale = pageW / canvas.width;
+      const pageCanvasHeight = Math.floor(pageH / scale);
+
+      // Cortamos por tiras del canvas, evitando que jsPDF haga downscale brutal de un solo golpe
+      const tmp = document.createElement("canvas");
+      const tctx = tmp.getContext("2d", {alpha: false});
+
+      let y = 0;
+      let page = 0;
+
+      while(y < canvas.height){
+        const sliceH = Math.min(pageCanvasHeight, canvas.height - y);
+
+        tmp.width = canvas.width;
+        tmp.height = sliceH;
+
+        tctx.clearRect(0, 0, tmp.width, tmp.height);
+        tctx.drawImage(canvas, 0, y, canvas.width, sliceH, 0, 0, canvas.width, sliceH);
+
+        // PNG (mejor texto) + "FAST" evita artefactos raros en algunos viewers
+        const sliceData = tmp.toDataURL("image/png");
+
+        if(page > 0) pdf.addPage();
+        const drawH = sliceH * scale;
+
+        pdf.addImage(sliceData, "PNG", 0, 0, pageW, drawH, undefined, "FAST");
+        y += sliceH;
+        page++;
+      }
+
+      pdf.save("flujo_hd.pdf");
     });
 
     document.getElementById("resetAll").addEventListener("click", () => {
