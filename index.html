@@ -1,13 +1,12 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!doctype html>
+<html lang="es"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Diagrama de Flujo - RRHH y Nómina (Editable)</title>
 
   <!-- Export PNG/PDF -->
-  <script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
   <style>
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 20px; }
@@ -177,7 +176,7 @@
     </p>
 
     <div class="toolbar">
-      <input id="q" type="search" placeholder="Buscar en todo el flujo..." />
+      <input id="q" type="search" placeholder="Buscar en todo el flujo...">
       <button class="btn primary" id="addMacro">+ Bloque</button>
       <button class="btn danger" id="deleteMacro">Eliminar bloque</button>
       <button class="btn" id="exportHtml">Exportar HTML</button>
@@ -188,96 +187,640 @@
   </div>
 
   <div id="captureArea">
-    <h1 id="exportTitle" style="text-align:center;color:#333;margin:0 0 12px 0;"></h1>
-    <div class="flow-container" id="flow"></div>
+    <h1 id="exportTitle" style="text-align:center;color:#333;margin:0 0 12px 0;">Ciclo de Gestión de Personas y Nómina</h1>
+    <div class="flow-container" id="flow"><div class="macro b1" data-macro="m1">
+          <div class="macro-title" contenteditable="true" data-path="macros.m1.title">1. Ingreso a EESS</div>
+          <div class="macro-desc" contenteditable="true" data-path="macros.m1.desc">Ingreso del trabajador y datos base (sistema fuente).</div>
+
+          <div class="macro-actions no-export">
+            <button class="btn" data-action="addSubprocess" data-macro="m1">+ Subproceso</button>
+            <button class="btn danger" data-action="deleteMacroInline" data-macro="m1">Eliminar bloque</button>
+          </div>
+
+          <div class="subflow" data-subflow="m1">
+            
+              <div class="subblock b2" data-sub="sp_ing_1" draggable="true">
+                <div class="subblock-topbar no-export">
+                  <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
+                  <button class="btn" data-action="addSection" data-macro="m1" data-sub="sp_ing_1">+ Caja proceso</button>
+                  <button class="btn danger" data-action="deleteSubprocess" data-macro="m1" data-sub="sp_ing_1">Eliminar subproceso</button>
+                </div>
+
+                <div class="subblock-title" contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.title">Ingreso y Datos Base</div>
+
+                
+                  <div class="process-box" data-section="s1">
+                    <div class="process-title">
+                      <span contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.sections.s1.title">Origen (Entradas)</span>
+                      <span class="process-tools no-export">
+                        <button class="btn" data-action="addTask" data-macro="m1" data-sub="sp_ing_1" data-section="s1">+ Tarea</button>
+                        <button class="btn danger" data-action="deleteSection" data-macro="m1" data-sub="sp_ing_1" data-section="s1">Eliminar</button>
+                      </span>
+                    </div>
+
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.sections.s1.tasks.0">Selección + Onboarding</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m1" data-sub="sp_ing_1" data-section="s1" data-task="0">Eliminar</button>
+                      </div>
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.sections.s1.tasks.1">Obra Directivo / Operario</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m1" data-sub="sp_ing_1" data-section="s1" data-task="1">Eliminar</button>
+                      </div>
+                    
+                  </div>
+                
+                  <div class="process-box" data-section="s2">
+                    <div class="process-title">
+                      <span contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.sections.s2.title">Alta Administrativa (EESS)</span>
+                      <span class="process-tools no-export">
+                        <button class="btn" data-action="addTask" data-macro="m1" data-sub="sp_ing_1" data-section="s2">+ Tarea</button>
+                        <button class="btn danger" data-action="deleteSection" data-macro="m1" data-sub="sp_ing_1" data-section="s2">Eliminar</button>
+                      </span>
+                    </div>
+
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.sections.s2.tasks.0">Datos Personales / Contractuales</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m1" data-sub="sp_ing_1" data-section="s2" data-task="0">Eliminar</button>
+                      </div>
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.sections.s2.tasks.1">Estructura Org. / Centro Costo</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m1" data-sub="sp_ing_1" data-section="s2" data-task="1">Eliminar</button>
+                      </div>
+                    
+                  </div>
+                
+              </div>
+            
+          </div>
+        </div><div class="connector">➔</div><div class="macro nomina" data-macro="m2">
+          <div class="macro-title" contenteditable="true" data-path="macros.m2.title">2. Nómina (Macroproceso)</div>
+          <div class="macro-desc" contenteditable="true" data-path="macros.m2.desc">Subprocesos 2 → 5: Configuración y Asistencia → Cálculo y Finiquitos → Tesorería y Centralización → Reportes y Gestión.</div>
+
+          <div class="macro-actions no-export">
+            <button class="btn" data-action="addSubprocess" data-macro="m2">+ Subproceso</button>
+            <button class="btn danger" data-action="deleteMacroInline" data-macro="m2">Eliminar bloque</button>
+          </div>
+
+          <div class="subflow" data-subflow="m2">
+            
+              <div class="subblock b2" data-sub="b2" draggable="true">
+                <div class="subblock-topbar no-export">
+                  <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
+                  <button class="btn" data-action="addSection" data-macro="m2" data-sub="b2">+ Caja proceso</button>
+                  <button class="btn danger" data-action="deleteSubprocess" data-macro="m2" data-sub="b2">Eliminar subproceso</button>
+                </div>
+
+                <div class="subblock-title" contenteditable="true" data-path="macros.m2.subprocesses.b2.title">2. Configuración y Asistencia</div>
+
+                
+                  <div class="process-box" data-section="p1">
+                    <div class="process-title">
+                      <span contenteditable="true" data-path="macros.m2.subprocesses.b2.sections.p1.title">Parámetros Nómina</span>
+                      <span class="process-tools no-export">
+                        <button class="btn" data-action="addTask" data-macro="m2" data-sub="b2" data-section="p1">+ Tarea</button>
+                        <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="b2" data-section="p1">Eliminar</button>
+                      </span>
+                    </div>
+
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m2.subprocesses.b2.sections.p1.tasks.0">Bancos / Gratificación / Impuestos</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b2" data-section="p1" data-task="0">Eliminar</button>
+                      </div>
+                    
+                  </div>
+                
+                  <div class="process-box" data-section="p2">
+                    <div class="process-title">
+                      <span contenteditable="true" data-path="macros.m2.subprocesses.b2.sections.p2.title">Recinto (Puesta en Vivo)</span>
+                      <span class="process-tools no-export">
+                        <button class="btn" data-action="addTask" data-macro="m2" data-sub="b2" data-section="p2">+ Tarea</button>
+                        <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="b2" data-section="p2">Eliminar</button>
+                      </span>
+                    </div>
+
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m2.subprocesses.b2.sections.p2.tasks.0">Habilitar Reloj-App / Sincro Subcontratos</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b2" data-section="p2" data-task="0">Eliminar</button>
+                      </div>
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m2.subprocesses.b2.sections.p2.tasks.1">Fiscalización DT / Portal Asistencia</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b2" data-section="p2" data-task="1">Eliminar</button>
+                      </div>
+                    
+                  </div>
+                
+                  <div class="process-box" data-section="p3">
+                    <div class="process-title">
+                      <span contenteditable="true" data-path="macros.m2.subprocesses.b2.sections.p3.title">Mantención Mensual</span>
+                      <span class="process-tools no-export">
+                        <button class="btn" data-action="addTask" data-macro="m2" data-sub="b2" data-section="p3">+ Tarea</button>
+                        <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="b2" data-section="p3">Eliminar</button>
+                      </span>
+                    </div>
+
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m2.subprocesses.b2.sections.p3.tasks.0">Nómina: Vacaciones y Licencias</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b2" data-section="p3" data-task="0">Eliminar</button>
+                      </div>
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m2.subprocesses.b2.sections.p3.tasks.1">Recinto: Horas Extras y Faltas</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b2" data-section="p3" data-task="1">Eliminar</button>
+                      </div>
+                    
+                  </div>
+                
+              </div>
+            
+              <div class="subblock b3" data-sub="b3" draggable="true">
+                <div class="subblock-topbar no-export">
+                  <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
+                  <button class="btn" data-action="addSection" data-macro="m2" data-sub="b3">+ Caja proceso</button>
+                  <button class="btn danger" data-action="deleteSubprocess" data-macro="m2" data-sub="b3">Eliminar subproceso</button>
+                </div>
+
+                <div class="subblock-title" contenteditable="true" data-path="macros.m2.subprocesses.b3.title">3. Cálculo y Finiquitos</div>
+
+                
+                  <div class="process-box" data-section="p4">
+                    <div class="process-title">
+                      <span contenteditable="true" data-path="macros.m2.subprocesses.b3.sections.p4.title">Proceso Sueldos</span>
+                      <span class="process-tools no-export">
+                        <button class="btn" data-action="addTask" data-macro="m2" data-sub="b3" data-section="p4">+ Tarea</button>
+                        <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="b3" data-section="p4">Eliminar</button>
+                      </span>
+                    </div>
+
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m2.subprocesses.b3.sections.p4.tasks.0">Actualizar Haberes Movilización</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b3" data-section="p4" data-task="0">Eliminar</button>
+                      </div>
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m2.subprocesses.b3.sections.p4.tasks.1">Anticipo → Sueldo → Ajustes</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b3" data-section="p4" data-task="1">Eliminar</button>
+                      </div>
+                    
+                  </div>
+                
+                  <div class="process-box" data-section="p5">
+                    <div class="process-title">
+                      <span contenteditable="true" data-path="macros.m2.subprocesses.b3.sections.p5.title">Proceso Finiquitos</span>
+                      <span class="process-tools no-export">
+                        <button class="btn" data-action="addTask" data-macro="m2" data-sub="b3" data-section="p5">+ Tarea</button>
+                        <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="b3" data-section="p5">Eliminar</button>
+                      </span>
+                    </div>
+
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m2.subprocesses.b3.sections.p5.tasks.0">Simular Baja / Grabar / Imprimir</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b3" data-section="p5" data-task="0">Eliminar</button>
+                      </div>
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m2.subprocesses.b3.sections.p5.tasks.1">Anticipado o Fin de Mes</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b3" data-section="p5" data-task="1">Eliminar</button>
+                      </div>
+                    
+                  </div>
+                
+              </div>
+            
+              <div class="subblock b4" data-sub="b4" draggable="true">
+                <div class="subblock-topbar no-export">
+                  <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
+                  <button class="btn" data-action="addSection" data-macro="m2" data-sub="b4">+ Caja proceso</button>
+                  <button class="btn danger" data-action="deleteSubprocess" data-macro="m2" data-sub="b4">Eliminar subproceso</button>
+                </div>
+
+                <div class="subblock-title" contenteditable="true" data-path="macros.m2.subprocesses.b4.title">4. Tesorería y Centralización</div>
+
+                
+                  <div class="process-box" data-section="p6">
+                    <div class="process-title">
+                      <span contenteditable="true" data-path="macros.m2.subprocesses.b4.sections.p6.title">Medios de Pago</span>
+                      <span class="process-tools no-export">
+                        <button class="btn" data-action="addTask" data-macro="m2" data-sub="b4" data-section="p6">+ Tarea</button>
+                        <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="b4" data-section="p6">Eliminar</button>
+                      </span>
+                    </div>
+
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m2.subprocesses.b4.sections.p6.tasks.0">Cta. Cte. / Efectivo / Vale Vista</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b4" data-section="p6" data-task="0">Eliminar</button>
+                      </div>
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m2.subprocesses.b4.sections.p6.tasks.1">Prueba Ingreso Ficha</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b4" data-section="p6" data-task="1">Eliminar</button>
+                      </div>
+                    
+                  </div>
+                
+                  <div class="process-box" data-section="p7">
+                    <div class="process-title">
+                      <span contenteditable="true" data-path="macros.m2.subprocesses.b4.sections.p7.title">Centralización</span>
+                      <span class="process-tools no-export">
+                        <button class="btn" data-action="addTask" data-macro="m2" data-sub="b4" data-section="p7">+ Tarea</button>
+                        <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="b4" data-section="p7">Eliminar</button>
+                      </span>
+                    </div>
+
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m2.subprocesses.b4.sections.p7.tasks.0">Sueldos y Ajustes</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b4" data-section="p7" data-task="0">Eliminar</button>
+                      </div>
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m2.subprocesses.b4.sections.p7.tasks.1">(Elimina Cent. Finiquitos)</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b4" data-section="p7" data-task="1">Eliminar</button>
+                      </div>
+                    
+                  </div>
+                
+              </div>
+            
+              <div class="subblock b5" data-sub="b5" draggable="true">
+                <div class="subblock-topbar no-export">
+                  <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
+                  <button class="btn" data-action="addSection" data-macro="m2" data-sub="b5">+ Caja proceso</button>
+                  <button class="btn danger" data-action="deleteSubprocess" data-macro="m2" data-sub="b5">Eliminar subproceso</button>
+                </div>
+
+                <div class="subblock-title" contenteditable="true" data-path="macros.m2.subprocesses.b5.title">5. Reportes y Gestión</div>
+
+                
+                  <div class="process-box" data-section="p8">
+                    <div class="process-title">
+                      <span contenteditable="true" data-path="macros.m2.subprocesses.b5.sections.p8.title">Cierres Legales</span>
+                      <span class="process-tools no-export">
+                        <button class="btn" data-action="addTask" data-macro="m2" data-sub="b5" data-section="p8">+ Tarea</button>
+                        <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="b5" data-section="p8">Eliminar</button>
+                      </span>
+                    </div>
+
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m2.subprocesses.b5.sections.p8.tasks.0">INE / LRE / Leyes Sociales</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b5" data-section="p8" data-task="0">Eliminar</button>
+                      </div>
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m2.subprocesses.b5.sections.p8.tasks.1">CIERRE MENSUAL</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b5" data-section="p8" data-task="1">Eliminar</button>
+                      </div>
+                    
+                  </div>
+                
+                  <div class="process-box" data-section="p9">
+                    <div class="process-title">
+                      <span contenteditable="true" data-path="macros.m2.subprocesses.b5.sections.p9.title">Gestión de Nómina</span>
+                      <span class="process-tools no-export">
+                        <button class="btn" data-action="addTask" data-macro="m2" data-sub="b5" data-section="p9">+ Tarea</button>
+                        <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="b5" data-section="p9">Eliminar</button>
+                      </span>
+                    </div>
+
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m2.subprocesses.b5.sections.p9.tasks.0">Préstamos / Seguros / Vacaciones</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b5" data-section="p9" data-task="0">Eliminar</button>
+                      </div>
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m2.subprocesses.b5.sections.p9.tasks.1">Masa Constructora / Especialidades</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b5" data-section="p9" data-task="1">Eliminar</button>
+                      </div>
+                    
+                  </div>
+                
+              </div>
+            
+          </div>
+        </div><div class="connector">➔</div><div class="macro gd" data-macro="m3">
+          <div class="macro-title" contenteditable="true" data-path="macros.m3.title">3. Gestión Documental</div>
+          <div class="macro-desc" contenteditable="true" data-path="macros.m3.desc">Contratos, anexos, respaldos y trazabilidad documental asociada al ciclo.</div>
+
+          <div class="macro-actions no-export">
+            <button class="btn" data-action="addSubprocess" data-macro="m3">+ Subproceso</button>
+            <button class="btn danger" data-action="deleteMacroInline" data-macro="m3">Eliminar bloque</button>
+          </div>
+
+          <div class="subflow" data-subflow="m3">
+            
+              <div class="subblock b5" data-sub="sp_gd_1" draggable="true">
+                <div class="subblock-topbar no-export">
+                  <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
+                  <button class="btn" data-action="addSection" data-macro="m3" data-sub="sp_gd_1">+ Caja proceso</button>
+                  <button class="btn danger" data-action="deleteSubprocess" data-macro="m3" data-sub="sp_gd_1">Eliminar subproceso</button>
+                </div>
+
+                <div class="subblock-title" contenteditable="true" data-path="macros.m3.subprocesses.sp_gd_1.title">Gestión y Respaldo</div>
+
+                
+                  <div class="process-box" data-section="g1">
+                    <div class="process-title">
+                      <span contenteditable="true" data-path="macros.m3.subprocesses.sp_gd_1.sections.g1.title">Documentación Laboral</span>
+                      <span class="process-tools no-export">
+                        <button class="btn" data-action="addTask" data-macro="m3" data-sub="sp_gd_1" data-section="g1">+ Tarea</button>
+                        <button class="btn danger" data-action="deleteSection" data-macro="m3" data-sub="sp_gd_1" data-section="g1">Eliminar</button>
+                      </span>
+                    </div>
+
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m3.subprocesses.sp_gd_1.sections.g1.tasks.0">Contratos / Anexos / Aviso DT</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m3" data-sub="sp_gd_1" data-section="g1" data-task="0">Eliminar</button>
+                      </div>
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m3.subprocesses.sp_gd_1.sections.g1.tasks.1">Firmas / Versionado / Vigencias</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m3" data-sub="sp_gd_1" data-section="g1" data-task="1">Eliminar</button>
+                      </div>
+                    
+                  </div>
+                
+                  <div class="process-box" data-section="g2">
+                    <div class="process-title">
+                      <span contenteditable="true" data-path="macros.m3.subprocesses.sp_gd_1.sections.g2.title">Respaldo del Ciclo</span>
+                      <span class="process-tools no-export">
+                        <button class="btn" data-action="addTask" data-macro="m3" data-sub="sp_gd_1" data-section="g2">+ Tarea</button>
+                        <button class="btn danger" data-action="deleteSection" data-macro="m3" data-sub="sp_gd_1" data-section="g2">Eliminar</button>
+                      </span>
+                    </div>
+
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m3.subprocesses.sp_gd_1.sections.g2.tasks.0">Centralizaciones / Reportes / Comprobantes</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m3" data-sub="sp_gd_1" data-section="g2" data-task="0">Eliminar</button>
+                      </div>
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m3.subprocesses.sp_gd_1.sections.g2.tasks.1">Auditoría y trazabilidad</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m3" data-sub="sp_gd_1" data-section="g2" data-task="1">Eliminar</button>
+                      </div>
+                    
+                  </div>
+                
+              </div>
+            
+          </div>
+        </div><div class="connector">➔</div><div class="macro b5" data-macro="m_06accd207e6ff19b9eb73767">
+          <div class="macro-title" contenteditable="true" data-path="macros.m_06accd207e6ff19b9eb73767.title">ASISTENCIA</div>
+          <div class="macro-desc" contenteditable="true" data-path="macros.m_06accd207e6ff19b9eb73767.desc">Descripción del bloque</div>
+
+          <div class="macro-actions no-export">
+            <button class="btn" data-action="addSubprocess" data-macro="m_06accd207e6ff19b9eb73767">+ Subproceso</button>
+            <button class="btn danger" data-action="deleteMacroInline" data-macro="m_06accd207e6ff19b9eb73767">Eliminar bloque</button>
+          </div>
+
+          <div class="subflow" data-subflow="m_06accd207e6ff19b9eb73767">
+            
+              <div class="subblock b2" data-sub="sb_0a475e9a28aef19b9eb73767" draggable="true">
+                <div class="subblock-topbar no-export">
+                  <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
+                  <button class="btn" data-action="addSection" data-macro="m_06accd207e6ff19b9eb73767" data-sub="sb_0a475e9a28aef19b9eb73767">+ Caja proceso</button>
+                  <button class="btn danger" data-action="deleteSubprocess" data-macro="m_06accd207e6ff19b9eb73767" data-sub="sb_0a475e9a28aef19b9eb73767">Eliminar subproceso</button>
+                </div>
+
+                <div class="subblock-title" contenteditable="true" data-path="macros.m_06accd207e6ff19b9eb73767.subprocesses.sb_0a475e9a28aef19b9eb73767.title">Subproceso</div>
+
+                
+                  <div class="process-box" data-section="s_e37c2ddf2f70219b9eb73767">
+                    <div class="process-title">
+                      <span contenteditable="true" data-path="macros.m_06accd207e6ff19b9eb73767.subprocesses.sb_0a475e9a28aef19b9eb73767.sections.s_e37c2ddf2f70219b9eb73767.title">Proceso</span>
+                      <span class="process-tools no-export">
+                        <button class="btn" data-action="addTask" data-macro="m_06accd207e6ff19b9eb73767" data-sub="sb_0a475e9a28aef19b9eb73767" data-section="s_e37c2ddf2f70219b9eb73767">+ Tarea</button>
+                        <button class="btn danger" data-action="deleteSection" data-macro="m_06accd207e6ff19b9eb73767" data-sub="sb_0a475e9a28aef19b9eb73767" data-section="s_e37c2ddf2f70219b9eb73767">Eliminar</button>
+                      </span>
+                    </div>
+
+                    
+                      <div class="sub-task">
+                        <span contenteditable="true" data-path="macros.m_06accd207e6ff19b9eb73767.subprocesses.sb_0a475e9a28aef19b9eb73767.sections.s_e37c2ddf2f70219b9eb73767.tasks.0">Tarea</span>
+                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m_06accd207e6ff19b9eb73767" data-sub="sb_0a475e9a28aef19b9eb73767" data-section="s_e37c2ddf2f70219b9eb73767" data-task="0">Eliminar</button>
+                      </div>
+                    
+                  </div>
+                
+              </div>
+            
+          </div>
+        </div></div>
   </div>
 
   <script id="INITIAL_MODEL" type="application/json">
-  {
-    "page": { "title": "Ciclo de Gestión de Personas y Nómina" },
-    "macros": [
-      {
-        "id": "m1",
-        "className": "b1",
-        "title": "1. Ingreso a EESS",
-        "desc": "Ingreso del trabajador y datos base (sistema fuente).",
-        "subprocesses": [
-          {
-            "id": "sp_ing_1",
-            "className": "b2",
-            "title": "Ingreso y Datos Base",
-            "sections": [
-              { "id": "s1", "title": "Origen (Entradas)", "tasks": ["Selección + Onboarding", "Obra Directivo / Operario"] },
-              { "id": "s2", "title": "Alta Administrativa (EESS)", "tasks": ["Datos Personales / Contractuales", "Estructura Org. / Centro Costo"] }
-            ]
-          }
-        ]
-      },
-      {
-        "id": "m2",
-        "className": "nomina",
-        "title": "2. Nómina (Macroproceso)",
-        "desc": "Subprocesos 2 → 5: Configuración y Asistencia → Cálculo y Finiquitos → Tesorería y Centralización → Reportes y Gestión.",
-        "subprocesses": [
-          {
-            "id": "b2",
-            "className": "b2",
-            "title": "2. Configuración y Asistencia",
-            "sections": [
-              { "id": "p1", "title": "Parámetros Nómina", "tasks": ["Bancos / Gratificación / Impuestos"] },
-              { "id": "p2", "title": "Recinto (Puesta en Vivo)", "tasks": ["Habilitar Reloj-App / Sincro Subcontratos", "Fiscalización DT / Portal Asistencia"] },
-              { "id": "p3", "title": "Mantención Mensual", "tasks": ["Nómina: Vacaciones y Licencias", "Recinto: Horas Extras y Faltas"] }
-            ]
-          },
-          {
-            "id": "b3",
-            "className": "b3",
-            "title": "3. Cálculo y Finiquitos",
-            "sections": [
-              { "id": "p4", "title": "Proceso Sueldos", "tasks": ["Actualizar Haberes Movilización", "Anticipo → Sueldo → Ajustes"] },
-              { "id": "p5", "title": "Proceso Finiquitos", "tasks": ["Simular Baja / Grabar / Imprimir", "Anticipado o Fin de Mes"] }
-            ]
-          },
-          {
-            "id": "b4",
-            "className": "b4",
-            "title": "4. Tesorería y Centralización",
-            "sections": [
-              { "id": "p6", "title": "Medios de Pago", "tasks": ["Cta. Cte. / Efectivo / Vale Vista", "Prueba Ingreso Ficha"] },
-              { "id": "p7", "title": "Centralización", "tasks": ["Sueldos y Ajustes", "(Elimina Cent. Finiquitos)"] }
-            ]
-          },
-          {
-            "id": "b5",
-            "className": "b5",
-            "title": "5. Reportes y Gestión",
-            "sections": [
-              { "id": "p8", "title": "Cierres Legales", "tasks": ["INE / LRE / Leyes Sociales", "CIERRE MENSUAL"] },
-              { "id": "p9", "title": "Gestión de Nómina", "tasks": ["Préstamos / Seguros / Vacaciones", "Masa Constructora / Especialidades"] }
-            ]
-          }
-        ]
-      },
-      {
-        "id": "m3",
-        "className": "gd",
-        "title": "3. Gestión Documental",
-        "desc": "Contratos, anexos, respaldos y trazabilidad documental asociada al ciclo.",
-        "subprocesses": [
-          {
-            "id": "sp_gd_1",
-            "className": "b5",
-            "title": "Gestión y Respaldo",
-            "sections": [
-              { "id": "g1", "title": "Documentación Laboral", "tasks": ["Contratos / Anexos / Aviso DT", "Firmas / Versionado / Vigencias"] },
-              { "id": "g2", "title": "Respaldo del Ciclo", "tasks": ["Centralizaciones / Reportes / Comprobantes", "Auditoría y trazabilidad"] }
-            ]
-          }
-        ]
-      }
-    ]
-  }
-  </script>
+{
+  "page": {
+    "title": "Ciclo de Gestión de Personas y Nómina"
+  },
+  "macros": [
+    {
+      "id": "m1",
+      "className": "b1",
+      "title": "1. Ingreso a EESS",
+      "desc": "Ingreso del trabajador y datos base (sistema fuente).",
+      "subprocesses": [
+        {
+          "id": "sp_ing_1",
+          "className": "b2",
+          "title": "Ingreso y Datos Base",
+          "sections": [
+            {
+              "id": "s1",
+              "title": "Origen (Entradas)",
+              "tasks": [
+                "Selección + Onboarding",
+                "Obra Directivo / Operario"
+              ]
+            },
+            {
+              "id": "s2",
+              "title": "Alta Administrativa (EESS)",
+              "tasks": [
+                "Datos Personales / Contractuales",
+                "Estructura Org. / Centro Costo"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m2",
+      "className": "nomina",
+      "title": "2. Nómina (Macroproceso)",
+      "desc": "Subprocesos 2 → 5: Configuración y Asistencia → Cálculo y Finiquitos → Tesorería y Centralización → Reportes y Gestión.",
+      "subprocesses": [
+        {
+          "id": "b2",
+          "className": "b2",
+          "title": "2. Configuración y Asistencia",
+          "sections": [
+            {
+              "id": "p1",
+              "title": "Parámetros Nómina",
+              "tasks": [
+                "Bancos / Gratificación / Impuestos"
+              ]
+            },
+            {
+              "id": "p2",
+              "title": "Recinto (Puesta en Vivo)",
+              "tasks": [
+                "Habilitar Reloj-App / Sincro Subcontratos",
+                "Fiscalización DT / Portal Asistencia"
+              ]
+            },
+            {
+              "id": "p3",
+              "title": "Mantención Mensual",
+              "tasks": [
+                "Nómina: Vacaciones y Licencias",
+                "Recinto: Horas Extras y Faltas"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b3",
+          "className": "b3",
+          "title": "3. Cálculo y Finiquitos",
+          "sections": [
+            {
+              "id": "p4",
+              "title": "Proceso Sueldos",
+              "tasks": [
+                "Actualizar Haberes Movilización",
+                "Anticipo → Sueldo → Ajustes"
+              ]
+            },
+            {
+              "id": "p5",
+              "title": "Proceso Finiquitos",
+              "tasks": [
+                "Simular Baja / Grabar / Imprimir",
+                "Anticipado o Fin de Mes"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b4",
+          "className": "b4",
+          "title": "4. Tesorería y Centralización",
+          "sections": [
+            {
+              "id": "p6",
+              "title": "Medios de Pago",
+              "tasks": [
+                "Cta. Cte. / Efectivo / Vale Vista",
+                "Prueba Ingreso Ficha"
+              ]
+            },
+            {
+              "id": "p7",
+              "title": "Centralización",
+              "tasks": [
+                "Sueldos y Ajustes",
+                "(Elimina Cent. Finiquitos)"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b5",
+          "className": "b5",
+          "title": "5. Reportes y Gestión",
+          "sections": [
+            {
+              "id": "p8",
+              "title": "Cierres Legales",
+              "tasks": [
+                "INE / LRE / Leyes Sociales",
+                "CIERRE MENSUAL"
+              ]
+            },
+            {
+              "id": "p9",
+              "title": "Gestión de Nómina",
+              "tasks": [
+                "Préstamos / Seguros / Vacaciones",
+                "Masa Constructora / Especialidades"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m3",
+      "className": "gd",
+      "title": "3. Gestión Documental",
+      "desc": "Contratos, anexos, respaldos y trazabilidad documental asociada al ciclo.",
+      "subprocesses": [
+        {
+          "id": "sp_gd_1",
+          "className": "b5",
+          "title": "Gestión y Respaldo",
+          "sections": [
+            {
+              "id": "g1",
+              "title": "Documentación Laboral",
+              "tasks": [
+                "Contratos / Anexos / Aviso DT",
+                "Firmas / Versionado / Vigencias"
+              ]
+            },
+            {
+              "id": "g2",
+              "title": "Respaldo del Ciclo",
+              "tasks": [
+                "Centralizaciones / Reportes / Comprobantes",
+                "Auditoría y trazabilidad"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m_06accd207e6ff19b9eb73767",
+      "className": "b5",
+      "title": "ASISTENCIA",
+      "desc": "Descripción del bloque",
+      "subprocesses": [
+        {
+          "id": "sb_0a475e9a28aef19b9eb73767",
+          "className": "b2",
+          "title": "Subproceso",
+          "sections": [
+            {
+              "id": "s_e37c2ddf2f70219b9eb73767",
+              "title": "Proceso",
+              "tasks": [
+                "Tarea"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+</script>
 
   <script>
     const STORAGE_KEY = "flujo_rrhh_nomina_macro_v8";
@@ -798,5 +1341,6 @@
     // boot
     render();
   </script>
-</body>
-</html>
+
+
+</body></html>
