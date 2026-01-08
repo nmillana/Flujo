@@ -1,12 +1,14 @@
+<!-- ✅ COPIA/PEGA ESTO EN TU HTML (YA TE DEJO TODO EL ARCHIVO COMPLETO) -->
 <!doctype html>
-<html lang="es"><head>
+<html lang="es">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Diagrama de Flujo - RRHH y Nómina (Editable)</title>
 
   <!-- Export PNG/PDF -->
-  <script defer="" src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
   <style>
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 20px; }
@@ -22,6 +24,13 @@
       padding: 15px;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
       flex: 0 0 auto;
+    }
+    .macro[draggable="true"]{ cursor: grab; }
+    .macro.dragging{ opacity: 0.6; transform: scale(0.995); }
+
+    .macro-topbar{
+      display:flex; gap:8px; justify-content:center; align-items:center; flex-wrap:wrap;
+      margin: -2px 0 10px;
     }
 
     .macro-title {
@@ -80,7 +89,16 @@
       margin: -2px 0 10px;
     }
 
-    .process-box { background: white; border: 1px solid #ddd; border-radius: 5px; padding: 12px; margin-bottom: 12px; min-width: 260px; }
+    .process-box {
+      background: white;
+      border: 1px solid #ddd;
+      border-left: 6px solid #ddd;
+      border-radius: 5px;
+      padding: 12px;
+      margin-bottom: 12px;
+      min-width: 260px;
+      position: relative;
+    }
     .process-title {
       font-weight: bold; font-size: 0.85em; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 8px; color: #555;
       display:flex; justify-content:space-between; gap:10px;
@@ -88,33 +106,67 @@
     .process-tools { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
 
     .sub-task {
-      background: #f9f9f9; border-left: 3px solid #ccc; padding: 5px 10px; margin-top: 5px;
-      font-size: 0.8em; color: #666; display:flex; justify-content:space-between; gap:10px; align-items:flex-start;
+      background: #f9f9f9;
+      border-left: 3px solid #ccc;
+      padding: 5px 10px;
+      margin-top: 5px;
+      font-size: 0.8em;
+      color: #666;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-start;
+      position: relative;
+      padding-right: 118px; /* espacio banderín + botones */
     }
 
+    /* ====== ESTADOS DE PROCESO ====== */
+    .process-box.status-ok{ border-left-color:#16a34a; }
+    .process-box.status-progress{ border-left-color:#f59e0b; }
+    .process-box.status-late{ border-left-color:#dc2626; }
+
+    .status-select{
+      border: 1px solid rgba(0,0,0,0.18);
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 0.78em;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    /* ====== BANDERÍN EN TAREAS ====== */
+    .task-flag{
+      position:absolute;
+      right: 92px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0; height: 0;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-left: 12px solid #dc2626;
+      filter: drop-shadow(0 1px 0 rgba(0,0,0,0.08));
+      pointer-events: none;
+    }
+    .task-flag::after{
+      content:"";
+      position:absolute;
+      left: -12px;
+      top: -8px;
+      width: 3px;
+      height: 16px;
+      background: #dc2626;
+      border-radius: 2px;
+    }
+    .task-flag.hide-flag{ display:none; }
+    .flag-btn{ padding: 6px 8px; font-size: 0.78em; }
+
     /* ===== Colores ===== */
-    .b1 { background-color: #e3f2fd; border-top: 5px solid #1976d2; }
-    .b1 .macro-title { background-color: #1976d2; }
-
-    .nomina { background-color: #fafafa; border-top: 5px solid #455a64; }
-    .nomina .macro-title { background-color: #455a64; }
-
-    .gd { background-color: #eef2ff; border-top: 5px solid #4f46e5; }
-    .gd .macro-title { background-color: #4f46e5; }
-
-    .b2 { background-color: #fff3e0; border-top: 5px solid #fb8c00; }
-    .b2 .subblock-title { background-color: #fb8c00; }
-
-    .b3 { background-color: #f3e5f5; border-top: 5px solid #8e24aa; }
-    .b3 .subblock-title { background-color: #8e24aa; }
-
-    .b4 { background-color: #e8f5e9; border-top: 5px solid #43a047; }
-    .b4 .subblock-title { background-color: #43a047; }
-
-    .b5 { background-color: #eceff1; border-top: 5px solid #607d8b; }
-    .b5 .subblock-title { background-color: #607d8b; }
-    /* FIX: macro-title para b5 (si un macro usa b5) */
-    .b5 .macro-title { background-color: #607d8b; }
+    .b1, .nomina, .gd, .b2, .b3, .b4, .b5 {
+      background-color: #e3f2fd;
+      border-top: 5px solid #1976d2;
+    }
+    .b1 .macro-title, .nomina .macro-title, .gd .macro-title, .b5 .macro-title { background-color: #1976d2; }
+    .b2 .subblock-title, .b3 .subblock-title, .b4 .subblock-title, .b5 .subblock-title { background-color: #1976d2; }
 
     .connector { display: flex; align-items: center; justify-content: center; min-width: 30px; font-size: 24px; color: #ccc; }
 
@@ -125,7 +177,7 @@
       margin: -2px -4px;
     }
 
-    /* ====== EDICIÓN LEGIBLE: SIEMPRE NEGRO AL EDITAR ====== */
+    /* ====== EDICIÓN LEGIBLE ====== */
     [contenteditable="true"]:focus{
       box-shadow: 0 0 0 2px rgba(25,118,210,0.25);
       background: #ffffff !important;
@@ -170,15 +222,16 @@
 <body>
   <div class="no-export">
     <h1 contenteditable="true" data-path="page.title">Ciclo de Gestión de Personas y Nómina</h1>
-    <p class="hint">
-      ✅ Al crear un <b>Bloque</b> o <b>Subproceso</b>, el sistema asigna un <b>color distinto</b> (primero usa los no ocupados, luego rota).<br>
-      ✅ Al editar, el texto pasa a <b>negro</b> para que se lea perfecto.
-    </p>
-
+    
     <div class="toolbar">
       <input id="q" type="search" placeholder="Buscar en todo el flujo...">
       <button class="btn primary" id="addMacro">+ Bloque</button>
       <button class="btn danger" id="deleteMacro">Eliminar bloque</button>
+
+      <button class="btn" id="exportJson">Exportar JSON</button>
+      <button class="btn" id="importJsonBtn">Importar JSON</button>
+      <input class="hide" id="importJsonFile" type="file" accept="application/json">
+
       <button class="btn" id="exportHtml">Exportar HTML</button>
       <button class="btn" id="exportPng">Exportar PNG (HD)</button>
       <button class="btn" id="exportPdf">Exportar PDF (HD)</button>
@@ -188,669 +241,15 @@
 
   <div id="captureArea">
     <h1 id="exportTitle" style="text-align:center;color:#333;margin:0 0 12px 0;">Ciclo de Gestión de Personas y Nómina</h1>
-    <div class="flow-container" id="flow"><div class="macro b1" data-macro="m1">
-          <div class="macro-title" contenteditable="true" data-path="macros.m1.title">1. Ingreso a EESS</div>
-          <div class="macro-desc" contenteditable="true" data-path="macros.m1.desc">Ingreso del trabajador y datos base (sistema fuente).</div>
-
-          <div class="macro-actions no-export">
-            <button class="btn" data-action="addSubprocess" data-macro="m1">+ Subproceso</button>
-            <button class="btn danger" data-action="deleteMacroInline" data-macro="m1">Eliminar bloque</button>
-          </div>
-
-          <div class="subflow" data-subflow="m1">
-            
-              <div class="subblock b2" data-sub="sp_ing_1" draggable="true">
-                <div class="subblock-topbar no-export">
-                  <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
-                  <button class="btn" data-action="addSection" data-macro="m1" data-sub="sp_ing_1">+ Caja proceso</button>
-                  <button class="btn danger" data-action="deleteSubprocess" data-macro="m1" data-sub="sp_ing_1">Eliminar subproceso</button>
-                </div>
-
-                <div class="subblock-title" contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.title">Ingreso y Datos Base</div>
-
-                
-                  <div class="process-box" data-section="s1">
-                    <div class="process-title">
-                      <span contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.sections.s1.title">Origen del trabajador (entradas al proceso</span>
-                      <span class="process-tools no-export">
-                        <button class="btn" data-action="addTask" data-macro="m1" data-sub="sp_ing_1" data-section="s1">+ Tarea</button>
-                        <button class="btn danger" data-action="deleteSection" data-macro="m1" data-sub="sp_ing_1" data-section="s1">Eliminar</button>
-                      </span>
-                    </div>
-
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.sections.s1.tasks.0">
- Selección
-     + Onboarding (con Administración de la Compensación)
-</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m1" data-sub="sp_ing_1" data-section="s1" data-task="0">Eliminar</button>
-                      </div>
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.sections.s1.tasks.1">
- Selección,
-     Reclutamiento y Onboarding
-</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m1" data-sub="sp_ing_1" data-section="s1" data-task="1">Eliminar</button>
-                      </div>
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.sections.s1.tasks.2">Selección, Reclutamiento y Onboarding Obra Directivo</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m1" data-sub="sp_ing_1" data-section="s1" data-task="2">Eliminar</button>
-                      </div>
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.sections.s1.tasks.3">Obra Operario</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m1" data-sub="sp_ing_1" data-section="s1" data-task="3">Eliminar</button>
-                      </div>
-                    
-                  </div>
-                
-                  <div class="process-box" data-section="s2">
-                    <div class="process-title">
-                      <span contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.sections.s2.title">Alta administrativa trabajador en EESS</span>
-                      <span class="process-tools no-export">
-                        <button class="btn" data-action="addTask" data-macro="m1" data-sub="sp_ing_1" data-section="s2">+ Tarea</button>
-                        <button class="btn danger" data-action="deleteSection" data-macro="m1" data-sub="sp_ing_1" data-section="s2">Eliminar</button>
-                      </span>
-                    </div>
-
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.sections.s2.tasks.0">Ingreso datos personales</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m1" data-sub="sp_ing_1" data-section="s2" data-task="0">Eliminar</button>
-                      </div>
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.sections.s2.tasks.1">Ingreso datos contractuales</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m1" data-sub="sp_ing_1" data-section="s2" data-task="1">Eliminar</button>
-                      </div>
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.sections.s2.tasks.2">Definición estructura organizacional</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m1" data-sub="sp_ing_1" data-section="s2" data-task="2">Eliminar</button>
-                      </div>
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.sections.s2.tasks.3">Asignación centro de costo</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m1" data-sub="sp_ing_1" data-section="s2" data-task="3">Eliminar</button>
-                      </div>
-                    
-                  </div>
-                
-              </div>
-            
-          </div>
-        </div><div class="connector">➔</div><div class="macro nomina" data-macro="m2">
-          <div class="macro-title" contenteditable="true" data-path="macros.m2.title">2. Nómina (Macroproceso)</div>
-          <div class="macro-desc" contenteditable="true" data-path="macros.m2.desc">Subprocesos 2 → 5: Configuración y Asistencia → Cálculo y Finiquitos → Tesorería y Centralización → Reportes y Gestión.</div>
-
-          <div class="macro-actions no-export">
-            <button class="btn" data-action="addSubprocess" data-macro="m2">+ Subproceso</button>
-            <button class="btn danger" data-action="deleteMacroInline" data-macro="m2">Eliminar bloque</button>
-          </div>
-
-          <div class="subflow" data-subflow="m2">
-            
-              <div class="subblock b2" data-sub="b2" draggable="true">
-                <div class="subblock-topbar no-export">
-                  <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
-                  <button class="btn" data-action="addSection" data-macro="m2" data-sub="b2">+ Caja proceso</button>
-                  <button class="btn danger" data-action="deleteSubprocess" data-macro="m2" data-sub="b2">Eliminar subproceso</button>
-                </div>
-
-                <div class="subblock-title" contenteditable="true" data-path="macros.m2.subprocesses.b2.title">2. Configuración y Asistencia</div>
-
-                
-                  <div class="process-box" data-section="p1">
-                    <div class="process-title">
-                      <span contenteditable="true" data-path="macros.m2.subprocesses.b2.sections.p1.title">Parámetros Nómina</span>
-                      <span class="process-tools no-export">
-                        <button class="btn" data-action="addTask" data-macro="m2" data-sub="b2" data-section="p1">+ Tarea</button>
-                        <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="b2" data-section="p1">Eliminar</button>
-                      </span>
-                    </div>
-
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m2.subprocesses.b2.sections.p1.tasks.0">Bancos / Gratificación / Impuestos</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b2" data-section="p1" data-task="0">Eliminar</button>
-                      </div>
-                    
-                  </div>
-                
-                  <div class="process-box" data-section="p2">
-                    <div class="process-title">
-                      <span contenteditable="true" data-path="macros.m2.subprocesses.b2.sections.p2.title">Recinto (Puesta en Vivo)</span>
-                      <span class="process-tools no-export">
-                        <button class="btn" data-action="addTask" data-macro="m2" data-sub="b2" data-section="p2">+ Tarea</button>
-                        <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="b2" data-section="p2">Eliminar</button>
-                      </span>
-                    </div>
-
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m2.subprocesses.b2.sections.p2.tasks.0">Habilitar Reloj-App / Sincro Subcontratos</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b2" data-section="p2" data-task="0">Eliminar</button>
-                      </div>
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m2.subprocesses.b2.sections.p2.tasks.1">Fiscalización DT / Portal Asistencia</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b2" data-section="p2" data-task="1">Eliminar</button>
-                      </div>
-                    
-                  </div>
-                
-                  <div class="process-box" data-section="p3">
-                    <div class="process-title">
-                      <span contenteditable="true" data-path="macros.m2.subprocesses.b2.sections.p3.title">Mantención Mensual</span>
-                      <span class="process-tools no-export">
-                        <button class="btn" data-action="addTask" data-macro="m2" data-sub="b2" data-section="p3">+ Tarea</button>
-                        <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="b2" data-section="p3">Eliminar</button>
-                      </span>
-                    </div>
-
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m2.subprocesses.b2.sections.p3.tasks.0">Nómina: Vacaciones y Licencias</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b2" data-section="p3" data-task="0">Eliminar</button>
-                      </div>
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m2.subprocesses.b2.sections.p3.tasks.1">Recinto: Horas Extras y Faltas</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b2" data-section="p3" data-task="1">Eliminar</button>
-                      </div>
-                    
-                  </div>
-                
-              </div>
-            
-              <div class="subblock b3" data-sub="b3" draggable="true">
-                <div class="subblock-topbar no-export">
-                  <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
-                  <button class="btn" data-action="addSection" data-macro="m2" data-sub="b3">+ Caja proceso</button>
-                  <button class="btn danger" data-action="deleteSubprocess" data-macro="m2" data-sub="b3">Eliminar subproceso</button>
-                </div>
-
-                <div class="subblock-title" contenteditable="true" data-path="macros.m2.subprocesses.b3.title">3. Cálculo y Finiquitos</div>
-
-                
-                  <div class="process-box" data-section="p4">
-                    <div class="process-title">
-                      <span contenteditable="true" data-path="macros.m2.subprocesses.b3.sections.p4.title">Proceso Sueldos</span>
-                      <span class="process-tools no-export">
-                        <button class="btn" data-action="addTask" data-macro="m2" data-sub="b3" data-section="p4">+ Tarea</button>
-                        <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="b3" data-section="p4">Eliminar</button>
-                      </span>
-                    </div>
-
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m2.subprocesses.b3.sections.p4.tasks.0">Actualizar Haberes Movilización</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b3" data-section="p4" data-task="0">Eliminar</button>
-                      </div>
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m2.subprocesses.b3.sections.p4.tasks.1">Anticipo → Sueldo → Ajustes</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b3" data-section="p4" data-task="1">Eliminar</button>
-                      </div>
-                    
-                  </div>
-                
-                  <div class="process-box" data-section="p5">
-                    <div class="process-title">
-                      <span contenteditable="true" data-path="macros.m2.subprocesses.b3.sections.p5.title">Proceso Finiquitos</span>
-                      <span class="process-tools no-export">
-                        <button class="btn" data-action="addTask" data-macro="m2" data-sub="b3" data-section="p5">+ Tarea</button>
-                        <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="b3" data-section="p5">Eliminar</button>
-                      </span>
-                    </div>
-
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m2.subprocesses.b3.sections.p5.tasks.0">Simular Baja / Grabar / Imprimir</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b3" data-section="p5" data-task="0">Eliminar</button>
-                      </div>
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m2.subprocesses.b3.sections.p5.tasks.1">Anticipado o Fin de Mes</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b3" data-section="p5" data-task="1">Eliminar</button>
-                      </div>
-                    
-                  </div>
-                
-              </div>
-            
-              <div class="subblock b4" data-sub="b4" draggable="true">
-                <div class="subblock-topbar no-export">
-                  <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
-                  <button class="btn" data-action="addSection" data-macro="m2" data-sub="b4">+ Caja proceso</button>
-                  <button class="btn danger" data-action="deleteSubprocess" data-macro="m2" data-sub="b4">Eliminar subproceso</button>
-                </div>
-
-                <div class="subblock-title" contenteditable="true" data-path="macros.m2.subprocesses.b4.title">4. Tesorería y Centralización</div>
-
-                
-                  <div class="process-box" data-section="p6">
-                    <div class="process-title">
-                      <span contenteditable="true" data-path="macros.m2.subprocesses.b4.sections.p6.title">Medios de Pago</span>
-                      <span class="process-tools no-export">
-                        <button class="btn" data-action="addTask" data-macro="m2" data-sub="b4" data-section="p6">+ Tarea</button>
-                        <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="b4" data-section="p6">Eliminar</button>
-                      </span>
-                    </div>
-
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m2.subprocesses.b4.sections.p6.tasks.0">Cta. Cte. / Efectivo / Vale Vista</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b4" data-section="p6" data-task="0">Eliminar</button>
-                      </div>
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m2.subprocesses.b4.sections.p6.tasks.1">Prueba Ingreso Ficha</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b4" data-section="p6" data-task="1">Eliminar</button>
-                      </div>
-                    
-                  </div>
-                
-                  <div class="process-box" data-section="p7">
-                    <div class="process-title">
-                      <span contenteditable="true" data-path="macros.m2.subprocesses.b4.sections.p7.title">Centralización</span>
-                      <span class="process-tools no-export">
-                        <button class="btn" data-action="addTask" data-macro="m2" data-sub="b4" data-section="p7">+ Tarea</button>
-                        <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="b4" data-section="p7">Eliminar</button>
-                      </span>
-                    </div>
-
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m2.subprocesses.b4.sections.p7.tasks.0">Sueldos y Ajustes</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b4" data-section="p7" data-task="0">Eliminar</button>
-                      </div>
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m2.subprocesses.b4.sections.p7.tasks.1">(Elimina Cent. Finiquitos)</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b4" data-section="p7" data-task="1">Eliminar</button>
-                      </div>
-                    
-                  </div>
-                
-              </div>
-            
-              <div class="subblock b5" data-sub="b5" draggable="true">
-                <div class="subblock-topbar no-export">
-                  <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
-                  <button class="btn" data-action="addSection" data-macro="m2" data-sub="b5">+ Caja proceso</button>
-                  <button class="btn danger" data-action="deleteSubprocess" data-macro="m2" data-sub="b5">Eliminar subproceso</button>
-                </div>
-
-                <div class="subblock-title" contenteditable="true" data-path="macros.m2.subprocesses.b5.title">5. Reportes y Gestión</div>
-
-                
-                  <div class="process-box" data-section="p8">
-                    <div class="process-title">
-                      <span contenteditable="true" data-path="macros.m2.subprocesses.b5.sections.p8.title">Cierres Legales</span>
-                      <span class="process-tools no-export">
-                        <button class="btn" data-action="addTask" data-macro="m2" data-sub="b5" data-section="p8">+ Tarea</button>
-                        <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="b5" data-section="p8">Eliminar</button>
-                      </span>
-                    </div>
-
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m2.subprocesses.b5.sections.p8.tasks.0">INE / LRE / Leyes Sociales</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b5" data-section="p8" data-task="0">Eliminar</button>
-                      </div>
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m2.subprocesses.b5.sections.p8.tasks.1">CIERRE MENSUAL</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b5" data-section="p8" data-task="1">Eliminar</button>
-                      </div>
-                    
-                  </div>
-                
-                  <div class="process-box" data-section="p9">
-                    <div class="process-title">
-                      <span contenteditable="true" data-path="macros.m2.subprocesses.b5.sections.p9.title">Gestión de Nómina</span>
-                      <span class="process-tools no-export">
-                        <button class="btn" data-action="addTask" data-macro="m2" data-sub="b5" data-section="p9">+ Tarea</button>
-                        <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="b5" data-section="p9">Eliminar</button>
-                      </span>
-                    </div>
-
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m2.subprocesses.b5.sections.p9.tasks.0">Préstamos / Seguros / Vacaciones</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b5" data-section="p9" data-task="0">Eliminar</button>
-                      </div>
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m2.subprocesses.b5.sections.p9.tasks.1">Masa Constructora / Especialidades</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m2" data-sub="b5" data-section="p9" data-task="1">Eliminar</button>
-                      </div>
-                    
-                  </div>
-                
-              </div>
-            
-          </div>
-        </div><div class="connector">➔</div><div class="macro gd" data-macro="m3">
-          <div class="macro-title" contenteditable="true" data-path="macros.m3.title">3. Gestión Documental</div>
-          <div class="macro-desc" contenteditable="true" data-path="macros.m3.desc">Contratos, anexos, respaldos y trazabilidad documental asociada al ciclo.</div>
-
-          <div class="macro-actions no-export">
-            <button class="btn" data-action="addSubprocess" data-macro="m3">+ Subproceso</button>
-            <button class="btn danger" data-action="deleteMacroInline" data-macro="m3">Eliminar bloque</button>
-          </div>
-
-          <div class="subflow" data-subflow="m3">
-            
-              <div class="subblock b5" data-sub="sp_gd_1" draggable="true">
-                <div class="subblock-topbar no-export">
-                  <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
-                  <button class="btn" data-action="addSection" data-macro="m3" data-sub="sp_gd_1">+ Caja proceso</button>
-                  <button class="btn danger" data-action="deleteSubprocess" data-macro="m3" data-sub="sp_gd_1">Eliminar subproceso</button>
-                </div>
-
-                <div class="subblock-title" contenteditable="true" data-path="macros.m3.subprocesses.sp_gd_1.title">Gestión y Respaldo</div>
-
-                
-                  <div class="process-box" data-section="g1">
-                    <div class="process-title">
-                      <span contenteditable="true" data-path="macros.m3.subprocesses.sp_gd_1.sections.g1.title">Documentación Laboral</span>
-                      <span class="process-tools no-export">
-                        <button class="btn" data-action="addTask" data-macro="m3" data-sub="sp_gd_1" data-section="g1">+ Tarea</button>
-                        <button class="btn danger" data-action="deleteSection" data-macro="m3" data-sub="sp_gd_1" data-section="g1">Eliminar</button>
-                      </span>
-                    </div>
-
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m3.subprocesses.sp_gd_1.sections.g1.tasks.0">Contratos / Anexos / Aviso DT</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m3" data-sub="sp_gd_1" data-section="g1" data-task="0">Eliminar</button>
-                      </div>
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m3.subprocesses.sp_gd_1.sections.g1.tasks.1">Firmas / Versionado / Vigencias</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m3" data-sub="sp_gd_1" data-section="g1" data-task="1">Eliminar</button>
-                      </div>
-                    
-                  </div>
-                
-                  <div class="process-box" data-section="g2">
-                    <div class="process-title">
-                      <span contenteditable="true" data-path="macros.m3.subprocesses.sp_gd_1.sections.g2.title">Respaldo del Ciclo</span>
-                      <span class="process-tools no-export">
-                        <button class="btn" data-action="addTask" data-macro="m3" data-sub="sp_gd_1" data-section="g2">+ Tarea</button>
-                        <button class="btn danger" data-action="deleteSection" data-macro="m3" data-sub="sp_gd_1" data-section="g2">Eliminar</button>
-                      </span>
-                    </div>
-
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m3.subprocesses.sp_gd_1.sections.g2.tasks.0">Centralizaciones / Reportes / Comprobantes</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m3" data-sub="sp_gd_1" data-section="g2" data-task="0">Eliminar</button>
-                      </div>
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m3.subprocesses.sp_gd_1.sections.g2.tasks.1">Auditoría y trazabilidad</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m3" data-sub="sp_gd_1" data-section="g2" data-task="1">Eliminar</button>
-                      </div>
-                    
-                  </div>
-                
-              </div>
-            
-          </div>
-        </div><div class="connector">➔</div><div class="macro b5" data-macro="m_c9120e1a5996319b9ed2eb03">
-          <div class="macro-title" contenteditable="true" data-path="macros.m_c9120e1a5996319b9ed2eb03.title">ASISTENCIA</div>
-          <div class="macro-desc" contenteditable="true" data-path="macros.m_c9120e1a5996319b9ed2eb03.desc">Descripción del bloque</div>
-
-          <div class="macro-actions no-export">
-            <button class="btn" data-action="addSubprocess" data-macro="m_c9120e1a5996319b9ed2eb03">+ Subproceso</button>
-            <button class="btn danger" data-action="deleteMacroInline" data-macro="m_c9120e1a5996319b9ed2eb03">Eliminar bloque</button>
-          </div>
-
-          <div class="subflow" data-subflow="m_c9120e1a5996319b9ed2eb03">
-            
-              <div class="subblock b2" data-sub="sb_51a10b49925dc819b9ed2eb03" draggable="true">
-                <div class="subblock-topbar no-export">
-                  <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
-                  <button class="btn" data-action="addSection" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03">+ Caja proceso</button>
-                  <button class="btn danger" data-action="deleteSubprocess" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03">Eliminar subproceso</button>
-                </div>
-
-                <div class="subblock-title" contenteditable="true" data-path="macros.m_c9120e1a5996319b9ed2eb03.subprocesses.sb_51a10b49925dc819b9ed2eb03.title">mODULO buk</div>
-
-                
-                  <div class="process-box" data-section="s_9c15ca094d062819b9ed2eb03">
-                    <div class="process-title">
-                      <span contenteditable="true" data-path="macros.m_c9120e1a5996319b9ed2eb03.subprocesses.sb_51a10b49925dc819b9ed2eb03.sections.s_9c15ca094d062819b9ed2eb03.title">Proceso 1</span>
-                      <span class="process-tools no-export">
-                        <button class="btn" data-action="addTask" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_9c15ca094d062819b9ed2eb03">+ Tarea</button>
-                        <button class="btn danger" data-action="deleteSection" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_9c15ca094d062819b9ed2eb03">Eliminar</button>
-                      </span>
-                    </div>
-
-                    
-                      <div class="sub-task">
-                        <span contenteditable="true" data-path="macros.m_c9120e1a5996319b9ed2eb03.subprocesses.sb_51a10b49925dc819b9ed2eb03.sections.s_9c15ca094d062819b9ed2eb03.tasks.0">Tarea</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_9c15ca094d062819b9ed2eb03" data-task="0">Eliminar</button>
-                      </div>
-                    
-                  </div>
-                
-              </div>
-            
-          </div>
-        </div></div>
+    <div class="flow-container" id="flow"></div>
   </div>
 
   <script id="INITIAL_MODEL" type="application/json">
 {
-  "page": {
-    "title": "Ciclo de Gestión de Personas y Nómina"
-  },
-  "macros": [
-    {
-      "id": "m1",
-      "className": "b1",
-      "title": "1. Ingreso a EESS",
-      "desc": "Ingreso del trabajador y datos base (sistema fuente).",
-      "subprocesses": [
-        {
-          "id": "sp_ing_1",
-          "className": "b2",
-          "title": "Ingreso y Datos Base",
-          "sections": [
-            {
-              "id": "s1",
-              "title": "Origen del trabajador (entradas al proceso",
-              "tasks": [
-                "\n Selección\n     + Onboarding (con Administración de la Compensación)\n",
-                "\n Selección,\n     Reclutamiento y Onboarding\n",
-                "Selección, Reclutamiento y Onboarding Obra Directivo",
-                "Obra Operario"
-              ]
-            },
-            {
-              "id": "s2",
-              "title": "Alta administrativa trabajador en EESS",
-              "tasks": [
-                "Ingreso datos personales",
-                "Ingreso datos contractuales",
-                "Definición estructura organizacional",
-                "Asignación centro de costo"
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "m2",
-      "className": "nomina",
-      "title": "2. Nómina (Macroproceso)",
-      "desc": "Subprocesos 2 → 5: Configuración y Asistencia → Cálculo y Finiquitos → Tesorería y Centralización → Reportes y Gestión.",
-      "subprocesses": [
-        {
-          "id": "b2",
-          "className": "b2",
-          "title": "2. Configuración y Asistencia",
-          "sections": [
-            {
-              "id": "p1",
-              "title": "Parámetros Nómina",
-              "tasks": [
-                "Bancos / Gratificación / Impuestos"
-              ]
-            },
-            {
-              "id": "p2",
-              "title": "Recinto (Puesta en Vivo)",
-              "tasks": [
-                "Habilitar Reloj-App / Sincro Subcontratos",
-                "Fiscalización DT / Portal Asistencia"
-              ]
-            },
-            {
-              "id": "p3",
-              "title": "Mantención Mensual",
-              "tasks": [
-                "Nómina: Vacaciones y Licencias",
-                "Recinto: Horas Extras y Faltas"
-              ]
-            }
-          ]
-        },
-        {
-          "id": "b3",
-          "className": "b3",
-          "title": "3. Cálculo y Finiquitos",
-          "sections": [
-            {
-              "id": "p4",
-              "title": "Proceso Sueldos",
-              "tasks": [
-                "Actualizar Haberes Movilización",
-                "Anticipo → Sueldo → Ajustes"
-              ]
-            },
-            {
-              "id": "p5",
-              "title": "Proceso Finiquitos",
-              "tasks": [
-                "Simular Baja / Grabar / Imprimir",
-                "Anticipado o Fin de Mes"
-              ]
-            }
-          ]
-        },
-        {
-          "id": "b4",
-          "className": "b4",
-          "title": "4. Tesorería y Centralización",
-          "sections": [
-            {
-              "id": "p6",
-              "title": "Medios de Pago",
-              "tasks": [
-                "Cta. Cte. / Efectivo / Vale Vista",
-                "Prueba Ingreso Ficha"
-              ]
-            },
-            {
-              "id": "p7",
-              "title": "Centralización",
-              "tasks": [
-                "Sueldos y Ajustes",
-                "(Elimina Cent. Finiquitos)"
-              ]
-            }
-          ]
-        },
-        {
-          "id": "b5",
-          "className": "b5",
-          "title": "5. Reportes y Gestión",
-          "sections": [
-            {
-              "id": "p8",
-              "title": "Cierres Legales",
-              "tasks": [
-                "INE / LRE / Leyes Sociales",
-                "CIERRE MENSUAL"
-              ]
-            },
-            {
-              "id": "p9",
-              "title": "Gestión de Nómina",
-              "tasks": [
-                "Préstamos / Seguros / Vacaciones",
-                "Masa Constructora / Especialidades"
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "m3",
-      "className": "gd",
-      "title": "3. Gestión Documental",
-      "desc": "Contratos, anexos, respaldos y trazabilidad documental asociada al ciclo.",
-      "subprocesses": [
-        {
-          "id": "sp_gd_1",
-          "className": "b5",
-          "title": "Gestión y Respaldo",
-          "sections": [
-            {
-              "id": "g1",
-              "title": "Documentación Laboral",
-              "tasks": [
-                "Contratos / Anexos / Aviso DT",
-                "Firmas / Versionado / Vigencias"
-              ]
-            },
-            {
-              "id": "g2",
-              "title": "Respaldo del Ciclo",
-              "tasks": [
-                "Centralizaciones / Reportes / Comprobantes",
-                "Auditoría y trazabilidad"
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "m_c9120e1a5996319b9ed2eb03",
-      "className": "b5",
-      "title": "ASISTENCIA",
-      "desc": "Descripción del bloque",
-      "subprocesses": [
-        {
-          "id": "sb_51a10b49925dc819b9ed2eb03",
-          "className": "b2",
-          "title": "mODULO buk",
-          "sections": [
-            {
-              "id": "s_9c15ca094d062819b9ed2eb03",
-              "title": "Proceso 1",
-              "tasks": [
-                "Tarea"
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  "page": { "title": "Ciclo de Gestión de Personas y Nómina" },
+  "macros": []
 }
-</script>
+  </script>
 
   <script>
     const STORAGE_KEY = "flujo_rrhh_nomina_macro_v8";
@@ -859,6 +258,23 @@
     const exportTitle = document.getElementById("exportTitle");
     const captureArea = document.getElementById("captureArea");
     const uid = () => (Math.random().toString(16).slice(2) + Date.now().toString(16));
+
+    // ===== Polyfills =====
+    if(!String.prototype.replaceAll){
+      // eslint-disable-next-line no-extend-native
+      String.prototype.replaceAll = function(search, replacement){
+        return this.split(search).join(replacement);
+      };
+    }
+    if(!window.CSS) window.CSS = {};
+    if(!window.CSS.escape){
+      window.CSS.escape = function(value){
+        return String(value).replace(/[^a-zA-Z0-9_\-]/g, function(ch){
+          const hex = ch.charCodeAt(0).toString(16).toUpperCase();
+          return "\\ " + hex + " ";
+        });
+      };
+    }
 
     function loadDefault(){ return JSON.parse(document.getElementById("INITIAL_MODEL").textContent); }
     function loadModel(){
@@ -873,7 +289,6 @@
     function saveModel(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(model)); }
     let model = loadModel();
 
-    // Paletas separadas: macro vs subproceso
     const MACRO_PALETTE = ["b1", "nomina", "gd", "b5"];
     const SUBPROC_PALETTE = ["b2", "b3", "b4", "b5"];
 
@@ -891,12 +306,42 @@
       });
     }
 
-    // ===== Selección de color (primero el que NO está usado, si todos usados rota) =====
+    // ===== Normalización =====
+    function normalizeModel(input){
+      const mm = input || model;
+      if(!mm.page) mm.page = { title: "Ciclo de Gestión de Personas y Nómina" };
+      if(!Array.isArray(mm.macros)) mm.macros = [];
+
+      mm.macros.forEach(m=>{
+        if(!m.id) m.id = "m_" + uid();
+        if(!m.className) m.className = "b1";
+        if(!Array.isArray(m.subprocesses)) m.subprocesses = [];
+        m.subprocesses.forEach(sb=>{
+          if(!sb.id) sb.id = "sb_" + uid();
+          if(!sb.className) sb.className = "b2";
+          if(!Array.isArray(sb.sections)) sb.sections = [];
+          sb.sections.forEach(sec=>{
+            if(!sec.id) sec.id = "s_" + uid();
+            if(!sec.status) sec.status = "progress";
+            if(!Array.isArray(sec.tasks)) sec.tasks = [];
+            sec.tasks = sec.tasks.map(t => {
+              if(t && typeof t === "object") return { text: (t.text ?? ""), flag: !!t.flag };
+              return { text: (t ?? "").toString(), flag: false };
+            });
+          });
+        });
+      });
+
+      return mm;
+    }
+
+    model = normalizeModel(model);
+    saveModel();
+
     function pickClass(palette, usedSet){
       for(const c of palette){
         if(!usedSet.has(c)) return c;
       }
-      // si todos están usados: rota según cantidad existente para que vaya variando
       return palette[usedSet.size % palette.length] || palette[0];
     }
 
@@ -915,79 +360,113 @@
     }
 
     function render(){
-      const title = model.page?.title || "Ciclo";
-      const titleEl = document.querySelector('[data-path="page.title"]');
-      if(titleEl && titleEl !== document.activeElement) titleEl.textContent = title;
-      exportTitle.textContent = title;
+      try{
+        const title = model.page?.title || "Ciclo";
+        const titleEl = document.querySelector('[data-path="page.title"]');
+        if(titleEl && titleEl !== document.activeElement) titleEl.textContent = title;
+        exportTitle.textContent = title;
 
-      flow.innerHTML = "";
+        const frag = document.createDocumentFragment();
 
-      const macros = model.macros || [];
-      macros.forEach(ensureSubprocesses);
+        const macros = model.macros || [];
+        macros.forEach(ensureSubprocesses);
 
-      macros.forEach((m, i) => {
-        const macro = document.createElement("div");
-        macro.className = `macro ${m.className || ""}`;
-        macro.setAttribute("data-macro", m.id);
+        macros.forEach((m, i) => {
+          const macro = document.createElement("div");
+          macro.className = `macro ${m.className || ""}`;
+          macro.setAttribute("data-macro", m.id);
+          macro.setAttribute("draggable","true");
 
-        macro.innerHTML = `
-          <div class="macro-title" contenteditable="true" data-path="macros.${m.id}.title">${esc(m.title || "")}</div>
-          <div class="macro-desc" contenteditable="true" data-path="macros.${m.id}.desc">${esc(m.desc || "")}</div>
+          macro.innerHTML = `
+            <div class="macro-topbar no-export">
+              <span class="drag-handle macro-drag" title="Arrastra para reordenar bloques" aria-label="Arrastrar bloque">⠿</span>
+            </div>
 
-          <div class="macro-actions no-export">
-            <button class="btn" data-action="addSubprocess" data-macro="${esc(m.id)}">+ Subproceso</button>
-            <button class="btn danger" data-action="deleteMacroInline" data-macro="${esc(m.id)}">Eliminar bloque</button>
-          </div>
+            <div class="macro-title" contenteditable="true" data-path="macros.${m.id}.title">${esc(m.title || "")}</div>
+            <div class="macro-desc" contenteditable="true" data-path="macros.${m.id}.desc">${esc(m.desc || "")}</div>
 
-          <div class="subflow" data-subflow="${esc(m.id)}">
-            ${(m.subprocesses || []).map((sb) => `
-              <div class="subblock ${esc(sb.className || "b5")}" data-sub="${esc(sb.id)}" draggable="true">
-                <div class="subblock-topbar no-export">
-                  <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
-                  <button class="btn" data-action="addSection" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}">+ Caja proceso</button>
-                  <button class="btn danger" data-action="deleteSubprocess" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}">Eliminar subproceso</button>
-                </div>
+            <div class="macro-actions no-export">
+              <button class="btn" data-action="addSubprocess" data-macro="${esc(m.id)}">+ Subproceso</button>
+              <button class="btn danger" data-action="deleteMacroInline" data-macro="${esc(m.id)}">Eliminar bloque</button>
+            </div>
 
-                <div class="subblock-title" contenteditable="true"
-                  data-path="macros.${m.id}.subprocesses.${sb.id}.title">${esc(sb.title || "")}</div>
-
-                ${(sb.sections || []).map(sec => `
-                  <div class="process-box" data-section="${esc(sec.id)}">
-                    <div class="process-title">
-                      <span contenteditable="true"
-                        data-path="macros.${m.id}.subprocesses.${sb.id}.sections.${sec.id}.title">${esc(sec.title || "")}</span>
-                      <span class="process-tools no-export">
-                        <button class="btn" data-action="addTask" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}" data-section="${esc(sec.id)}">+ Tarea</button>
-                        <button class="btn danger" data-action="deleteSection" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}" data-section="${esc(sec.id)}">Eliminar</button>
-                      </span>
-                    </div>
-
-                    ${(sec.tasks || []).map((t, ti) => `
-                      <div class="sub-task">
-                        <span contenteditable="true"
-                          data-path="macros.${m.id}.subprocesses.${sb.id}.sections.${sec.id}.tasks.${ti}">${esc(t)}</span>
-                        <button class="btn danger no-export" data-action="deleteTask" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}" data-section="${esc(sec.id)}" data-task="${ti}">Eliminar</button>
-                      </div>
-                    `).join("")}
+            <div class="subflow" data-subflow="${esc(m.id)}">
+              ${(m.subprocesses || []).map((sb) => `
+                <div class="subblock ${esc(sb.className || "b5")}" data-sub="${esc(sb.id)}" draggable="true">
+                  <div class="subblock-topbar no-export">
+                    <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
+                    <button class="btn" data-action="addSection" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}">+ Caja proceso</button>
+                    <button class="btn danger" data-action="deleteSubprocess" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}">Eliminar subproceso</button>
                   </div>
-                `).join("")}
-              </div>
-            `).join("")}
-          </div>
-        `;
 
-        flow.appendChild(macro);
+                  <div class="subblock-title" contenteditable="true"
+                    data-path="macros.${m.id}.subprocesses.${sb.id}.title">${esc(sb.title || "")}</div>
 
-        if(i < macros.length - 1){
-          const conn = document.createElement("div");
-          conn.className = "connector";
-          conn.textContent = "➔";
-          flow.appendChild(conn);
-        }
-      });
+                  ${(sb.sections || []).map(sec => {
+                    const st = (sec.status || "progress");
+                    const statusClass = st === "ok" ? "status-ok" : (st === "late" ? "status-late" : "status-progress");
+                    return `
+                      <div class="process-box ${statusClass}" data-section="${esc(sec.id)}">
+                        <div class="process-title">
+                          <span contenteditable="true"
+                            data-path="macros.${m.id}.subprocesses.${sb.id}.sections.${sec.id}.title">${esc(sec.title || "")}</span>
+                          <span class="process-tools no-export">
+                            <select class="status-select" data-action="setStatus"
+                              data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}" data-section="${esc(sec.id)}" aria-label="Estado">
+                              <option value="ok" ${st==="ok"?"selected":""}>OK</option>
+                              <option value="progress" ${(st==="progress"||!st)?"selected":""}>En proceso</option>
+                              <option value="late" ${st==="late"?"selected":""}>Atrasado</option>
+                            </select>
+                            <button class="btn" data-action="addTask" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}" data-section="${esc(sec.id)}">+ Tarea</button>
+                            <button class="btn danger" data-action="deleteSection" data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}" data-section="${esc(sec.id)}">Eliminar</button>
+                          </span>
+                        </div>
 
-      wireDnDAllMacros();
-      applyFilter();
+                        ${(sec.tasks || []).map((t, ti) => {
+                          const text = (t && typeof t === "object") ? (t.text ?? "") : (t ?? "");
+                          const flagged = (t && typeof t === "object") ? !!t.flag : false;
+                          return `
+                            <div class="sub-task">
+                              <span contenteditable="true"
+                                data-path="macros.${m.id}.subprocesses.${sb.id}.sections.${sec.id}.tasks.${ti}">${esc(text)}</span>
+                              <i class="task-flag ${flagged ? "" : "hide-flag"}" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag"
+                                  data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}" data-section="${esc(sec.id)}" data-task="${ti}"
+                                  title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask"
+                                  data-macro="${esc(m.id)}" data-sub="${esc(sb.id)}" data-section="${esc(sec.id)}" data-task="${ti}">Eliminar</button>
+                              </span>
+                            </div>
+                          `;
+                        }).join("")}
+                      </div>
+                    `;
+                  }).join("")}
+                </div>
+              `).join("")}
+            </div>
+          `;
+
+          frag.appendChild(macro);
+
+          if(i < macros.length - 1){
+            const conn = document.createElement("div");
+            conn.className = "connector";
+            conn.textContent = "➔";
+            frag.appendChild(conn);
+          }
+        });
+
+        flow.replaceChildren(frag);
+
+        wireDnDMacros();
+        wireDnDAllMacros();
+        applyFilter();
+      }catch(err){
+        console.error('Render error', err);
+        alert('Ocurrió un error al cargar el diagrama. Revisa la consola (F12) para ver el detalle.');
+      }
     }
 
     function setByPath(path, value){
@@ -1025,7 +504,12 @@
           if(p[6] === "tasks"){
             const idx = Number(p[7]);
             if(!Array.isArray(sec.tasks)) sec.tasks = [];
-            sec.tasks[idx] = value; saveModel(); return;
+            if(sec.tasks[idx] && typeof sec.tasks[idx] === 'object'){
+              sec.tasks[idx].text = value;
+            }else{
+              sec.tasks[idx] = { text: value, flag: false };
+            }
+            saveModel(); return;
           }
         }
       }
@@ -1044,7 +528,6 @@
       if(!m) return;
       ensureSubprocesses(m);
 
-      // color distinto dentro del macro
       const used = getUsedSubprocClasses(macroId);
       const cls = pickClass(SUBPROC_PALETTE, used);
 
@@ -1053,7 +536,7 @@
         id: newId,
         className: cls,
         title: "Nuevo subproceso",
-        sections: [{ id: "p_" + uid(), title: "Nuevo proceso", tasks: ["Nueva tarea"] }]
+        sections: [{ id: "p_" + uid(), title: "Nuevo proceso", status: "progress", tasks: [{text:"Nueva tarea", flag:false}] }]
       });
       saveModel(); render();
     }
@@ -1071,7 +554,7 @@
       const sb = (m.subprocesses || []).find(x => x.id === subId);
       if(!sb) return;
       if(!Array.isArray(sb.sections)) sb.sections = [];
-      sb.sections.push({ id: "s_" + uid(), title: "Nuevo proceso", tasks: ["Nueva tarea"] });
+      sb.sections.push({ id: "s_" + uid(), title: "Nuevo proceso", status: "progress", tasks: [{text:"Nueva tarea", flag:false}] });
       saveModel(); render();
     }
 
@@ -1091,7 +574,7 @@
       const sec = sb ? (sb.sections || []).find(x => x.id === sectionId) : null;
       if(!sec) return;
       if(!Array.isArray(sec.tasks)) sec.tasks = [];
-      sec.tasks.push("Nueva tarea");
+      sec.tasks.push({ text: "Nueva tarea", flag: false });
       saveModel(); render();
     }
 
@@ -1105,14 +588,38 @@
       saveModel(); render();
     }
 
-    // ===== Agregar / Eliminar BLOQUE (macro) con color distinto =====
+    function setStatus(macroId, subId, sectionId, status){
+      const m = model.macros.find(x => x.id === macroId);
+      if(!m) return;
+      const sb = (m.subprocesses || []).find(x => x.id === subId);
+      const sec = sb ? (sb.sections || []).find(x => x.id === sectionId) : null;
+      if(!sec) return;
+      sec.status = (status === "ok" || status === "late" || status === "progress") ? status : "progress";
+      saveModel(); render();
+    }
+
+    function toggleFlag(macroId, subId, sectionId, idx){
+      const m = model.macros.find(x => x.id === macroId);
+      if(!m) return;
+      const sb = (m.subprocesses || []).find(x => x.id === subId);
+      const sec = sb ? (sb.sections || []).find(x => x.id === sectionId) : null;
+      if(!sec || !Array.isArray(sec.tasks)) return;
+
+      const t = sec.tasks[idx];
+      if(t && typeof t === "object"){
+        t.flag = !t.flag;
+      }else{
+        sec.tasks[idx] = { text: (t ?? "").toString(), flag: true };
+      }
+      saveModel(); render();
+    }
+
+    // ===== Agregar / Eliminar BLOQUE (macro) =====
     function addMacro(){
       const used = getUsedMacroClasses();
       const cls = pickClass(MACRO_PALETTE, used);
 
       const newId = "m_" + uid();
-
-      // Subproceso inicial también con color distinto dentro de ese macro
       const spCls = pickClass(SUBPROC_PALETTE, new Set());
 
       model.macros.push({
@@ -1125,7 +632,7 @@
             id: "sb_" + uid(),
             className: spCls,
             title: "Subproceso",
-            sections: [{ id: "s_" + uid(), title: "Proceso", tasks: ["Tarea"] }]
+            sections: [{ id: "s_" + uid(), title: "Proceso", status: "progress", tasks: [{text:"Tarea", flag:false}] }]
           }
         ]
       });
@@ -1165,10 +672,76 @@
       if(a === "deleteSection") deleteSection(macroId, subId, sectionId);
       if(a === "addTask") addTask(macroId, subId, sectionId);
       if(a === "deleteTask") deleteTask(macroId, subId, sectionId, Number(taskIdx));
+      if(a === "toggleFlag") toggleFlag(macroId, subId, sectionId, Number(taskIdx));
       if(a === "deleteMacroInline") deleteMacroById(macroId);
     });
 
-    // ===== Drag & Drop: reordenar subprocesos =====
+    // ===== Cambio de estado =====
+    document.addEventListener("change", (ev) => {
+      const sel = ev.target.closest?.('select[data-action="setStatus"]');
+      if(!sel) return;
+      const macroId = sel.getAttribute("data-macro");
+      const subId = sel.getAttribute("data-sub");
+      const sectionId = sel.getAttribute("data-section");
+      setStatus(macroId, subId, sectionId, sel.value);
+    });
+
+    // ===== Drag & Drop: reordenar BLOQUES (macros) =====
+    function wireDnDMacros(){
+      const container = document.getElementById("flow");
+      if(!container) return;
+
+      let draggedId = null;
+
+      const items = Array.from(container.querySelectorAll('.macro[draggable="true"]'));
+      items.forEach(el => {
+        const handle = el.querySelector('.macro-drag');
+        if(handle){
+          handle.addEventListener('mousedown', () => el.dataset.dragAllowed = "1");
+          handle.addEventListener('mouseup',   () => el.dataset.dragAllowed = "0");
+          handle.addEventListener('mouseleave',() => el.dataset.dragAllowed = "0");
+        }
+
+        el.addEventListener('dragstart', (e) => {
+          if(el.dataset.dragAllowed !== "1"){ e.preventDefault(); return; }
+          draggedId = el.getAttribute('data-macro');
+          el.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+          try{ e.dataTransfer.setData('text/plain', draggedId); }catch(_){}
+        });
+
+        el.addEventListener('dragend', () => {
+          el.classList.remove('dragging');
+          el.dataset.dragAllowed = "0";
+        });
+      });
+
+      container.addEventListener('dragover', (e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; });
+
+      container.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const target = e.target.closest('.macro');
+        if(!target) return;
+
+        const toId = target.getAttribute('data-macro');
+        const fromId = draggedId || (()=>{
+          try{ return e.dataTransfer.getData('text/plain'); }catch(_){ return null; }
+        })();
+
+        if(!fromId || !toId || fromId === toId) return;
+
+        const fromIndex = (model.macros || []).findIndex(x => x.id === fromId);
+        const toIndex   = (model.macros || []).findIndex(x => x.id === toId);
+        if(fromIndex < 0 || toIndex < 0) return;
+
+        const [moved] = model.macros.splice(fromIndex, 1);
+        model.macros.splice(toIndex, 0, moved);
+
+        saveModel(); render();
+      });
+    }
+
+    // ===== Drag & Drop: reordenar SUBPROCESOS =====
     function wireDnDAllMacros(){
       (model.macros || []).forEach(m => {
         const container = document.querySelector(`.subflow[data-subflow="${CSS.escape(m.id)}"]`);
@@ -1178,7 +751,7 @@
 
         const items = Array.from(container.querySelectorAll('.subblock[draggable="true"]'));
         items.forEach(el => {
-          const handle = el.querySelector('.drag-handle');
+          const handle = el.querySelector('.drag-handle:not(.macro-drag)');
           if(handle){
             handle.addEventListener('mousedown', () => el.dataset.dragAllowed = "1");
             handle.addEventListener('mouseup',   () => el.dataset.dragAllowed = "0");
@@ -1228,6 +801,51 @@
       });
     }
 
+    // ===== Export / Import JSON =====
+    function downloadBlob(blob, filename){
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById("exportJson").addEventListener("click", () => {
+      const clean = normalizeModel(JSON.parse(JSON.stringify(model)));
+      const json = JSON.stringify(clean, null, 2);
+      downloadBlob(new Blob([json], {type:"application/json;charset=utf-8"}), "flujo_modelo.json");
+    });
+
+    const importFile = document.getElementById("importJsonFile");
+    document.getElementById("importJsonBtn").addEventListener("click", () => importFile.click());
+
+    importFile.addEventListener("change", async () => {
+      const file = importFile.files?.[0];
+      if(!file) return;
+      try{
+        const txt = await file.text();
+        const parsed = JSON.parse(txt);
+        const incoming = normalizeModel(parsed);
+
+        // validación mínima estructural
+        if(!incoming || !Array.isArray(incoming.macros)){
+          alert("JSON inválido: falta 'macros'.");
+          importFile.value = "";
+          return;
+        }
+
+        model = incoming;
+        saveModel();
+        render();
+        alert("JSON importado OK.");
+      }catch(e){
+        console.error(e);
+        alert("No se pudo importar: archivo no es JSON válido o estructura incompatible.");
+      }finally{
+        importFile.value = "";
+      }
+    });
+
     // ===== Filtro =====
     function applyFilter(){
       const term = (q.value || "").trim().toLowerCase();
@@ -1254,16 +872,8 @@
     }
     q.addEventListener("input", applyFilter);
 
-    // ===== Export =====
-    function downloadBlob(blob, filename){
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url; a.download = filename;
-      document.body.appendChild(a); a.click(); a.remove();
-      URL.revokeObjectURL(url);
-    }
+    // ===== Export PNG/PDF/HTML =====
     function setExporting(on){ document.body.classList.toggle("exporting", !!on); }
-
     function getDeviceScale(){
       const dpr = window.devicePixelRatio || 1;
       return Math.min(4, Math.max(2, dpr * 2));
@@ -1361,18 +971,39 @@
       pdf.save("flujo_hd.pdf");
     });
 
+    // ===== Restaurar =====
     document.getElementById("resetAll").addEventListener("click", () => {
       localStorage.removeItem(STORAGE_KEY);
-      model = loadDefault();
+      model = normalizeModel(loadDefault());
       saveModel();
       render();
     });
 
+    // ===== Si está vacío, arma un ejemplo mínimo =====
+    if(!model.macros || model.macros.length === 0){
+      model.macros = [
+        {
+          id: "m1",
+          className: "b1",
+          title: "1. Ingreso a EESS",
+          desc: "Ingreso del trabajador y datos base (sistema fuente).",
+          subprocesses: [
+            {
+              id: "sb_1",
+              className: "b2",
+              title: "Subproceso",
+              sections: [
+                { id:"s_1", title:"Proceso", status:"progress", tasks:[{text:"Tarea", flag:false}] }
+              ]
+            }
+          ]
+        }
+      ];
+      saveModel();
+    }
+
     // boot
     render();
   </script>
-
-
-
-
-</body></html>
+</body>
+</html>
