@@ -1,14 +1,12 @@
-<!-- ✅ COPIA/PEGA ESTO EN TU HTML (YA TE DEJO TODO EL ARCHIVO COMPLETO) -->
 <!doctype html>
-<html lang="es">
-<head>
+<html lang="es"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Diagrama de Flujo - RRHH y Nómina (Editable)</title>
 
   <!-- Export PNG/PDF -->
-  <script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
   <style>
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 20px; }
@@ -221,7 +219,7 @@
 
 <body>
   <div class="no-export">
-    <h1 contenteditable="true" data-path="page.title">Ciclo de Gestión de Personas y Nómina</h1>
+    <h1 contenteditable="true" data-path="page.title">SISTEMA UNO BUK</h1>
     
     <div class="toolbar">
       <input id="q" type="search" placeholder="Buscar en todo el flujo...">
@@ -240,16 +238,1597 @@
   </div>
 
   <div id="captureArea">
-    <h1 id="exportTitle" style="text-align:center;color:#333;margin:0 0 12px 0;">Ciclo de Gestión de Personas y Nómina</h1>
-    <div class="flow-container" id="flow"></div>
+    <h1 id="exportTitle" style="text-align:center;color:#333;margin:0 0 12px 0;">SISTEMA UNO BUK</h1>
+    <div class="flow-container" id="flow"><div class="macro b1" data-macro="m1" draggable="true">
+            <div class="macro-topbar no-export">
+              <span class="drag-handle macro-drag" title="Arrastra para reordenar bloques" aria-label="Arrastrar bloque">⠿</span>
+            </div>
+
+            <div class="macro-title" contenteditable="true" data-path="macros.m1.title">1. Ingreso a EESS</div>
+            <div class="macro-desc" contenteditable="true" data-path="macros.m1.desc">Ingreso del trabajador y datos base (sistema fuente).</div>
+
+            <div class="macro-actions no-export">
+              <button class="btn" data-action="addSubprocess" data-macro="m1">+ Subproceso</button>
+              <button class="btn danger" data-action="deleteMacroInline" data-macro="m1">Eliminar bloque</button>
+            </div>
+
+            <div class="subflow" data-subflow="m1">
+              
+                <div class="subblock b3" data-sub="sb_88ec06a9f7d5b819b9f09fc2a" draggable="true">
+                  <div class="subblock-topbar no-export">
+                    <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
+                    <button class="btn" data-action="addSection" data-macro="m1" data-sub="sb_88ec06a9f7d5b819b9f09fc2a">+ Caja proceso</button>
+                    <button class="btn danger" data-action="deleteSubprocess" data-macro="m1" data-sub="sb_88ec06a9f7d5b819b9f09fc2a">Eliminar subproceso</button>
+                  </div>
+
+                  <div class="subblock-title" contenteditable="true" data-path="macros.m1.subprocesses.sb_88ec06a9f7d5b819b9f09fc2a.title">INGRESO DE UN NUEVO COLABORADOR</div>
+
+                  
+                      <div class="process-box status-progress" data-section="p_a9f4484418554819b9f09fc2a">
+                        <div class="process-title">
+                          <span contenteditable="true" data-path="macros.m1.subprocesses.sb_88ec06a9f7d5b819b9f09fc2a.sections.p_a9f4484418554819b9f09fc2a.title">CON ADMINISTRACION DE LA COMPENSACION</span>
+                          <span class="process-tools no-export">
+                            <select class="status-select" data-action="setStatus" data-macro="m1" data-sub="sb_88ec06a9f7d5b819b9f09fc2a" data-section="p_a9f4484418554819b9f09fc2a" aria-label="Estado">
+                              <option value="ok">OK</option>
+                              <option value="progress" selected="">En proceso</option>
+                              <option value="late">Atrasado</option>
+                            </select>
+                            <button class="btn" data-action="addTask" data-macro="m1" data-sub="sb_88ec06a9f7d5b819b9f09fc2a" data-section="p_a9f4484418554819b9f09fc2a">+ Tarea</button>
+                            <button class="btn danger" data-action="deleteSection" data-macro="m1" data-sub="sb_88ec06a9f7d5b819b9f09fc2a" data-section="p_a9f4484418554819b9f09fc2a">Eliminar</button>
+                          </span>
+                        </div>
+
+                        
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m1.subprocesses.sb_88ec06a9f7d5b819b9f09fc2a.sections.p_a9f4484418554819b9f09fc2a.tasks.0">Colaborador de "oficina"&nbsp;</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m1" data-sub="sb_88ec06a9f7d5b819b9f09fc2a" data-section="p_a9f4484418554819b9f09fc2a" data-task="0" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m1" data-sub="sb_88ec06a9f7d5b819b9f09fc2a" data-section="p_a9f4484418554819b9f09fc2a" data-task="0">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m1.subprocesses.sb_88ec06a9f7d5b819b9f09fc2a.sections.p_a9f4484418554819b9f09fc2a.tasks.1">Personal Directivo obra</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m1" data-sub="sb_88ec06a9f7d5b819b9f09fc2a" data-section="p_a9f4484418554819b9f09fc2a" data-task="1" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m1" data-sub="sb_88ec06a9f7d5b819b9f09fc2a" data-section="p_a9f4484418554819b9f09fc2a" data-task="1">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m1.subprocesses.sb_88ec06a9f7d5b819b9f09fc2a.sections.p_a9f4484418554819b9f09fc2a.tasks.2">WORKFLOW&nbsp;</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m1" data-sub="sb_88ec06a9f7d5b819b9f09fc2a" data-section="p_a9f4484418554819b9f09fc2a" data-task="2" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m1" data-sub="sb_88ec06a9f7d5b819b9f09fc2a" data-section="p_a9f4484418554819b9f09fc2a" data-task="2">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                      </div>
+                    
+                      <div class="process-box status-progress" data-section="s_cacb85d7a7b73819b9f0bdee6">
+                        <div class="process-title">
+                          <span contenteditable="true" data-path="macros.m1.subprocesses.sb_88ec06a9f7d5b819b9f09fc2a.sections.s_cacb85d7a7b73819b9f0bdee6.title">SIN ADMINISTRACION DE LA COMPENSACION&nbsp;</span>
+                          <span class="process-tools no-export">
+                            <select class="status-select" data-action="setStatus" data-macro="m1" data-sub="sb_88ec06a9f7d5b819b9f09fc2a" data-section="s_cacb85d7a7b73819b9f0bdee6" aria-label="Estado">
+                              <option value="ok">OK</option>
+                              <option value="progress" selected="">En proceso</option>
+                              <option value="late">Atrasado</option>
+                            </select>
+                            <button class="btn" data-action="addTask" data-macro="m1" data-sub="sb_88ec06a9f7d5b819b9f09fc2a" data-section="s_cacb85d7a7b73819b9f0bdee6">+ Tarea</button>
+                            <button class="btn danger" data-action="deleteSection" data-macro="m1" data-sub="sb_88ec06a9f7d5b819b9f09fc2a" data-section="s_cacb85d7a7b73819b9f0bdee6">Eliminar</button>
+                          </span>
+                        </div>
+
+                        
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m1.subprocesses.sb_88ec06a9f7d5b819b9f09fc2a.sections.s_cacb85d7a7b73819b9f0bdee6.tasks.0">Personal de obra</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m1" data-sub="sb_88ec06a9f7d5b819b9f09fc2a" data-section="s_cacb85d7a7b73819b9f0bdee6" data-task="0" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m1" data-sub="sb_88ec06a9f7d5b819b9f09fc2a" data-section="s_cacb85d7a7b73819b9f0bdee6" data-task="0">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                      </div>
+                    
+                </div>
+              
+                <div class="subblock b2" data-sub="sp_ing_1" draggable="true">
+                  <div class="subblock-topbar no-export">
+                    <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
+                    <button class="btn" data-action="addSection" data-macro="m1" data-sub="sp_ing_1">+ Caja proceso</button>
+                    <button class="btn danger" data-action="deleteSubprocess" data-macro="m1" data-sub="sp_ing_1">Eliminar subproceso</button>
+                  </div>
+
+                  <div class="subblock-title" contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.title">MODULO DE SELECCION&nbsp;</div>
+
+                  
+                      <div class="process-box status-ok" data-section="s1">
+                        <div class="process-title">
+                          <span contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.sections.s1.title"></span>
+                          <span class="process-tools no-export">
+                            <select class="status-select" data-action="setStatus" data-macro="m1" data-sub="sp_ing_1" data-section="s1" aria-label="Estado">
+                              <option value="ok" selected="">OK</option>
+                              <option value="progress">En proceso</option>
+                              <option value="late">Atrasado</option>
+                            </select>
+                            <button class="btn" data-action="addTask" data-macro="m1" data-sub="sp_ing_1" data-section="s1">+ Tarea</button>
+                            <button class="btn danger" data-action="deleteSection" data-macro="m1" data-sub="sp_ing_1" data-section="s1">Eliminar</button>
+                          </span>
+                        </div>
+
+                        
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.sections.s1.tasks.0">Reclutamiento y Selección&nbsp;</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m1" data-sub="sp_ing_1" data-section="s1" data-task="0" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m1" data-sub="sp_ing_1" data-section="s1" data-task="0">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.sections.s1.tasks.1">
+ Selección&nbsp;</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m1" data-sub="sp_ing_1" data-section="s1" data-task="1" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m1" data-sub="sp_ing_1" data-section="s1" data-task="1">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.sections.s1.tasks.2">WORKFLOW</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m1" data-sub="sp_ing_1" data-section="s1" data-task="2" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m1" data-sub="sp_ing_1" data-section="s1" data-task="2">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m1.subprocesses.sp_ing_1.sections.s1.tasks.3">CONFIGURACION DE PLANTILLAS</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m1" data-sub="sp_ing_1" data-section="s1" data-task="3" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m1" data-sub="sp_ing_1" data-section="s1" data-task="3">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                      </div>
+                    
+                </div>
+              
+                <div class="subblock b4" data-sub="sb_6f6a798ffdb4119b9f23e760" draggable="true">
+                  <div class="subblock-topbar no-export">
+                    <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
+                    <button class="btn" data-action="addSection" data-macro="m1" data-sub="sb_6f6a798ffdb4119b9f23e760">+ Caja proceso</button>
+                    <button class="btn danger" data-action="deleteSubprocess" data-macro="m1" data-sub="sb_6f6a798ffdb4119b9f23e760">Eliminar subproceso</button>
+                  </div>
+
+                  <div class="subblock-title" contenteditable="true" data-path="macros.m1.subprocesses.sb_6f6a798ffdb4119b9f23e760.title">MODULO ON BORADING</div>
+
+                  
+                      <div class="process-box status-progress" data-section="p_85db1511dc303819b9f23e760">
+                        <div class="process-title">
+                          <span contenteditable="true" data-path="macros.m1.subprocesses.sb_6f6a798ffdb4119b9f23e760.sections.p_85db1511dc303819b9f23e760.title"></span>
+                          <span class="process-tools no-export">
+                            <select class="status-select" data-action="setStatus" data-macro="m1" data-sub="sb_6f6a798ffdb4119b9f23e760" data-section="p_85db1511dc303819b9f23e760" aria-label="Estado">
+                              <option value="ok">OK</option>
+                              <option value="progress" selected="">En proceso</option>
+                              <option value="late">Atrasado</option>
+                            </select>
+                            <button class="btn" data-action="addTask" data-macro="m1" data-sub="sb_6f6a798ffdb4119b9f23e760" data-section="p_85db1511dc303819b9f23e760">+ Tarea</button>
+                            <button class="btn danger" data-action="deleteSection" data-macro="m1" data-sub="sb_6f6a798ffdb4119b9f23e760" data-section="p_85db1511dc303819b9f23e760">Eliminar</button>
+                          </span>
+                        </div>
+
+                        
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m1.subprocesses.sb_6f6a798ffdb4119b9f23e760.sections.p_85db1511dc303819b9f23e760.tasks.0">Colaborador de "oficina"</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m1" data-sub="sb_6f6a798ffdb4119b9f23e760" data-section="p_85db1511dc303819b9f23e760" data-task="0" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m1" data-sub="sb_6f6a798ffdb4119b9f23e760" data-section="p_85db1511dc303819b9f23e760" data-task="0">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m1.subprocesses.sb_6f6a798ffdb4119b9f23e760.sections.p_85db1511dc303819b9f23e760.tasks.1">Personal Directivo Obra</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m1" data-sub="sb_6f6a798ffdb4119b9f23e760" data-section="p_85db1511dc303819b9f23e760" data-task="1" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m1" data-sub="sb_6f6a798ffdb4119b9f23e760" data-section="p_85db1511dc303819b9f23e760" data-task="1">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m1.subprocesses.sb_6f6a798ffdb4119b9f23e760.sections.p_85db1511dc303819b9f23e760.tasks.2">WORFLOW</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m1" data-sub="sb_6f6a798ffdb4119b9f23e760" data-section="p_85db1511dc303819b9f23e760" data-task="2" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m1" data-sub="sb_6f6a798ffdb4119b9f23e760" data-section="p_85db1511dc303819b9f23e760" data-task="2">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m1.subprocesses.sb_6f6a798ffdb4119b9f23e760.sections.p_85db1511dc303819b9f23e760.tasks.3">DETERMINAR TAREAS</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m1" data-sub="sb_6f6a798ffdb4119b9f23e760" data-section="p_85db1511dc303819b9f23e760" data-task="3" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m1" data-sub="sb_6f6a798ffdb4119b9f23e760" data-section="p_85db1511dc303819b9f23e760" data-task="3">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                      </div>
+                    
+                </div>
+              
+            </div>
+          </div><div class="connector">➔</div><div class="macro gd" data-macro="m3" draggable="true">
+            <div class="macro-topbar no-export">
+              <span class="drag-handle macro-drag" title="Arrastra para reordenar bloques" aria-label="Arrastrar bloque">⠿</span>
+            </div>
+
+            <div class="macro-title" contenteditable="true" data-path="macros.m3.title">2. ALTA DEL COLABORADOR</div>
+            <div class="macro-desc" contenteditable="true" data-path="macros.m3.desc">Contratos, anexos, respaldos y trazabilidad documental asociada al ciclo.</div>
+
+            <div class="macro-actions no-export">
+              <button class="btn" data-action="addSubprocess" data-macro="m3">+ Subproceso</button>
+              <button class="btn danger" data-action="deleteMacroInline" data-macro="m3">Eliminar bloque</button>
+            </div>
+
+            <div class="subflow" data-subflow="m3">
+              
+                <div class="subblock b5" data-sub="sp_gd_1" draggable="true">
+                  <div class="subblock-topbar no-export">
+                    <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
+                    <button class="btn" data-action="addSection" data-macro="m3" data-sub="sp_gd_1">+ Caja proceso</button>
+                    <button class="btn danger" data-action="deleteSubprocess" data-macro="m3" data-sub="sp_gd_1">Eliminar subproceso</button>
+                  </div>
+
+                  <div class="subblock-title" contenteditable="true" data-path="macros.m3.subprocesses.sp_gd_1.title">MODULO GESTOR DOCUMENTAL</div>
+
+                  
+                      <div class="process-box status-ok" data-section="g1">
+                        <div class="process-title">
+                          <span contenteditable="true" data-path="macros.m3.subprocesses.sp_gd_1.sections.g1.title">Documentación Laboral</span>
+                          <span class="process-tools no-export">
+                            <select class="status-select" data-action="setStatus" data-macro="m3" data-sub="sp_gd_1" data-section="g1" aria-label="Estado">
+                              <option value="ok" selected="">OK</option>
+                              <option value="progress">En proceso</option>
+                              <option value="late">Atrasado</option>
+                            </select>
+                            <button class="btn" data-action="addTask" data-macro="m3" data-sub="sp_gd_1" data-section="g1">+ Tarea</button>
+                            <button class="btn danger" data-action="deleteSection" data-macro="m3" data-sub="sp_gd_1" data-section="g1">Eliminar</button>
+                          </span>
+                        </div>
+
+                        
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m3.subprocesses.sp_gd_1.sections.g1.tasks.0">Contratos / Anexos&nbsp;</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m3" data-sub="sp_gd_1" data-section="g1" data-task="0" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m3" data-sub="sp_gd_1" data-section="g1" data-task="0">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m3.subprocesses.sp_gd_1.sections.g1.tasks.1">PRUEBAS DE PERFILES</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m3" data-sub="sp_gd_1" data-section="g1" data-task="1" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m3" data-sub="sp_gd_1" data-section="g1" data-task="1">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m3.subprocesses.sp_gd_1.sections.g1.tasks.2">COMPLETAR FORMATOS DE DOCUMENTOS</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m3" data-sub="sp_gd_1" data-section="g1" data-task="2" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m3" data-sub="sp_gd_1" data-section="g1" data-task="2">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                      </div>
+                    
+                      <div class="process-box status-ok" data-section="g2">
+                        <div class="process-title">
+                          <span contenteditable="true" data-path="macros.m3.subprocesses.sp_gd_1.sections.g2.title">Respaldo del Ciclo</span>
+                          <span class="process-tools no-export">
+                            <select class="status-select" data-action="setStatus" data-macro="m3" data-sub="sp_gd_1" data-section="g2" aria-label="Estado">
+                              <option value="ok" selected="">OK</option>
+                              <option value="progress">En proceso</option>
+                              <option value="late">Atrasado</option>
+                            </select>
+                            <button class="btn" data-action="addTask" data-macro="m3" data-sub="sp_gd_1" data-section="g2">+ Tarea</button>
+                            <button class="btn danger" data-action="deleteSection" data-macro="m3" data-sub="sp_gd_1" data-section="g2">Eliminar</button>
+                          </span>
+                        </div>
+
+                        
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m3.subprocesses.sp_gd_1.sections.g2.tasks.0">CARTAS DE DESPIDO</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m3" data-sub="sp_gd_1" data-section="g2" data-task="0" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m3" data-sub="sp_gd_1" data-section="g2" data-task="0">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m3.subprocesses.sp_gd_1.sections.g2.tasks.1">COMPORBANTES DE VACACIONES</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m3" data-sub="sp_gd_1" data-section="g2" data-task="1" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m3" data-sub="sp_gd_1" data-section="g2" data-task="1">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                      </div>
+                    
+                </div>
+              
+            </div>
+          </div><div class="connector">➔</div><div class="macro nomina" data-macro="m2" draggable="true">
+            <div class="macro-topbar no-export">
+              <span class="drag-handle macro-drag" title="Arrastra para reordenar bloques" aria-label="Arrastrar bloque">⠿</span>
+            </div>
+
+            <div class="macro-title" contenteditable="true" data-path="macros.m2.title">3. CICLO MENSUAL DE NOMINA Y ASISTENCIA</div>
+            <div class="macro-desc" contenteditable="true" data-path="macros.m2.desc">Subprocesos 2 → 5: Configuración y Asistencia → Cálculo y Finiquitos → Tesorería y Centralización → Reportes y Gestión.</div>
+
+            <div class="macro-actions no-export">
+              <button class="btn" data-action="addSubprocess" data-macro="m2">+ Subproceso</button>
+              <button class="btn danger" data-action="deleteMacroInline" data-macro="m2">Eliminar bloque</button>
+            </div>
+
+            <div class="subflow" data-subflow="m2">
+              
+                <div class="subblock b2" data-sub="sb_e7f9e18f3cbb6819b9f33abc0" draggable="true">
+                  <div class="subblock-topbar no-export">
+                    <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
+                    <button class="btn" data-action="addSection" data-macro="m2" data-sub="sb_e7f9e18f3cbb6819b9f33abc0">+ Caja proceso</button>
+                    <button class="btn danger" data-action="deleteSubprocess" data-macro="m2" data-sub="sb_e7f9e18f3cbb6819b9f33abc0">Eliminar subproceso</button>
+                  </div>
+
+                  <div class="subblock-title" contenteditable="true" data-path="macros.m2.subprocesses.sb_e7f9e18f3cbb6819b9f33abc0.title">MODULO NOMINA</div>
+
+                  
+                      <div class="process-box status-progress" data-section="p_6b15903f3671f819b9f33abc0">
+                        <div class="process-title">
+                          <span contenteditable="true" data-path="macros.m2.subprocesses.sb_e7f9e18f3cbb6819b9f33abc0.sections.p_6b15903f3671f819b9f33abc0.title">FICHA DEL COLABORADOR</span>
+                          <span class="process-tools no-export">
+                            <select class="status-select" data-action="setStatus" data-macro="m2" data-sub="sb_e7f9e18f3cbb6819b9f33abc0" data-section="p_6b15903f3671f819b9f33abc0" aria-label="Estado">
+                              <option value="ok">OK</option>
+                              <option value="progress" selected="">En proceso</option>
+                              <option value="late">Atrasado</option>
+                            </select>
+                            <button class="btn" data-action="addTask" data-macro="m2" data-sub="sb_e7f9e18f3cbb6819b9f33abc0" data-section="p_6b15903f3671f819b9f33abc0">+ Tarea</button>
+                            <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="sb_e7f9e18f3cbb6819b9f33abc0" data-section="p_6b15903f3671f819b9f33abc0">Eliminar</button>
+                          </span>
+                        </div>
+
+                        
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.sb_e7f9e18f3cbb6819b9f33abc0.sections.p_6b15903f3671f819b9f33abc0.tasks.0">Completar datos de la Ficha</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="sb_e7f9e18f3cbb6819b9f33abc0" data-section="p_6b15903f3671f819b9f33abc0" data-task="0" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="sb_e7f9e18f3cbb6819b9f33abc0" data-section="p_6b15903f3671f819b9f33abc0" data-task="0">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.sb_e7f9e18f3cbb6819b9f33abc0.sections.p_6b15903f3671f819b9f33abc0.tasks.1">AVISO A DT</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="sb_e7f9e18f3cbb6819b9f33abc0" data-section="p_6b15903f3671f819b9f33abc0" data-task="1" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="sb_e7f9e18f3cbb6819b9f33abc0" data-section="p_6b15903f3671f819b9f33abc0" data-task="1">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.sb_e7f9e18f3cbb6819b9f33abc0.sections.p_6b15903f3671f819b9f33abc0.tasks.2">INGRESO MOVILIZACION (UNIFICAR CONSTRUCTORAS)</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="sb_e7f9e18f3cbb6819b9f33abc0" data-section="p_6b15903f3671f819b9f33abc0" data-task="2" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="sb_e7f9e18f3cbb6819b9f33abc0" data-section="p_6b15903f3671f819b9f33abc0" data-task="2">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                      </div>
+                    
+                </div>
+              
+                <div class="subblock b4" data-sub="b4" draggable="true">
+                  <div class="subblock-topbar no-export">
+                    <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
+                    <button class="btn" data-action="addSection" data-macro="m2" data-sub="b4">+ Caja proceso</button>
+                    <button class="btn danger" data-action="deleteSubprocess" data-macro="m2" data-sub="b4">Eliminar subproceso</button>
+                  </div>
+
+                  <div class="subblock-title" contenteditable="true" data-path="macros.m2.subprocesses.b4.title">MODULO NOMINA</div>
+
+                  
+                      <div class="process-box status-progress" data-section="p6">
+                        <div class="process-title">
+                          <span contenteditable="true" data-path="macros.m2.subprocesses.b4.sections.p6.title">INGRESO DE HABERES Y DESCUENTOS</span>
+                          <span class="process-tools no-export">
+                            <select class="status-select" data-action="setStatus" data-macro="m2" data-sub="b4" data-section="p6" aria-label="Estado">
+                              <option value="ok">OK</option>
+                              <option value="progress" selected="">En proceso</option>
+                              <option value="late">Atrasado</option>
+                            </select>
+                            <button class="btn" data-action="addTask" data-macro="m2" data-sub="b4" data-section="p6">+ Tarea</button>
+                            <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="b4" data-section="p6">Eliminar</button>
+                          </span>
+                        </div>
+
+                        
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.b4.sections.p6.tasks.0">Pagos de anticipos</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="b4" data-section="p6" data-task="0" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="b4" data-section="p6" data-task="0">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.b4.sections.p6.tasks.1">Pago de sueldos</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="b4" data-section="p6" data-task="1" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="b4" data-section="p6" data-task="1">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.b4.sections.p6.tasks.2">Pago de Ajustes</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="b4" data-section="p6" data-task="2" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="b4" data-section="p6" data-task="2">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                      </div>
+                    
+                      <div class="process-box status-progress" data-section="s_530266d1dd2aa819b9f88feba">
+                        <div class="process-title">
+                          <span contenteditable="true" data-path="macros.m2.subprocesses.b4.sections.s_530266d1dd2aa819b9f88feba.title">TRANSFER BANCOS</span>
+                          <span class="process-tools no-export">
+                            <select class="status-select" data-action="setStatus" data-macro="m2" data-sub="b4" data-section="s_530266d1dd2aa819b9f88feba" aria-label="Estado">
+                              <option value="ok">OK</option>
+                              <option value="progress" selected="">En proceso</option>
+                              <option value="late">Atrasado</option>
+                            </select>
+                            <button class="btn" data-action="addTask" data-macro="m2" data-sub="b4" data-section="s_530266d1dd2aa819b9f88feba">+ Tarea</button>
+                            <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="b4" data-section="s_530266d1dd2aa819b9f88feba">Eliminar</button>
+                          </span>
+                        </div>
+
+                        
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.b4.sections.s_530266d1dd2aa819b9f88feba.tasks.0">A cuentas corrientes</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="b4" data-section="s_530266d1dd2aa819b9f88feba" data-task="0" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="b4" data-section="s_530266d1dd2aa819b9f88feba" data-task="0">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.b4.sections.s_530266d1dd2aa819b9f88feba.tasks.1">Efectivo</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="b4" data-section="s_530266d1dd2aa819b9f88feba" data-task="1" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="b4" data-section="s_530266d1dd2aa819b9f88feba" data-task="1">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.b4.sections.s_530266d1dd2aa819b9f88feba.tasks.2">Vales Vista</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="b4" data-section="s_530266d1dd2aa819b9f88feba" data-task="2" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="b4" data-section="s_530266d1dd2aa819b9f88feba" data-task="2">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                      </div>
+                    
+                </div>
+              
+                <div class="subblock b2" data-sub="b2" draggable="true">
+                  <div class="subblock-topbar no-export">
+                    <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
+                    <button class="btn" data-action="addSection" data-macro="m2" data-sub="b2">+ Caja proceso</button>
+                    <button class="btn danger" data-action="deleteSubprocess" data-macro="m2" data-sub="b2">Eliminar subproceso</button>
+                  </div>
+
+                  <div class="subblock-title" contenteditable="true" data-path="macros.m2.subprocesses.b2.title">modulo nomina</div>
+
+                  
+                      <div class="process-box status-progress" data-section="p1">
+                        <div class="process-title">
+                          <span contenteditable="true" data-path="macros.m2.subprocesses.b2.sections.p1.title">FINIQUITOS</span>
+                          <span class="process-tools no-export">
+                            <select class="status-select" data-action="setStatus" data-macro="m2" data-sub="b2" data-section="p1" aria-label="Estado">
+                              <option value="ok">OK</option>
+                              <option value="progress" selected="">En proceso</option>
+                              <option value="late">Atrasado</option>
+                            </select>
+                            <button class="btn" data-action="addTask" data-macro="m2" data-sub="b2" data-section="p1">+ Tarea</button>
+                            <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="b2" data-section="p1">Eliminar</button>
+                          </span>
+                        </div>
+
+                        
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.b2.sections.p1.tasks.0">Simulación para datos de carta</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="b2" data-section="p1" data-task="0" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="b2" data-section="p1" data-task="0">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.b2.sections.p1.tasks.1">Baja en el sistema</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="b2" data-section="p1" data-task="1" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="b2" data-section="p1" data-task="1">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.b2.sections.p1.tasks.2">Pago de finiquito</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="b2" data-section="p1" data-task="2" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="b2" data-section="p1" data-task="2">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.b2.sections.p1.tasks.3">Impresión de documento</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="b2" data-section="p1" data-task="3" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="b2" data-section="p1" data-task="3">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                      </div>
+                    
+                </div>
+              
+                <div class="subblock b3" data-sub="b3" draggable="true">
+                  <div class="subblock-topbar no-export">
+                    <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
+                    <button class="btn" data-action="addSection" data-macro="m2" data-sub="b3">+ Caja proceso</button>
+                    <button class="btn danger" data-action="deleteSubprocess" data-macro="m2" data-sub="b3">Eliminar subproceso</button>
+                  </div>
+
+                  <div class="subblock-title" contenteditable="true" data-path="macros.m2.subprocesses.b3.title">Modulo nomina</div>
+
+                  
+                      <div class="process-box status-progress" data-section="p4">
+                        <div class="process-title">
+                          <span contenteditable="true" data-path="macros.m2.subprocesses.b3.sections.p4.title">CENTRALIZACION</span>
+                          <span class="process-tools no-export">
+                            <select class="status-select" data-action="setStatus" data-macro="m2" data-sub="b3" data-section="p4" aria-label="Estado">
+                              <option value="ok">OK</option>
+                              <option value="progress" selected="">En proceso</option>
+                              <option value="late">Atrasado</option>
+                            </select>
+                            <button class="btn" data-action="addTask" data-macro="m2" data-sub="b3" data-section="p4">+ Tarea</button>
+                            <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="b3" data-section="p4">Eliminar</button>
+                          </span>
+                        </div>
+
+                        
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.b3.sections.p4.tasks.0">Sueldo</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="b3" data-section="p4" data-task="0" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="b3" data-section="p4" data-task="0">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.b3.sections.p4.tasks.1">Ajustes</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="b3" data-section="p4" data-task="1" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="b3" data-section="p4" data-task="1">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.b3.sections.p4.tasks.2">Finiquitos</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="b3" data-section="p4" data-task="2" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="b3" data-section="p4" data-task="2">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.b3.sections.p4.tasks.3">SE ELIMINA LA CENTRALIZACION DE ANTICIPOS</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="b3" data-section="p4" data-task="3" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="b3" data-section="p4" data-task="3">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                      </div>
+                    
+                </div>
+              
+                <div class="subblock b5" data-sub="b5" draggable="true">
+                  <div class="subblock-topbar no-export">
+                    <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
+                    <button class="btn" data-action="addSection" data-macro="m2" data-sub="b5">+ Caja proceso</button>
+                    <button class="btn danger" data-action="deleteSubprocess" data-macro="m2" data-sub="b5">Eliminar subproceso</button>
+                  </div>
+
+                  <div class="subblock-title" contenteditable="true" data-path="macros.m2.subprocesses.b5.title">MODULO NOMINA</div>
+
+                  
+                      <div class="process-box status-progress" data-section="p8">
+                        <div class="process-title">
+                          <span contenteditable="true" data-path="macros.m2.subprocesses.b5.sections.p8.title">CIERRES MENSUALES</span>
+                          <span class="process-tools no-export">
+                            <select class="status-select" data-action="setStatus" data-macro="m2" data-sub="b5" data-section="p8" aria-label="Estado">
+                              <option value="ok">OK</option>
+                              <option value="progress" selected="">En proceso</option>
+                              <option value="late">Atrasado</option>
+                            </select>
+                            <button class="btn" data-action="addTask" data-macro="m2" data-sub="b5" data-section="p8">+ Tarea</button>
+                            <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="b5" data-section="p8">Eliminar</button>
+                          </span>
+                        </div>
+
+                        
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.b5.sections.p8.tasks.0">Leyes Sociales</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="b5" data-section="p8" data-task="0" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="b5" data-section="p8" data-task="0">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.b5.sections.p8.tasks.1">INE</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="b5" data-section="p8" data-task="1" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="b5" data-section="p8" data-task="1">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.b5.sections.p8.tasks.2">LRE</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="b5" data-section="p8" data-task="2" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="b5" data-section="p8" data-task="2">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.b5.sections.p8.tasks.3">Cierre del Periodo</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="b5" data-section="p8" data-task="3" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="b5" data-section="p8" data-task="3">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                      </div>
+                    
+                </div>
+              
+                <div class="subblock b2" data-sub="sb_89bdf0655b21819ba265054d" draggable="true">
+                  <div class="subblock-topbar no-export">
+                    <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
+                    <button class="btn" data-action="addSection" data-macro="m2" data-sub="sb_89bdf0655b21819ba265054d">+ Caja proceso</button>
+                    <button class="btn danger" data-action="deleteSubprocess" data-macro="m2" data-sub="sb_89bdf0655b21819ba265054d">Eliminar subproceso</button>
+                  </div>
+
+                  <div class="subblock-title" contenteditable="true" data-path="macros.m2.subprocesses.sb_89bdf0655b21819ba265054d.title">MODULO NOMINA</div>
+
+                  
+                      <div class="process-box status-progress" data-section="p_3b3fd0eebd91519ba265054d">
+                        <div class="process-title">
+                          <span contenteditable="true" data-path="macros.m2.subprocesses.sb_89bdf0655b21819ba265054d.sections.p_3b3fd0eebd91519ba265054d.title">INFORMES MENSUALES</span>
+                          <span class="process-tools no-export">
+                            <select class="status-select" data-action="setStatus" data-macro="m2" data-sub="sb_89bdf0655b21819ba265054d" data-section="p_3b3fd0eebd91519ba265054d" aria-label="Estado">
+                              <option value="ok">OK</option>
+                              <option value="progress" selected="">En proceso</option>
+                              <option value="late">Atrasado</option>
+                            </select>
+                            <button class="btn" data-action="addTask" data-macro="m2" data-sub="sb_89bdf0655b21819ba265054d" data-section="p_3b3fd0eebd91519ba265054d">+ Tarea</button>
+                            <button class="btn danger" data-action="deleteSection" data-macro="m2" data-sub="sb_89bdf0655b21819ba265054d" data-section="p_3b3fd0eebd91519ba265054d">Eliminar</button>
+                          </span>
+                        </div>
+
+                        
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.sb_89bdf0655b21819ba265054d.sections.p_3b3fd0eebd91519ba265054d.tasks.0">Préstamos/ sobregiros / otros</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="sb_89bdf0655b21819ba265054d" data-section="p_3b3fd0eebd91519ba265054d" data-task="0" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="sb_89bdf0655b21819ba265054d" data-section="p_3b3fd0eebd91519ba265054d" data-task="0">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.sb_89bdf0655b21819ba265054d.sections.p_3b3fd0eebd91519ba265054d.tasks.1">Calidad de Vida</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="sb_89bdf0655b21819ba265054d" data-section="p_3b3fd0eebd91519ba265054d" data-task="1" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="sb_89bdf0655b21819ba265054d" data-section="p_3b3fd0eebd91519ba265054d" data-task="1">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.sb_89bdf0655b21819ba265054d.sections.p_3b3fd0eebd91519ba265054d.tasks.2">Infonominas</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="sb_89bdf0655b21819ba265054d" data-section="p_3b3fd0eebd91519ba265054d" data-task="2" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="sb_89bdf0655b21819ba265054d" data-section="p_3b3fd0eebd91519ba265054d" data-task="2">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.sb_89bdf0655b21819ba265054d.sections.p_3b3fd0eebd91519ba265054d.tasks.3">Provisiones</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="sb_89bdf0655b21819ba265054d" data-section="p_3b3fd0eebd91519ba265054d" data-task="3" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="sb_89bdf0655b21819ba265054d" data-section="p_3b3fd0eebd91519ba265054d" data-task="3">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.sb_89bdf0655b21819ba265054d.sections.p_3b3fd0eebd91519ba265054d.tasks.4">Especialidades / Remuchek</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="sb_89bdf0655b21819ba265054d" data-section="p_3b3fd0eebd91519ba265054d" data-task="4" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="sb_89bdf0655b21819ba265054d" data-section="p_3b3fd0eebd91519ba265054d" data-task="4">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m2.subprocesses.sb_89bdf0655b21819ba265054d.sections.p_3b3fd0eebd91519ba265054d.tasks.5">Otros</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m2" data-sub="sb_89bdf0655b21819ba265054d" data-section="p_3b3fd0eebd91519ba265054d" data-task="5" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m2" data-sub="sb_89bdf0655b21819ba265054d" data-section="p_3b3fd0eebd91519ba265054d" data-task="5">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                      </div>
+                    
+                </div>
+              
+            </div>
+          </div><div class="connector">➔</div><div class="macro b5" data-macro="m_c9120e1a5996319b9ed2eb03" draggable="true">
+            <div class="macro-topbar no-export">
+              <span class="drag-handle macro-drag" title="Arrastra para reordenar bloques" aria-label="Arrastrar bloque">⠿</span>
+            </div>
+
+            <div class="macro-title" contenteditable="true" data-path="macros.m_c9120e1a5996319b9ed2eb03.title">ASISTENCIA</div>
+            <div class="macro-desc" contenteditable="true" data-path="macros.m_c9120e1a5996319b9ed2eb03.desc">Descripción del bloque</div>
+
+            <div class="macro-actions no-export">
+              <button class="btn" data-action="addSubprocess" data-macro="m_c9120e1a5996319b9ed2eb03">+ Subproceso</button>
+              <button class="btn danger" data-action="deleteMacroInline" data-macro="m_c9120e1a5996319b9ed2eb03">Eliminar bloque</button>
+            </div>
+
+            <div class="subflow" data-subflow="m_c9120e1a5996319b9ed2eb03">
+              
+                <div class="subblock b2" data-sub="sb_51a10b49925dc819b9ed2eb03" draggable="true">
+                  <div class="subblock-topbar no-export">
+                    <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
+                    <button class="btn" data-action="addSection" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03">+ Caja proceso</button>
+                    <button class="btn danger" data-action="deleteSubprocess" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03">Eliminar subproceso</button>
+                  </div>
+
+                  <div class="subblock-title" contenteditable="true" data-path="macros.m_c9120e1a5996319b9ed2eb03.subprocesses.sb_51a10b49925dc819b9ed2eb03.title">mODULO CONTROL DE ASISTENCIA</div>
+
+                  
+                      <div class="process-box status-ok" data-section="s_9c15ca094d062819b9ed2eb03">
+                        <div class="process-title">
+                          <span contenteditable="true" data-path="macros.m_c9120e1a5996319b9ed2eb03.subprocesses.sb_51a10b49925dc819b9ed2eb03.sections.s_9c15ca094d062819b9ed2eb03.title">CREAR RECINTO</span>
+                          <span class="process-tools no-export">
+                            <select class="status-select" data-action="setStatus" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_9c15ca094d062819b9ed2eb03" aria-label="Estado">
+                              <option value="ok" selected="">OK</option>
+                              <option value="progress">En proceso</option>
+                              <option value="late">Atrasado</option>
+                            </select>
+                            <button class="btn" data-action="addTask" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_9c15ca094d062819b9ed2eb03">+ Tarea</button>
+                            <button class="btn danger" data-action="deleteSection" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_9c15ca094d062819b9ed2eb03">Eliminar</button>
+                          </span>
+                        </div>
+
+                        
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m_c9120e1a5996319b9ed2eb03.subprocesses.sb_51a10b49925dc819b9ed2eb03.sections.s_9c15ca094d062819b9ed2eb03.tasks.0">Turnos y calendario</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_9c15ca094d062819b9ed2eb03" data-task="0" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_9c15ca094d062819b9ed2eb03" data-task="0">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m_c9120e1a5996319b9ed2eb03.subprocesses.sb_51a10b49925dc819b9ed2eb03.sections.s_9c15ca094d062819b9ed2eb03.tasks.1">Habilitar Usuarios</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_9c15ca094d062819b9ed2eb03" data-task="1" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_9c15ca094d062819b9ed2eb03" data-task="1">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                      </div>
+                    
+                      <div class="process-box status-ok" data-section="s_e88deab41f26e19ba2693980">
+                        <div class="process-title">
+                          <span contenteditable="true" data-path="macros.m_c9120e1a5996319b9ed2eb03.subprocesses.sb_51a10b49925dc819b9ed2eb03.sections.s_e88deab41f26e19ba2693980.title">EN LA OBRA</span>
+                          <span class="process-tools no-export">
+                            <select class="status-select" data-action="setStatus" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_e88deab41f26e19ba2693980" aria-label="Estado">
+                              <option value="ok" selected="">OK</option>
+                              <option value="progress">En proceso</option>
+                              <option value="late">Atrasado</option>
+                            </select>
+                            <button class="btn" data-action="addTask" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_e88deab41f26e19ba2693980">+ Tarea</button>
+                            <button class="btn danger" data-action="deleteSection" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_e88deab41f26e19ba2693980">Eliminar</button>
+                          </span>
+                        </div>
+
+                        
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m_c9120e1a5996319b9ed2eb03.subprocesses.sb_51a10b49925dc819b9ed2eb03.sections.s_e88deab41f26e19ba2693980.tasks.0">Habilitar Aplicación BUK&nbsp;</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_e88deab41f26e19ba2693980" data-task="0" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_e88deab41f26e19ba2693980" data-task="0">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m_c9120e1a5996319b9ed2eb03.subprocesses.sb_51a10b49925dc819b9ed2eb03.sections.s_e88deab41f26e19ba2693980.tasks.1">Sincronizar Usuarios (Sub-Contratos)</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_e88deab41f26e19ba2693980" data-task="1" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_e88deab41f26e19ba2693980" data-task="1">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m_c9120e1a5996319b9ed2eb03.subprocesses.sb_51a10b49925dc819b9ed2eb03.sections.s_e88deab41f26e19ba2693980.tasks.2">Activar Portal de asistencia trabajador (-1 día)</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_e88deab41f26e19ba2693980" data-task="2" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_e88deab41f26e19ba2693980" data-task="2">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m_c9120e1a5996319b9ed2eb03.subprocesses.sb_51a10b49925dc819b9ed2eb03.sections.s_e88deab41f26e19ba2693980.tasks.3">Activar disponible DT</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_e88deab41f26e19ba2693980" data-task="3" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_e88deab41f26e19ba2693980" data-task="3">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m_c9120e1a5996319b9ed2eb03.subprocesses.sb_51a10b49925dc819b9ed2eb03.sections.s_e88deab41f26e19ba2693980.tasks.4">SINCRONIZAR CON REMUNERACIONES</span>
+                              <i class="task-flag hide-flag" aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_e88deab41f26e19ba2693980" data-task="4" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m_c9120e1a5996319b9ed2eb03" data-sub="sb_51a10b49925dc819b9ed2eb03" data-section="s_e88deab41f26e19ba2693980" data-task="4">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                      </div>
+                    
+                </div>
+              
+            </div>
+          </div><div class="connector">➔</div><div class="macro b1" data-macro="m_7cd49b5ecd91c819ba26ccfcf" draggable="true">
+            <div class="macro-topbar no-export">
+              <span class="drag-handle macro-drag" title="Arrastra para reordenar bloques" aria-label="Arrastrar bloque">⠿</span>
+            </div>
+
+            <div class="macro-title" contenteditable="true" data-path="macros.m_7cd49b5ecd91c819ba26ccfcf.title">EVALUACION DE DESEMPEÑO</div>
+            <div class="macro-desc" contenteditable="true" data-path="macros.m_7cd49b5ecd91c819ba26ccfcf.desc">Descripción del bloque</div>
+
+            <div class="macro-actions no-export">
+              <button class="btn" data-action="addSubprocess" data-macro="m_7cd49b5ecd91c819ba26ccfcf">+ Subproceso</button>
+              <button class="btn danger" data-action="deleteMacroInline" data-macro="m_7cd49b5ecd91c819ba26ccfcf">Eliminar bloque</button>
+            </div>
+
+            <div class="subflow" data-subflow="m_7cd49b5ecd91c819ba26ccfcf">
+              
+                <div class="subblock b2" data-sub="sb_29f0c57b53fd419ba26ccfcf" draggable="true">
+                  <div class="subblock-topbar no-export">
+                    <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
+                    <button class="btn" data-action="addSection" data-macro="m_7cd49b5ecd91c819ba26ccfcf" data-sub="sb_29f0c57b53fd419ba26ccfcf">+ Caja proceso</button>
+                    <button class="btn danger" data-action="deleteSubprocess" data-macro="m_7cd49b5ecd91c819ba26ccfcf" data-sub="sb_29f0c57b53fd419ba26ccfcf">Eliminar subproceso</button>
+                  </div>
+
+                  <div class="subblock-title" contenteditable="true" data-path="macros.m_7cd49b5ecd91c819ba26ccfcf.subprocesses.sb_29f0c57b53fd419ba26ccfcf.title">MODULO EVALUACION&nbsp;</div>
+
+                  
+                      <div class="process-box status-progress" data-section="s_c5db3521fe833819ba26ccfcf">
+                        <div class="process-title">
+                          <span contenteditable="true" data-path="macros.m_7cd49b5ecd91c819ba26ccfcf.subprocesses.sb_29f0c57b53fd419ba26ccfcf.sections.s_c5db3521fe833819ba26ccfcf.title">EVALAUCION&nbsp;</span>
+                          <span class="process-tools no-export">
+                            <select class="status-select" data-action="setStatus" data-macro="m_7cd49b5ecd91c819ba26ccfcf" data-sub="sb_29f0c57b53fd419ba26ccfcf" data-section="s_c5db3521fe833819ba26ccfcf" aria-label="Estado">
+                              <option value="ok">OK</option>
+                              <option value="progress" selected="">En proceso</option>
+                              <option value="late">Atrasado</option>
+                            </select>
+                            <button class="btn" data-action="addTask" data-macro="m_7cd49b5ecd91c819ba26ccfcf" data-sub="sb_29f0c57b53fd419ba26ccfcf" data-section="s_c5db3521fe833819ba26ccfcf">+ Tarea</button>
+                            <button class="btn danger" data-action="deleteSection" data-macro="m_7cd49b5ecd91c819ba26ccfcf" data-sub="sb_29f0c57b53fd419ba26ccfcf" data-section="s_c5db3521fe833819ba26ccfcf">Eliminar</button>
+                          </span>
+                        </div>
+
+                        
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m_7cd49b5ecd91c819ba26ccfcf.subprocesses.sb_29f0c57b53fd419ba26ccfcf.sections.s_c5db3521fe833819ba26ccfcf.tasks.0">Subir modelo de competencia</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m_7cd49b5ecd91c819ba26ccfcf" data-sub="sb_29f0c57b53fd419ba26ccfcf" data-section="s_c5db3521fe833819ba26ccfcf" data-task="0" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m_7cd49b5ecd91c819ba26ccfcf" data-sub="sb_29f0c57b53fd419ba26ccfcf" data-section="s_c5db3521fe833819ba26ccfcf" data-task="0">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m_7cd49b5ecd91c819ba26ccfcf.subprocesses.sb_29f0c57b53fd419ba26ccfcf.sections.s_c5db3521fe833819ba26ccfcf.tasks.1">Subir modelo de evaluación de Objetivos</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m_7cd49b5ecd91c819ba26ccfcf" data-sub="sb_29f0c57b53fd419ba26ccfcf" data-section="s_c5db3521fe833819ba26ccfcf" data-task="1" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m_7cd49b5ecd91c819ba26ccfcf" data-sub="sb_29f0c57b53fd419ba26ccfcf" data-section="s_c5db3521fe833819ba26ccfcf" data-task="1">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m_7cd49b5ecd91c819ba26ccfcf.subprocesses.sb_29f0c57b53fd419ba26ccfcf.sections.s_c5db3521fe833819ba26ccfcf.tasks.2">Creación de formularios desempeño</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m_7cd49b5ecd91c819ba26ccfcf" data-sub="sb_29f0c57b53fd419ba26ccfcf" data-section="s_c5db3521fe833819ba26ccfcf" data-task="2" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m_7cd49b5ecd91c819ba26ccfcf" data-sub="sb_29f0c57b53fd419ba26ccfcf" data-section="s_c5db3521fe833819ba26ccfcf" data-task="2">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m_7cd49b5ecd91c819ba26ccfcf.subprocesses.sb_29f0c57b53fd419ba26ccfcf.sections.s_c5db3521fe833819ba26ccfcf.tasks.3">Aprobación modelo de evaluación (90-180-360)</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m_7cd49b5ecd91c819ba26ccfcf" data-sub="sb_29f0c57b53fd419ba26ccfcf" data-section="s_c5db3521fe833819ba26ccfcf" data-task="3" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m_7cd49b5ecd91c819ba26ccfcf" data-sub="sb_29f0c57b53fd419ba26ccfcf" data-section="s_c5db3521fe833819ba26ccfcf" data-task="3">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                      </div>
+                    
+                </div>
+              
+            </div>
+          </div><div class="connector">➔</div><div class="macro b1" data-macro="m_dd2e00620b0c3819ba26ed60b" draggable="true">
+            <div class="macro-topbar no-export">
+              <span class="drag-handle macro-drag" title="Arrastra para reordenar bloques" aria-label="Arrastrar bloque">⠿</span>
+            </div>
+
+            <div class="macro-title" contenteditable="true" data-path="macros.m_dd2e00620b0c3819ba26ed60b.title">COMUNICACION Y RECONOCIMIENTO</div>
+            <div class="macro-desc" contenteditable="true" data-path="macros.m_dd2e00620b0c3819ba26ed60b.desc">Descripción del bloque</div>
+
+            <div class="macro-actions no-export">
+              <button class="btn" data-action="addSubprocess" data-macro="m_dd2e00620b0c3819ba26ed60b">+ Subproceso</button>
+              <button class="btn danger" data-action="deleteMacroInline" data-macro="m_dd2e00620b0c3819ba26ed60b">Eliminar bloque</button>
+            </div>
+
+            <div class="subflow" data-subflow="m_dd2e00620b0c3819ba26ed60b">
+              
+                <div class="subblock b2" data-sub="sb_9d8f7d0af4880819ba26ed60b" draggable="true">
+                  <div class="subblock-topbar no-export">
+                    <span class="drag-handle" title="Arrastra para reordenar" aria-label="Arrastrar">⠿</span>
+                    <button class="btn" data-action="addSection" data-macro="m_dd2e00620b0c3819ba26ed60b" data-sub="sb_9d8f7d0af4880819ba26ed60b">+ Caja proceso</button>
+                    <button class="btn danger" data-action="deleteSubprocess" data-macro="m_dd2e00620b0c3819ba26ed60b" data-sub="sb_9d8f7d0af4880819ba26ed60b">Eliminar subproceso</button>
+                  </div>
+
+                  <div class="subblock-title" contenteditable="true" data-path="macros.m_dd2e00620b0c3819ba26ed60b.subprocesses.sb_9d8f7d0af4880819ba26ed60b.title">Subproceso</div>
+
+                  
+                      <div class="process-box status-ok" data-section="s_f5af376a1cd4e819ba26ed60b">
+                        <div class="process-title">
+                          <span contenteditable="true" data-path="macros.m_dd2e00620b0c3819ba26ed60b.subprocesses.sb_9d8f7d0af4880819ba26ed60b.sections.s_f5af376a1cd4e819ba26ed60b.title">RECONOCIMIENTO</span>
+                          <span class="process-tools no-export">
+                            <select class="status-select" data-action="setStatus" data-macro="m_dd2e00620b0c3819ba26ed60b" data-sub="sb_9d8f7d0af4880819ba26ed60b" data-section="s_f5af376a1cd4e819ba26ed60b" aria-label="Estado">
+                              <option value="ok" selected="">OK</option>
+                              <option value="progress">En proceso</option>
+                              <option value="late">Atrasado</option>
+                            </select>
+                            <button class="btn" data-action="addTask" data-macro="m_dd2e00620b0c3819ba26ed60b" data-sub="sb_9d8f7d0af4880819ba26ed60b" data-section="s_f5af376a1cd4e819ba26ed60b">+ Tarea</button>
+                            <button class="btn danger" data-action="deleteSection" data-macro="m_dd2e00620b0c3819ba26ed60b" data-sub="sb_9d8f7d0af4880819ba26ed60b" data-section="s_f5af376a1cd4e819ba26ed60b">Eliminar</button>
+                          </span>
+                        </div>
+
+                        
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m_dd2e00620b0c3819ba26ed60b.subprocesses.sb_9d8f7d0af4880819ba26ed60b.sections.s_f5af376a1cd4e819ba26ed60b.tasks.0">Validación de principios</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m_dd2e00620b0c3819ba26ed60b" data-sub="sb_9d8f7d0af4880819ba26ed60b" data-section="s_f5af376a1cd4e819ba26ed60b" data-task="0" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m_dd2e00620b0c3819ba26ed60b" data-sub="sb_9d8f7d0af4880819ba26ed60b" data-section="s_f5af376a1cd4e819ba26ed60b" data-task="0">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m_dd2e00620b0c3819ba26ed60b.subprocesses.sb_9d8f7d0af4880819ba26ed60b.sections.s_f5af376a1cd4e819ba26ed60b.tasks.1">Carga de Principios en módulo</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m_dd2e00620b0c3819ba26ed60b" data-sub="sb_9d8f7d0af4880819ba26ed60b" data-section="s_f5af376a1cd4e819ba26ed60b" data-task="1" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m_dd2e00620b0c3819ba26ed60b" data-sub="sb_9d8f7d0af4880819ba26ed60b" data-section="s_f5af376a1cd4e819ba26ed60b" data-task="1">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                      </div>
+                    
+                      <div class="process-box status-ok" data-section="s_bfdc4168f0fe119bb2539784">
+                        <div class="process-title">
+                          <span contenteditable="true" data-path="macros.m_dd2e00620b0c3819ba26ed60b.subprocesses.sb_9d8f7d0af4880819ba26ed60b.sections.s_bfdc4168f0fe119bb2539784.title">COMUNICACIONES</span>
+                          <span class="process-tools no-export">
+                            <select class="status-select" data-action="setStatus" data-macro="m_dd2e00620b0c3819ba26ed60b" data-sub="sb_9d8f7d0af4880819ba26ed60b" data-section="s_bfdc4168f0fe119bb2539784" aria-label="Estado">
+                              <option value="ok" selected="">OK</option>
+                              <option value="progress">En proceso</option>
+                              <option value="late">Atrasado</option>
+                            </select>
+                            <button class="btn" data-action="addTask" data-macro="m_dd2e00620b0c3819ba26ed60b" data-sub="sb_9d8f7d0af4880819ba26ed60b" data-section="s_bfdc4168f0fe119bb2539784">+ Tarea</button>
+                            <button class="btn danger" data-action="deleteSection" data-macro="m_dd2e00620b0c3819ba26ed60b" data-sub="sb_9d8f7d0af4880819ba26ed60b" data-section="s_bfdc4168f0fe119bb2539784">Eliminar</button>
+                          </span>
+                        </div>
+
+                        
+                            <div class="sub-task">
+                              <span contenteditable="true" data-path="macros.m_dd2e00620b0c3819ba26ed60b.subprocesses.sb_9d8f7d0af4880819ba26ed60b.sections.s_bfdc4168f0fe119bb2539784.tasks.0">Configuraciones de plantillas y graficas</span>
+                              <i class="task-flag " aria-hidden="true"></i>
+                              <span class="no-export" style="display:flex;gap:6px;align-items:center;">
+                                <button class="btn danger flag-btn" data-action="toggleFlag" data-macro="m_dd2e00620b0c3819ba26ed60b" data-sub="sb_9d8f7d0af4880819ba26ed60b" data-section="s_bfdc4168f0fe119bb2539784" data-task="0" title="Marcar/desmarcar banderín">🚩</button>
+                                <button class="btn danger" data-action="deleteTask" data-macro="m_dd2e00620b0c3819ba26ed60b" data-sub="sb_9d8f7d0af4880819ba26ed60b" data-section="s_bfdc4168f0fe119bb2539784" data-task="0">Eliminar</button>
+                              </span>
+                            </div>
+                          
+                      </div>
+                    
+                </div>
+              
+            </div>
+          </div></div>
   </div>
 
   <script id="INITIAL_MODEL" type="application/json">
 {
-  "page": { "title": "Ciclo de Gestión de Personas y Nómina" },
-  "macros": []
+  "page": {
+    "title": "SISTEMA UNO BUK"
+  },
+  "macros": [
+    {
+      "id": "m1",
+      "className": "b1",
+      "title": "1. Ingreso a EESS",
+      "desc": "Ingreso del trabajador y datos base (sistema fuente).",
+      "subprocesses": [
+        {
+          "id": "sb_88ec06a9f7d5b819b9f09fc2a",
+          "className": "b3",
+          "title": "INGRESO DE UN NUEVO COLABORADOR",
+          "sections": [
+            {
+              "id": "p_a9f4484418554819b9f09fc2a",
+              "title": "CON ADMINISTRACION DE LA COMPENSACION",
+              "tasks": [
+                {
+                  "text": "Colaborador de \"oficina\" ",
+                  "flag": false
+                },
+                {
+                  "text": "Personal Directivo obra",
+                  "flag": false
+                },
+                {
+                  "text": "WORKFLOW ",
+                  "flag": true
+                }
+              ],
+              "status": "progress"
+            },
+            {
+              "id": "s_cacb85d7a7b73819b9f0bdee6",
+              "title": "SIN ADMINISTRACION DE LA COMPENSACION ",
+              "tasks": [
+                {
+                  "text": "Personal de obra",
+                  "flag": false
+                }
+              ],
+              "status": "progress"
+            }
+          ]
+        },
+        {
+          "id": "sp_ing_1",
+          "className": "b2",
+          "title": "MODULO DE SELECCION ",
+          "sections": [
+            {
+              "id": "s1",
+              "title": "",
+              "tasks": [
+                {
+                  "text": "Reclutamiento y Selección ",
+                  "flag": false
+                },
+                {
+                  "text": "\n Selección ",
+                  "flag": false
+                },
+                {
+                  "text": "WORKFLOW",
+                  "flag": true
+                },
+                {
+                  "text": "CONFIGURACION DE PLANTILLAS",
+                  "flag": true
+                }
+              ],
+              "status": "ok"
+            }
+          ]
+        },
+        {
+          "id": "sb_6f6a798ffdb4119b9f23e760",
+          "className": "b4",
+          "title": "MODULO ON BORADING",
+          "sections": [
+            {
+              "id": "p_85db1511dc303819b9f23e760",
+              "title": "",
+              "tasks": [
+                {
+                  "text": "Colaborador de \"oficina\"",
+                  "flag": false
+                },
+                {
+                  "text": "Personal Directivo Obra",
+                  "flag": false
+                },
+                {
+                  "text": "WORFLOW",
+                  "flag": true
+                },
+                {
+                  "text": "DETERMINAR TAREAS",
+                  "flag": true
+                }
+              ],
+              "status": "progress"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m3",
+      "className": "gd",
+      "title": "2. ALTA DEL COLABORADOR",
+      "desc": "Contratos, anexos, respaldos y trazabilidad documental asociada al ciclo.",
+      "subprocesses": [
+        {
+          "id": "sp_gd_1",
+          "className": "b5",
+          "title": "MODULO GESTOR DOCUMENTAL",
+          "sections": [
+            {
+              "id": "g1",
+              "title": "Documentación Laboral",
+              "tasks": [
+                {
+                  "text": "Contratos / Anexos ",
+                  "flag": false
+                },
+                {
+                  "text": "PRUEBAS DE PERFILES",
+                  "flag": true
+                },
+                {
+                  "text": "COMPLETAR FORMATOS DE DOCUMENTOS",
+                  "flag": true
+                }
+              ],
+              "status": "ok"
+            },
+            {
+              "id": "g2",
+              "title": "Respaldo del Ciclo",
+              "tasks": [
+                {
+                  "text": "CARTAS DE DESPIDO",
+                  "flag": true
+                },
+                {
+                  "text": "COMPORBANTES DE VACACIONES",
+                  "flag": true
+                }
+              ],
+              "status": "ok"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m2",
+      "className": "nomina",
+      "title": "3. CICLO MENSUAL DE NOMINA Y ASISTENCIA",
+      "desc": "Subprocesos 2 → 5: Configuración y Asistencia → Cálculo y Finiquitos → Tesorería y Centralización → Reportes y Gestión.",
+      "subprocesses": [
+        {
+          "id": "sb_e7f9e18f3cbb6819b9f33abc0",
+          "className": "b2",
+          "title": "MODULO NOMINA",
+          "sections": [
+            {
+              "id": "p_6b15903f3671f819b9f33abc0",
+              "title": "FICHA DEL COLABORADOR",
+              "tasks": [
+                {
+                  "text": "Completar datos de la Ficha",
+                  "flag": false
+                },
+                {
+                  "text": "AVISO A DT",
+                  "flag": true
+                },
+                {
+                  "text": "INGRESO MOVILIZACION (UNIFICAR CONSTRUCTORAS)",
+                  "flag": true
+                }
+              ],
+              "status": "progress"
+            }
+          ]
+        },
+        {
+          "id": "b4",
+          "className": "b4",
+          "title": "MODULO NOMINA",
+          "sections": [
+            {
+              "id": "p6",
+              "title": "INGRESO DE HABERES Y DESCUENTOS",
+              "tasks": [
+                {
+                  "text": "Pagos de anticipos",
+                  "flag": false
+                },
+                {
+                  "text": "Pago de sueldos",
+                  "flag": false
+                },
+                {
+                  "text": "Pago de Ajustes",
+                  "flag": false
+                }
+              ],
+              "status": "progress"
+            },
+            {
+              "id": "s_530266d1dd2aa819b9f88feba",
+              "title": "TRANSFER BANCOS",
+              "status": "progress",
+              "tasks": [
+                {
+                  "text": "A cuentas corrientes",
+                  "flag": false
+                },
+                {
+                  "text": "Efectivo",
+                  "flag": true
+                },
+                {
+                  "text": "Vales Vista",
+                  "flag": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b2",
+          "className": "b2",
+          "title": "modulo nomina",
+          "sections": [
+            {
+              "id": "p1",
+              "title": "FINIQUITOS",
+              "tasks": [
+                {
+                  "text": "Simulación para datos de carta",
+                  "flag": true
+                },
+                {
+                  "text": "Baja en el sistema",
+                  "flag": true
+                },
+                {
+                  "text": "Pago de finiquito",
+                  "flag": true
+                },
+                {
+                  "text": "Impresión de documento",
+                  "flag": true
+                }
+              ],
+              "status": "progress"
+            }
+          ]
+        },
+        {
+          "id": "b3",
+          "className": "b3",
+          "title": "Modulo nomina",
+          "sections": [
+            {
+              "id": "p4",
+              "title": "CENTRALIZACION",
+              "tasks": [
+                {
+                  "text": "Sueldo",
+                  "flag": true
+                },
+                {
+                  "text": "Ajustes",
+                  "flag": true
+                },
+                {
+                  "text": "Finiquitos",
+                  "flag": true
+                },
+                {
+                  "text": "SE ELIMINA LA CENTRALIZACION DE ANTICIPOS",
+                  "flag": false
+                }
+              ],
+              "status": "progress"
+            }
+          ]
+        },
+        {
+          "id": "b5",
+          "className": "b5",
+          "title": "MODULO NOMINA",
+          "sections": [
+            {
+              "id": "p8",
+              "title": "CIERRES MENSUALES",
+              "tasks": [
+                {
+                  "text": "Leyes Sociales",
+                  "flag": false
+                },
+                {
+                  "text": "INE",
+                  "flag": true
+                },
+                {
+                  "text": "LRE",
+                  "flag": true
+                },
+                {
+                  "text": "Cierre del Periodo",
+                  "flag": false
+                }
+              ],
+              "status": "progress"
+            }
+          ]
+        },
+        {
+          "id": "sb_89bdf0655b21819ba265054d",
+          "className": "b2",
+          "title": "MODULO NOMINA",
+          "sections": [
+            {
+              "id": "p_3b3fd0eebd91519ba265054d",
+              "title": "INFORMES MENSUALES",
+              "status": "progress",
+              "tasks": [
+                {
+                  "text": "Préstamos/ sobregiros / otros",
+                  "flag": true
+                },
+                {
+                  "text": "Calidad de Vida",
+                  "flag": true
+                },
+                {
+                  "text": "Infonominas",
+                  "flag": true
+                },
+                {
+                  "text": "Provisiones",
+                  "flag": true
+                },
+                {
+                  "text": "Especialidades / Remuchek",
+                  "flag": true
+                },
+                {
+                  "text": "Otros",
+                  "flag": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m_c9120e1a5996319b9ed2eb03",
+      "className": "b5",
+      "title": "ASISTENCIA",
+      "desc": "Descripción del bloque",
+      "subprocesses": [
+        {
+          "id": "sb_51a10b49925dc819b9ed2eb03",
+          "className": "b2",
+          "title": "mODULO CONTROL DE ASISTENCIA",
+          "sections": [
+            {
+              "id": "s_9c15ca094d062819b9ed2eb03",
+              "title": "CREAR RECINTO",
+              "tasks": [
+                {
+                  "text": "Turnos y calendario",
+                  "flag": false
+                },
+                {
+                  "text": "Habilitar Usuarios",
+                  "flag": false
+                }
+              ],
+              "status": "ok"
+            },
+            {
+              "id": "s_e88deab41f26e19ba2693980",
+              "title": "EN LA OBRA",
+              "status": "ok",
+              "tasks": [
+                {
+                  "text": "Habilitar Aplicación BUK ",
+                  "flag": false
+                },
+                {
+                  "text": "Sincronizar Usuarios (Sub-Contratos)",
+                  "flag": false
+                },
+                {
+                  "text": "Activar Portal de asistencia trabajador (-1 día)",
+                  "flag": false
+                },
+                {
+                  "text": "Activar disponible DT",
+                  "flag": false
+                },
+                {
+                  "text": "SINCRONIZAR CON REMUNERACIONES",
+                  "flag": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m_7cd49b5ecd91c819ba26ccfcf",
+      "className": "b1",
+      "title": "EVALUACION DE DESEMPEÑO",
+      "desc": "Descripción del bloque",
+      "subprocesses": [
+        {
+          "id": "sb_29f0c57b53fd419ba26ccfcf",
+          "className": "b2",
+          "title": "MODULO EVALUACION ",
+          "sections": [
+            {
+              "id": "s_c5db3521fe833819ba26ccfcf",
+              "title": "EVALAUCION ",
+              "status": "progress",
+              "tasks": [
+                {
+                  "text": "Subir modelo de competencia",
+                  "flag": true
+                },
+                {
+                  "text": "Subir modelo de evaluación de Objetivos",
+                  "flag": true
+                },
+                {
+                  "text": "Creación de formularios desempeño",
+                  "flag": true
+                },
+                {
+                  "text": "Aprobación modelo de evaluación (90-180-360)",
+                  "flag": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m_dd2e00620b0c3819ba26ed60b",
+      "className": "b1",
+      "title": "COMUNICACION Y RECONOCIMIENTO",
+      "desc": "Descripción del bloque",
+      "subprocesses": [
+        {
+          "id": "sb_9d8f7d0af4880819ba26ed60b",
+          "className": "b2",
+          "title": "Subproceso",
+          "sections": [
+            {
+              "id": "s_f5af376a1cd4e819ba26ed60b",
+              "title": "RECONOCIMIENTO",
+              "status": "ok",
+              "tasks": [
+                {
+                  "text": "Validación de principios",
+                  "flag": true
+                },
+                {
+                  "text": "Carga de Principios en módulo",
+                  "flag": true
+                }
+              ]
+            },
+            {
+              "id": "s_bfdc4168f0fe119bb2539784",
+              "title": "COMUNICACIONES",
+              "status": "ok",
+              "tasks": [
+                {
+                  "text": "Configuraciones de plantillas y graficas",
+                  "flag": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
-  </script>
+</script>
 
   <script>
     const STORAGE_KEY = "flujo_rrhh_nomina_macro_v8";
@@ -1005,5 +2584,6 @@
     // boot
     render();
   </script>
-</body>
-</html>
+
+
+</body></html>
